@@ -1,0 +1,10 @@
+{
+	"auth": {
+		"coexist20e68ab7": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}

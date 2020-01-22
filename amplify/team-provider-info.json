@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-coexist-dev-144528-authRole",
+            "UnauthRoleArn": "arn:aws:iam::185750188724:role/amplify-coexist-dev-144528-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::185750188724:role/amplify-coexist-dev-144528-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-coexist-dev-144528-deployment",
+            "UnauthRoleName": "amplify-coexist-dev-144528-unauthRole",
+            "StackName": "amplify-coexist-dev-144528",
+            "StackId": "arn:aws:cloudformation:us-east-1:185750188724:stack/amplify-coexist-dev-144528/bf192bb0-3d4f-11ea-8a29-0e43f2110cc5",
+            "AmplifyAppId": "dvy78tlskjqgv"
+        },
+        "categories": {
+            "auth": {
+                "coexist20e68ab7": {}
+            }
+        }
+    }
+}
