@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 
 //pages
-import Login from "../pages/login/login";
+import Login from "../pages/login/Login";
 
 //component
 import Layout from "../components/Layout/Layout";
@@ -14,7 +14,7 @@ export default function App() {
     // global
     //var { isAuthenticated } = useUserState();
     var {isAuthenticated} = false;
-  
+
     return (
       <HashRouter>
         <Switch>
@@ -30,9 +30,9 @@ export default function App() {
         </Switch>
       </HashRouter>
     );
-  
+
     // #######################################################################
-  
+
     function PrivateRoute({ component, ...rest }) {
       return (
         <Route
@@ -54,7 +54,7 @@ export default function App() {
         />
       );
     }
-  
+
     function PublicRoute({ component, ...rest }) {
       return (
         <Route
@@ -74,4 +74,3 @@ export default function App() {
       );
     }
 }
-  
