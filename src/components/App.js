@@ -6,7 +6,7 @@ import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 
 //pages
 import Login from "../pages/login/Login";
-//import HomePage from "../pages/homepage/HomePage";
+import HomePage from "../pages/homepage/HomePage";
 
 //component
 import Layout from "../components/Layout/Layout";
@@ -30,6 +30,7 @@ export default function App() {
           />
           <PrivateRoute path="/app" component={Layout} />
           <PublicRoute path="/login" component={Login} />
+          <PublicRoute path="/homepage" component={HomePage} />
           <Route component={Error} />
         </Switch>
       </HashRouter>

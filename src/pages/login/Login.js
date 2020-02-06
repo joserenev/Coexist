@@ -9,7 +9,10 @@ import {
   TextField,
   Fade,
 } from "@material-ui/core";
-import { withRouter } from "react-router-dom";
+import { 
+  withRouter,
+  Link,
+ } from "react-router-dom";
 //import classnames from "classnames";
 
 // styles
@@ -111,17 +114,20 @@ function Login(props) {
                   {isLoading ? (
                     <CircularProgress size={26} className={classes.loginLoader} />
                   ) : (
+                    <Link to= "/homepage">
                     <Button
                       disabled={
                         loginValue.length === 0 || passwordValue.length === 0
                       }
                       //onClick={}
+
                       variant="contained"
                       color="primary"
                       size="large"
                     >
                       Login
                     </Button>
+                    </Link>
                   )}
                   <Button
                     color="primary"
