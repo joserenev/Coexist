@@ -177,6 +177,21 @@ function Login(props) {
                   fullWidth
                 />
                 <TextField
+                  id="userName"
+                  InputProps={{
+                    classes: {
+                      underline: classes.textFieldUnderline,
+                      input: classes.textField,
+                    },
+                  }}
+                  value={loginValue}
+                  onChange={e => setLoginValue(e.target.value)}
+                  margin="normal"
+                  placeholder="User Name"
+                  type="email"
+                  fullWidth
+                />
+                <TextField
                   id="password"
                   InputProps={{
                     classes: {
@@ -189,6 +204,21 @@ function Login(props) {
                   margin="normal"
                   placeholder="Password"
                   type="password"
+                  fullWidth
+                />
+                <TextField
+                  id="phoneNumber"
+                  InputProps={{
+                    classes: {
+                      underline: classes.textFieldUnderline,
+                      input: classes.textField,
+                    },
+                  }}
+                  value={loginValue}
+                  onChange={e => setLoginValue(e.target.value)}
+                  margin="normal"
+                  placeholder="Phone Number"
+                  type="email"
                   fullWidth
                 />
                 <div className={classes.creatingButtonContainer}>
