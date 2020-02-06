@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 
 //pages
-import Login from "../pages/login/Login";
+import Login from "../pages/login/login";
 
 //component
 import Layout from "../components/Layout/Layout";

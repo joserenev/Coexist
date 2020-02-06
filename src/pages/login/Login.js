@@ -19,13 +19,8 @@ import useStyles from "./styles";
 import logo from "./logo.svg";
 import google from "../../images/google.svg";
 
-// context
-/*
-TODO:
-    import { useUserDispatch, loginUser } from "../../context/UserContext";
 
-*/
-function Login(props) {
+function LoginFunc(props) {
     var classes = useStyles();
   
     // global
@@ -115,7 +110,7 @@ function Login(props) {
                       disabled={
                         loginValue.length === 0 || passwordValue.length === 0
                       }
-                      //onClick={}
+                      //onClick={} TODO: use loginUser function
                       variant="contained"
                       color="primary"
                       size="large"
@@ -226,7 +221,7 @@ function Login(props) {
                     <CircularProgress size={26} />
                   ) : (
                     <Button
-                      //TODO: onClick={ }
+                      //TODO: onClick={ }  TODO: use loginUser() function
                       disabled={
                         loginValue.length === 0 ||
                         passwordValue.length === 0 ||
@@ -266,5 +261,23 @@ function Login(props) {
       </Grid>
     );
   }
-  
-  export default withRouter(Login);
+
+
+class Login extends React.Component {
+
+    /*
+        TODO: 
+        constructor() 
+        async componentDidMount()
+
+    */
+
+    render() {
+        //const {username, password, showRespone, response} = this.state;
+        return (
+            <LoginFunc/>
+        )
+    }
+}
+
+export default withRouter(Login);
