@@ -18,7 +18,7 @@ export default function App() {
     // global
     //var { isAuthenticated } = useUserState();
     var {isAuthenticated} = false;
-  
+
     return (
       <HashRouter>
         <Switch>
@@ -35,9 +35,9 @@ export default function App() {
         </Switch>
       </HashRouter>
     );
-  
+
     // #######################################################################
-  
+
     function PrivateRoute({ component, ...rest }) {
       return (
         <Route
@@ -59,7 +59,7 @@ export default function App() {
         />
       );
     }
-  
+
     function PublicRoute({ component, ...rest }) {
       return (
         <Route
@@ -79,4 +79,3 @@ export default function App() {
       );
     }
 }
-  
