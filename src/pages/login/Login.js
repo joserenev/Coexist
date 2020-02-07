@@ -159,7 +159,7 @@ function Login(props) {
                   //     response: "Sign Up Confirmed. Please confirm code.",
                   //     showVerification: true
                   // });
-
+                  setResponse("Sign Up Confirmed. Please confirm code.");
                   setUserValidatingCode(true);
 
                   return;
