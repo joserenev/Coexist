@@ -11,13 +11,12 @@ class Authentication {
     }
 
     // Sign up method
-    async signUp(username, password, email, profile_image) {
+    async signUp(username, password, email) {
         let data = await Auth.signUp({
             username,
             password,
             attributes: {
-                email
-
+                email,
             }
         });
 

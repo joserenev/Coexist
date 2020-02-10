@@ -11,6 +11,13 @@ export const createUser = `mutation CreateUser(
     email
     name
     phone
+    group {
+      id
+      name
+      users {
+        nextToken
+      }
+    }
   }
 }
 `;
@@ -24,6 +31,13 @@ export const updateUser = `mutation UpdateUser(
     email
     name
     phone
+    group {
+      id
+      name
+      users {
+        nextToken
+      }
+    }
   }
 }
 `;
@@ -37,6 +51,73 @@ export const deleteUser = `mutation DeleteUser(
     email
     name
     phone
+    group {
+      id
+      name
+      users {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const createGroup = `mutation CreateGroup(
+  $input: CreateGroupInput!
+  $condition: ModelGroupConditionInput
+) {
+  createGroup(input: $input, condition: $condition) {
+    id
+    name
+    users {
+      items {
+        id
+        username
+        email
+        name
+        phone
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const updateGroup = `mutation UpdateGroup(
+  $input: UpdateGroupInput!
+  $condition: ModelGroupConditionInput
+) {
+  updateGroup(input: $input, condition: $condition) {
+    id
+    name
+    users {
+      items {
+        id
+        username
+        email
+        name
+        phone
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const deleteGroup = `mutation DeleteGroup(
+  $input: DeleteGroupInput!
+  $condition: ModelGroupConditionInput
+) {
+  deleteGroup(input: $input, condition: $condition) {
+    id
+    name
+    users {
+      items {
+        id
+        username
+        email
+        name
+        phone
+      }
+      nextToken
+    }
   }
 }
 `;

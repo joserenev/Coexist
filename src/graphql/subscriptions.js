@@ -8,6 +8,13 @@ export const onCreateUser = `subscription OnCreateUser {
     email
     name
     phone
+    group {
+      id
+      name
+      users {
+        nextToken
+      }
+    }
   }
 }
 `;
@@ -18,6 +25,13 @@ export const onUpdateUser = `subscription OnUpdateUser {
     email
     name
     phone
+    group {
+      id
+      name
+      users {
+        nextToken
+      }
+    }
   }
 }
 `;
@@ -28,6 +42,64 @@ export const onDeleteUser = `subscription OnDeleteUser {
     email
     name
     phone
+    group {
+      id
+      name
+      users {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const onCreateGroup = `subscription OnCreateGroup {
+  onCreateGroup {
+    id
+    name
+    users {
+      items {
+        id
+        username
+        email
+        name
+        phone
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onUpdateGroup = `subscription OnUpdateGroup {
+  onUpdateGroup {
+    id
+    name
+    users {
+      items {
+        id
+        username
+        email
+        name
+        phone
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onDeleteGroup = `subscription OnDeleteGroup {
+  onDeleteGroup {
+    id
+    name
+    users {
+      items {
+        id
+        username
+        email
+        name
+        phone
+      }
+      nextToken
+    }
   }
 }
 `;

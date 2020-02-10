@@ -4,6 +4,13 @@ type User {
   email: String!
   name: String
   phone: String
+  group: Group
+}
+
+type Group {
+  id: ID!
+  name: String
+  users(filter: ModelUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserConnection
 }
 
 enum ModelSortDirection {
@@ -103,6 +110,8 @@ input ModelUserFilterInput {
 type Query {
   getUser(id: ID!): User
   listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
+  getGroup(id: ID!): Group
+  listGroups(filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection
 }
 
 input CreateUserInput {
@@ -111,6 +120,7 @@ input CreateUserInput {
   email: String!
   name: String
   phone: String
+  userGroupId: ID
 }
 
 input UpdateUserInput {
@@ -119,6 +129,7 @@ input UpdateUserInput {
   email: String
   name: String
   phone: String
+  userGroupId: ID
 }
 
 input DeleteUserInput {
@@ -129,6 +140,9 @@ type Mutation {
   createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User
   updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User
   deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User
+  createGroup(input: CreateGroupInput!, condition: ModelGroupConditionInput): Group
+  updateGroup(input: UpdateGroupInput!, condition: ModelGroupConditionInput): Group
+  deleteGroup(input: DeleteGroupInput!, condition: ModelGroupConditionInput): Group
 }
 
 input ModelUserConditionInput {
@@ -158,4 +172,41 @@ type Subscription {
   onCreateUser: User @aws_subscribe(mutations: ["createUser"])
   onUpdateUser: User @aws_subscribe(mutations: ["updateUser"])
   onDeleteUser: User @aws_subscribe(mutations: ["deleteUser"])
+  onCreateGroup: Group @aws_subscribe(mutations: ["createGroup"])
+  onUpdateGroup: Group @aws_subscribe(mutations: ["updateGroup"])
+  onDeleteGroup: Group @aws_subscribe(mutations: ["deleteGroup"])
+}
+
+type ModelGroupConnection {
+  items: [Group]
+  nextToken: String
+}
+
+input ModelGroupFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  and: [ModelGroupFilterInput]
+  or: [ModelGroupFilterInput]
+  not: ModelGroupFilterInput
+}
+
+input CreateGroupInput {
+  id: ID
+  name: String
+}
+
+input UpdateGroupInput {
+  id: ID!
+  name: String
+}
+
+input DeleteGroupInput {
+  id: ID
+}
+
+input ModelGroupConditionInput {
+  name: ModelStringInput
+  and: [ModelGroupConditionInput]
+  or: [ModelGroupConditionInput]
+  not: ModelGroupConditionInput
 }

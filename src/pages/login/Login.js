@@ -9,7 +9,7 @@ import {
   TextField,
   Fade,
 } from "@material-ui/core";
-import { 
+import {
   withRouter,
   Link,
  } from "react-router-dom";
@@ -70,7 +70,6 @@ function Login(props) {
               //     response: "Logged In"
               // });
 
-              //window.location.replace("/");
 
           }).catch(function (err) {
               // that.setState({
@@ -171,8 +170,6 @@ function Login(props) {
               return;
     };
 
-// GraphQL endpoint: https://ghpulxkwnnhbfff4r3iephhd5a.appsync-api.us-east-1.amazonaws.com/graphql
-
     const handleConfirmCode = async () => {
 
       // let that = this;
@@ -222,7 +219,7 @@ function Login(props) {
 
                       //Redirects user to home page
                       setTimeout(function() {
-                          window.location.replace("/");
+                          window.location.replace("/homepage");
                       }, 1500);
                   })
 
@@ -313,12 +310,12 @@ function Login(props) {
                   {isLoading ? (
                     <CircularProgress size={26} className={classes.loginLoader} />
                   ) : (
-                    <Link to= "/homepage">
+                    //<Link to= "/homepage">
                     <Button
                       disabled={
                         loginValue.length === 0 || passwordValue.length === 0
                       }
-                    
+
                       onClick={handleLogin} //Log in the user with its credentials entered
                       variant="contained"
                       color="primary"
@@ -326,7 +323,7 @@ function Login(props) {
                     >
                       Login
                     </Button>
-                    </Link>
+                    //</Link>
                   )}
                   <Button
                     color="primary"

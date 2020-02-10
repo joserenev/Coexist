@@ -4,4 +4,11 @@ type User @model {
   email: String!
   name: String
   phone: String
+  group: Group @connection(name: "GroupUsers")
+}
+
+type Group @model {
+  id: ID!
+  name: String
+  users: [User] @connection(name: "GroupUsers")
 }
