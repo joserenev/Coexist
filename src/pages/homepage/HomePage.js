@@ -11,6 +11,15 @@ import {
   Fade,
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
+
+import {
+  Layout,
+  Header,
+  Textfield,
+  Drawer,
+  Navigation,
+  Content,
+} from 'react-mdl'
 //import classnames from "classnames";
 
 // styles
@@ -33,19 +42,32 @@ function HomePage(props) {
     //var userDispatch = useUserDispatch();
     var userDispatch = true;
   
-    // local
-    var [isLoading, setIsLoading] = useState(false);
-    var [error, setError] = useState(null);
-    var [activeTabId, setActiveTabId] = useState(0);
-    var [nameValue, setNameValue] = useState("");
-    var [loginValue, setLoginValue] = useState("");
-    var [passwordValue, setPasswordValue] = useState("");
   
     return (
       <header>
-          <div>
-              THIS IS THE HOMEPAGE
-              </div>
+        <div style={{height: '300px', position: 'relative'}}>
+    <Layout fixedHeader fixedDrawer>
+        <Header title="Homepage">
+            <Textfield
+                value=""
+                onChange={() => {}}
+                label="Search"
+                expandable
+                expandableIcon="search"
+            />
+        </Header>
+        <Drawer title="HomePage">
+            <Navigation>
+                <a href="#">Group1</a>
+                <a href="#">Group2</a>
+                <a href="#">Group3</a>
+                <a href="#">+ Group</a>
+
+            </Navigation>
+        </Drawer>
+        <Content />
+    </Layout>
+</div>
           </header>
     );
   }
