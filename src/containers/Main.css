@@ -1,0 +1,72 @@
+.container {
+    margin-top: 100px;
+    height: 100%;
+    position: relative;
+    margin-bottom: 56px !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+.drawer-nav {
+    position: fixed !important;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+.signup-container{
+    position: fixed;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    left: 50%;
+    transform: translateX(-50%);
+}
+.signup-form-container{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 52px;
+    margin-top: 8px;
+}
+.home-container{
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+    margin-bottom: 56px;
+}
+.viewprofile-container{
+    position: relative;
+    height: 73%;
+    overflow-y: auto;
+}
+.home{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+}
+.profile-grid{
+    margin-bottom: 56px !important;
+    margin-top: 8px !important;
+}
+.profile-container{
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+.list-group {
+    margin-bottom: 100px;
+}
+.tweet-col{
+    margin-bottom: 56px;
+}
+.add-tweet {
+    margin-bottom: 0;
+}
