@@ -4,6 +4,10 @@ import './index.css';
 //import App from './App';
 import App from "./components/App";
 
+//for mdl layouts
+import 'react-mdl/extra/material.css';
+import 'react-mdl/extra/material.js';
+
 import Themes from "./themes";
 import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline } from "@material-ui/core";
