@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -28,10 +27,10 @@ export default function AlignItemsList() {
     <List className={classes.root}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt="Group Name" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
         <ListItemText
-          primary="Brunch this weekend?"
+          primary="Last message sender"
           secondary={
             <React.Fragment>
               <Typography
@@ -42,7 +41,7 @@ export default function AlignItemsList() {
               >
                 Ali Connors
               </Typography>
-              {" — I'll be in your neighborhood doing errands this…"}
+              {"Last Message sent"}
             </React.Fragment>
           }
         />
@@ -50,10 +49,10 @@ export default function AlignItemsList() {
       <Divider variant="inset" component="li" />
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+          <Avatar alt="Group Name 2" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
         <ListItemText
-          primary="Summer BBQ"
+          primary="Last message sender"
           secondary={
             <React.Fragment>
               <Typography
@@ -62,9 +61,9 @@ export default function AlignItemsList() {
                 className={classes.inline}
                 color="textPrimary"
               >
-                to Scott, Alex, Jennifer
+                Ali Connors
               </Typography>
-              {" — Wish I could come, but I'm out of town this…"}
+              {"Last Message sent"}
             </React.Fragment>
           }
         />
