@@ -56,19 +56,17 @@ function Login(props) {
     const [showConfirmResponse, setShowConfirmResponse] = useState(false);
 
     const handleLogin = async () => {
-
+      console.log(loginValue);
       await Authentication.signIn(loginValue, passwordValue)
-          .then(function (user) {
+        
+          .then(function (data) {
+              console.log(loginValue);
+              console.log(data);
 
-              console.log(user);
-
-              console.log("Caching this ID at sign in: ", user.attributes);
-              localStorage.setItem("id", user.attributes.sub);
-
-              // that.setState({
-              //     showResponse: true,
-              //     response: "Logged In"
-              // });
+              console.log("Caching this ID at sign in: ", data.attributes);
+              localStorage.setItem("id", data.attributes.sub);
+              window.location.replace("/homepage");
+              
 
 
           }).catch(function (err) {
@@ -76,7 +74,7 @@ function Login(props) {
               //     showResponse: true,
               //     response: "Invalid Username or Password"
               // })
-              console.log(err);
+              console.log("Something wrong in handle log in Function");
       })
     };
 
@@ -316,7 +314,7 @@ function Login(props) {
                         loginValue.length === 0 || passwordValue.length === 0
                       }
 
-                      onClick={handleLogin} //Log in the user with its credentials entered
+                      onClick={handleLogin } //Log in the user with its credentials entered
                       variant="contained"
                       color="primary"
                       size="large"
