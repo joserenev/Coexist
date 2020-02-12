@@ -106,6 +106,7 @@ import React, {Component} from 'react';
 
 import { withStyles } from '@material-ui/styles';
 import "../../containers/Main.css";
+import Group from "Group.js";
 //import NotificationTopics from "./NotificationTopics";
 
 
@@ -344,6 +345,9 @@ const MySubComponent = (props) => {
           <Typography className={classes.title} color="textSecondary" gutterBottom>
             Groups
           </Typography>
+		  <Group>
+			Group Name
+		  </Group>
         </CardContent>
         </Card>
 

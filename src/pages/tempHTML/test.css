@@ -1,0 +1,43 @@
+.group-holder {
+	position: absolute;
+	width: 25vw; 
+	height: 20vh; 
+	background: #CCCCCC;
+	padding: .4vh;
+}
+
+.group {
+	position: relative;
+	display: inline-block;
+	padding: .8vh;
+	width: 24.2vw;
+	height: auto;
+	background: #FFFFFF;
+	border-radius: 1vh;
+}
+
+.image-section {
+	float: left;
+	width: 25%;
+}
+
+.text-section {
+	float: right;
+	width: 75%;
+}
+
+.group-img {
+	max-height: 10vh !important;
+	max-width: 10vw !important;
+	border-radius: .8vh;
+}
+
+.group-text {
+	margin: 0px;
+	width: 100%;
+}
+
+.group-title {
+	text-size: 3vh;
+	height: 5vh;
+}
