@@ -345,7 +345,13 @@ const MySubComponent = (props) => {
           <Typography className={classes.title} color="textSecondary" gutterBottom>
             Groups
           </Typography>
-		  <Group/>
+		  <Group>
+			What goes here
+		  </Group>
+		  <Divider variant="inset" component="li" />
+		  <Group>
+			What goes here
+		  </Group>
         </CardContent>
         </Card>
 
