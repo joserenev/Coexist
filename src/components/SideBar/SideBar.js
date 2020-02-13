@@ -106,7 +106,7 @@ import React, {Component} from 'react';
 
 import { withStyles } from '@material-ui/styles';
 import "../../containers/Main.css";
-import Group from "Group";
+import Group from "./Group";
 //import NotificationTopics from "./NotificationTopics";
 
 

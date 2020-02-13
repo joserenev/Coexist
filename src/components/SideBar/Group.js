@@ -26,11 +26,63 @@ const useStyles = makeStyles(theme => ({
     display: 'inline',
   },
   avatar: {
-	  border-radius: 5px,
+	  borderRadius: "5px",
   }
 }));
 
-const MySubComponent = (props) => {
+export default function AlignItemsList() {
+  const classes = useStyles();
+
+  return (
+    <List className={classes.root}>
+      <ListItem alignItems="flex-start">
+        <ListItemAvatar>
+          <Avatar alt="Group Avatar" src="/static/images/avatar/1.jpg" />
+        </ListItemAvatar>
+        <ListItemText
+          primary="Roommate Group"
+          secondary={
+            <React.Fragment>
+              <Typography
+                component="span"
+                variant="body2"
+                className={classes.inline}
+                color="textPrimary"
+              >
+                Last sender name: 
+              </Typography>
+              {"Someone needs to vacuum"}
+            </React.Fragment>
+          }
+        />
+      </ListItem>
+      <Divider variant="inset" component="li" />
+      <ListItem alignItems="flex-start">
+        <ListItemAvatar>
+          <Avatar alt="Group Avatar" src="/static/images/avatar/2.jpg" />
+        </ListItemAvatar>
+        <ListItemText
+          primary="Friend Group"
+          secondary={
+            <React.Fragment>
+              <Typography
+                component="span"
+                variant="body2"
+                className={classes.inline}
+                color="textPrimary"
+              >
+                Last sender name: 
+              </Typography>
+              {"Sup"}
+            </React.Fragment>
+          }
+        />
+      </ListItem>
+    </List>
+  );
+}
+
+/*const MySubComponent = (props) => {
     const classes = useStyles(props);
 	
 	return (
@@ -162,4 +214,4 @@ class Group extends Component {
 
 }
 
-export default (Group);
+export default (Group);*/
