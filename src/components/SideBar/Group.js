@@ -9,6 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
 import Typography from '@material-ui/core/Typography';
 import { borderRadius } from '@material-ui/system';
 
@@ -37,7 +38,7 @@ export default function AlignItemsList() {
     <List className={classes.root}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Group Avatar" src="/static/images/avatar/1.jpg" />
+          <Avatar variant="rounded" alt="Group Avatar" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
         <ListItemText
           primary="Roommate Group"
@@ -59,7 +60,7 @@ export default function AlignItemsList() {
       <Divider variant="inset" component="li" />
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Group Avatar" src="/static/images/avatar/2.jpg" />
+          <Avatar variant="rounded" alt="Group Avatar" src="/static/images/avatar/2.jpg" />
         </ListItemAvatar>
         <ListItemText
           primary="Friend Group"
@@ -81,137 +82,3 @@ export default function AlignItemsList() {
     </List>
   );
 }
-
-/*const MySubComponent = (props) => {
-    const classes = useStyles(props);
-	
-	return (
-    <List className={classes.root}>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Group Name" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Last message sender"
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                Ali Connors
-              </Typography>
-              {"Last Message sent"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Group Name 2" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Last message sender"
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                Ali Connors
-              </Typography>
-              {"Last Message sent"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-    </List>
-  );
-}
-
-
-
-
-export default function AlignItemsList() {
-  const classes = useStyles();
-
-  return (
-    <List className={classes.root}>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Group Name" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Last message sender"
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                Ali Connors
-              </Typography>
-              {"Last Message sent"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Group Name 2" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Last message sender"
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                Ali Connors
-              </Typography>
-              {"Last Message sent"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-    </List>
-  );
-}
-
-class Group extends Component {
-    
-
-    // Constructor: TODO
-    
-    
-    async componentDidMount() {
-        
-    }
-    
-    
-    
-    render(){
-
-
-      return (
-          < MySubComponent/>
-      );
-    }
-
-
-}
-
-export default (Group);*/
