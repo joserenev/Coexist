@@ -32,9 +32,6 @@ const useStyles = makeStyles(theme => ({
   group: {
 	'&:hover': {
 		background: "#dddddd",
-		'& $groupName': {
-			fontWeight: 'bold',
-		},
 		'& $groupText': {
 			textShadow: "0px 1px #aaa",
 		}
