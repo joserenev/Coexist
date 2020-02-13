@@ -28,19 +28,47 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
 	  borderRadius: "5px",
-  }
+  },
+  group: {
+	'&:hover': {
+		background: "#dddddd",
+		'& $groupName': {
+			fontWeight: 'bold',
+		},
+		'& $groupText': {
+			textShadow: "0px 1px #aaa",
+		}
+	},
+	cursor: "pointer",
+  },
+  groupName: {
+	  
+  },
+  groupText: {
+	  
+  },
 }));
 
 export default function AlignItemsList() {
   const classes = useStyles();
 
   return (
-	  <ListItem alignItems="flex-start">
+	  <ListItem alignItems="flex-start" className={classes.group}>
 		<ListItemAvatar>
 		  <Avatar variant="rounded" alt="Group Avatar" src="/static/images/avatar/1.jpg" />
 		</ListItemAvatar>
-		<ListItemText
-		  primary="Roommate Group"
+		<ListItemText className={classes.groupText}
+		  primary={
+		  <React.Fragment>
+			  <Typography
+				component="span"
+				className={classes.groupName}
+				color="textPrimary"
+			  >
+				Group Name
+			  </Typography>
+			</React.Fragment>
+		}
 		  secondary={
 			<React.Fragment>
 			  <Typography
