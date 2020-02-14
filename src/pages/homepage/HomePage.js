@@ -14,68 +14,7 @@ import { withRouter } from "react-router-dom";
 
 
 import SideBar from "../../components/SideBar/SideBar";
-//import classnames from "classnames";
-
-// styles
-//import useStyles from "./styles";
-
-// logo
-//import logo from "./logo.svg";
-//import google from "../../images/google.svg";
-
-// context
-/*
-TODO:
-    import { useUserDispatch, loginUser } from "../../context/UserContext";
-
-*/
-
-/**
- * 
-
-function HomePage(props) {
-   // var classes = useStyles();
-  
-    // global
-    //var userDispatch = useUserDispatch();
-    var userDispatch = true;
-  
-  
-    return (
-      <header>
-        <div style={{height: '300px', position: 'relative'}}>
-    <Layout fixedHeader fixedDrawer>
-        <Header title="Homepage">
-            <Textfield
-                value=""
-                onChange={() => {}}
-                label="Search"
-                expandable
-                expandableIcon="search"
-            />
-        </Header>
-        <Drawer title="HomePage">
-            <Navigation>
-                <a href="#">Group1</a>
-                <a href="#">Group2</a>
-                <a href="#">Group3</a>
-                <a href="#">+ Group</a>
-
-            </Navigation>
-        </Drawer>
-        <Content />
-    </Layout>
-</div>
-          </header>
-    );
-  }
-  
-  export default withRouter(HomePage);
-
-  */
-
-
-
+import ImageCard from "../../components/ImageCard/ImageCard.js";
 
 class HomePage extends React.Component{
 
@@ -100,10 +39,13 @@ class HomePage extends React.Component{
   render() {
 
     return (
-      <div >
-          
+      <div>
+        <div>
           <SideBar/>
-  
+          <div/>
+        <div>
+          <ImageCard/>
+        </div>
       </div>
 
   )

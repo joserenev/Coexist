@@ -65,7 +65,7 @@ function Login(props) {
 
               console.log("Caching this ID at sign in: ", data.attributes);
               localStorage.setItem("id", data.attributes.sub);
-              window.location.replace("/homepage");
+              window.location.replace("/homepage"); //CHANGE BACK
               
 
 
