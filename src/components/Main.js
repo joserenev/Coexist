@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Link } from "react-router-dom";
 import Login from "../pages/login/Login";
 import HomePage from "../pages/homepage/HomePage";
 import SideBar from "../components/SideBar/SideBar.js";
+import ProfilePage from "../pages/Profile/ProfilePage.js";
 
 //component
 import Layout from "../components/Layout/Layout";
@@ -49,6 +50,25 @@ const Main = props => {
                                     isSideBarOpen={isSideBarOpen}
                                 >
                                     <HomePage />
+                                </ComponentContainer>
+                            </>
+                        );
+                    }}
+                />
+                <Route
+                    exact
+                    path="/profile"
+                    render={props => {
+                        return (
+                            <>
+                                <SideBar
+                                    isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                />
+                                <ComponentContainer
+                                    isSideBarOpen={isSideBarOpen}
+                                >
+                                    <ProfilePage />
                                 </ComponentContainer>
                             </>
                         );

@@ -21,8 +21,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
+import HomeIcon from '@material-ui/icons/Home';
 import ProfileIcon from "@material-ui/icons/AccountCircle";
-import FavIcon from "@material-ui/icons/StarBorder";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -262,6 +263,19 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
                     <ListItem
                         button
                         component={Link}
+                        to="/homepage"
+                        //selected={selectedIndex === 2}
+                        //onClick={event => handleListItemClick(event, 2)}
+                        onClick={handleDrawerClose}
+                    >
+                        <ListItemIcon>
+                            <HomeIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Homepage" />
+                    </ListItem>
+                    <ListItem
+                        button
+                        component={Link}
                         to="/profile"
                         //selected={selectedIndex === 2}
                         //onClick={event => handleListItemClick(event, 2)}
@@ -278,8 +292,9 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
                         //onClick={event => handleListItemClick(event, 3)}
                         //onClick={logout}
                     >
+
                         <ListItemIcon>
-                            <FavIcon />
+                            <ExitToAppIcon />
                         </ListItemIcon>
                         <ListItemText primary="Sign Out" />
                     </ListItem>

@@ -18,5 +18,4 @@ function HomePage(): React.MixedElement {
     const classes = useStyles();
     return <div className={classes.homePage}>Hello World!</div>;
 }
-//export default connect(MatchStateToProps, {getUserConnect, getLoaded})(Homepage)
 export default HomePage;
