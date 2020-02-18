@@ -39,10 +39,10 @@ const useStyles = makeStyles(theme => ({
 	cursor: "pointer",
   },
   groupName: {
-	  
+
   },
   groupText: {
-	  
+
   },
 }));
 
@@ -74,7 +74,7 @@ export default function AlignItemsList() {
 				className={classes.inline}
 				color="textPrimary"
 			  >
-				Last sender name: 
+				Last sender name:
 			  </Typography>
 			  {"Someone needs to vacuum"}
 			</React.Fragment>
