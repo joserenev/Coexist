@@ -10,6 +10,7 @@ import Login from "../pages/login/Login";
 import HomePage from "../pages/homepage/HomePage";
 import SideBar from "../components/SideBar/SideBar.js";
 import ProfilePage from "../pages/Profile/ProfilePage.js";
+import GroupHomePage from "../components/Groups/GroupHomePage";
 
 //component
 import Layout from "../components/Layout/Layout";
@@ -69,6 +70,25 @@ const Main = props => {
                                     isSideBarOpen={isSideBarOpen}
                                 >
                                     <ProfilePage />
+                                </ComponentContainer>
+                            </>
+                        );
+                    }}
+                />
+                <Route
+                    exact
+                    path="/groupHomePage"
+                    render={props => {
+                        return (
+                            <>
+                                <SideBar
+                                    isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                />
+                                <ComponentContainer
+                                    isSideBarOpen={isSideBarOpen}
+                                >
+                                    <GroupHomePage />
                                 </ComponentContainer>
                             </>
                         );

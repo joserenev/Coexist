@@ -50,7 +50,7 @@ export default function AlignItemsList() {
   const classes = useStyles();
 
   return (
-	  <ListItem alignItems="flex-start" className={classes.group}>
+	  <ListItem alignItems="flex-start" className={classes.group} component={Link} to="/groupHomePage">
 		<ListItemAvatar>
 		  <Avatar variant="rounded" alt="Group Avatar" src="/static/images/avatar/1.jpg" />
 		</ListItemAvatar>
