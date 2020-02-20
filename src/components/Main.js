@@ -1,9 +1,10 @@
 // @flow
+// @format
 
 import React from "react";
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router, Redirect } from "react-router-dom";
 
 //pages
 import Login from "../pages/login/Login";
@@ -11,32 +12,63 @@ import HomePage from "../pages/homepage/HomePage";
 import SideBar from "../components/SideBar/SideBar.js";
 import ProfilePage from "../pages/Profile/ProfilePage.js";
 import GroupHomePage from "../components/Groups/GroupHomePage";
-
-//component
-import Layout from "../components/Layout/Layout";
+import ErrorPage from "../pages/Error/ErrorPage";
 
 import Authentication from "../authentication/Authentication";
-import { Athena } from "aws-sdk/clients/all";
 
 import ComponentContainer from "../components/util/ComponentContainer.react";
 
-import { useState } from "react";
-//context TODO
+import { useEffect, useState } from "react";
 
-const Main = props => {
-    const { currentUser } = props;
+function Main(props): React.MixedElement {
     const [isSideBarOpen, setSideBarOpen] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<object>(null);
+
+    useEffect(() => {
+        if (!currentUser) {
+            getCurrentUser();
+        }
+    });
+
+    const getCurrentUser = async (): Object => {
+        await Authentication.getAuthenticatedUserObject()
+            .then(user => {
+                setCurrentUser(user);
+            })
+            .catch(error => {
+                console.log(error);
+                setCurrentUser(null);
+            });
+    };
+
+    if (currentUser == null) {
+        return (
+            <Router>
+                <Switch>
+                    <Route
+                        exact
+                        path="/"
+                        render={props => {
+                            return <Login />;
+                        }}
+                    />
+                    <Route
+                        path="/login"
+                        render={props => {
+                            return <Login />;
+                        }}
+                    />
+                    <Redirect to="login" />
+                </Switch>
+            </Router>
+        );
+    }
 
     return (
         <Router>
             <Switch>
-                <Route
-                    exact
-                    path="/"
-                    render={props => {
-                        return <Login />;
-                    }}
-                />
+                <Redirect exact path="/" to="/homepage" />
+                <Redirect path="/login" to="/homepage" />
                 <Route
                     exact
                     path="/homepage"
@@ -94,8 +126,15 @@ const Main = props => {
                         );
                     }}
                 />
+                <Route
+                    path="*"
+                    render={props => {
+                        return <ErrorPage />;
+                    }}
+                />
             </Switch>
         </Router>
     );
-};
+}
+
 export default Main;

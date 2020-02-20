@@ -1,4 +1,6 @@
 // @flow
+// @format
+
 import React from "react";
 
 import clsx from "clsx";
@@ -17,24 +19,25 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-//import Authentication from "../store/actions/Authentication"
+import Authentication from "../../authentication/Authentication";
 
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
-import HomeIcon from '@material-ui/icons/Home';
+import HomeIcon from "@material-ui/icons/Home";
 import ProfileIcon from "@material-ui/icons/AccountCircle";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 import "../../containers/Main.css";
 import Group from "../Groups/Group";
+import CreateGroupButton from "../Groups/CreateGroupButton.react";
 
 const drawerWidth = 240;
 
@@ -128,6 +131,8 @@ type Props = {|
 function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
     const theme = useTheme();
     const classes = useStyles(theme);
+
+    const browserHistory = useHistory();
     //console.log("Test getting my Name:", props);
     //console.log("Test muNmae string", props.toString())
     /*
@@ -142,19 +147,19 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
         setSideBarOpen(true);
     };
 
-    const discover = async () => {
-        //await Authentication.logout();
-        handleDrawerClose();
-        window.location.replace("/discover");
-    };
-
-    /*
     const logout = async () => {
-      await Authentication.logout();
-      handleDrawerClose();
-      window.location.replace('/');
-    }
-    */
+        console.log(Authentication.logout());
+        await Authentication.logout()
+            .then(() => {
+                console.log("comes here to logout after promise");
+                browserHistory.push("/");
+                window.location.replace("/");
+            })
+            .catch(error => {
+                console.log(error);
+                // browserHistory.push("/");
+            });
+    };
 
     const handleDrawerClose = () => {
         setSideBarOpen(false);
@@ -288,11 +293,9 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
                     </ListItem>
                     <ListItem
                         button
-                        //selected={selectedIndex === 3}
-                        //onClick={event => handleListItemClick(event, 3)}
-                        //onClick={logout}
+                        selected={selectedIndex === 3}
+                        onClick={logout}
                     >
-
                         <ListItemIcon>
                             <ExitToAppIcon />
                         </ListItemIcon>
@@ -311,6 +314,7 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
                             <Group>What goes here</Group>
                             <Divider variant="inset" component="li" />
                             <Group>What goes here</Group>
+                            <CreateGroupButton />
                         </CardContent>
                     </Card>
 
