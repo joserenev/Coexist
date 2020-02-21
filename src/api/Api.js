@@ -52,3 +52,22 @@ export async function getUserById(userID) {
     console.log("Finished getting user.", info);
     return info;
 }
+
+export async function createGroup(name){
+
+  let groupInfo = {
+      name: name,
+  };
+
+  console.log("Group Details : ", groupInfo);
+
+  await API.graphql(graphqlOperation(mutations.createGroup, {input: groupInfo}))
+    .then(async response => {
+        console.log("Group creation response: ", response);
+        return;
+    })
+    .catch(err => {
+        console.error("Error posting tweet:", err);
+    })
+
+}
