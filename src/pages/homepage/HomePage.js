@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 // <img src={logo} alt="logo" className={classes.logotypeImage} />
-import {
-  Grid,
-  CircularProgress,
-  Typography,
-  Button,
-  Tabs,
-  Tab,
-  TextField,
-  Fade,
-} from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router-dom";
-
-
+//import ImCard from "../../components/Card/ImCard.js/index.js";
+import Grid from '@material-ui/core/Grid';
 import SideBar from "../../components/SideBar/SideBar";
 import ImageCard from "../../components/ImageCard/ImageCard.js";
+//card images
+import exp from '../../images/expense.png';
+import chat from '../../images/chat.png';
+import task from '../../images/task.png';
+import calendar from '../../images/calendar.png';
 
 class HomePage extends React.Component{
 
@@ -32,6 +28,7 @@ class HomePage extends React.Component{
       //}
   }
 
+
   componentDidMount() {
 
   }
@@ -39,14 +36,18 @@ class HomePage extends React.Component{
   render() {
 
     return (
-      <div>
-        <div>
+    <div>
+        
+        <div className= 'drawer'>
           <SideBar/>
-          <div/>
-        <div>
-          <ImageCard/>
         </div>
+      <div align="right">
+        <ImageCard/>
       </div>
+      
+       
+    </div>
+ 
 
   )
   }

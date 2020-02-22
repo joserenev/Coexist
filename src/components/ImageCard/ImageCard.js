@@ -9,69 +9,130 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+import { NavRight } from 'aws-amplify-react';
+
+//images:
+import exp from '../../images/expense.png'
+import task from '../../images/task.png'
+import chat from '../../images/chat.png'
+import calendar from '../../images/calendar.png'
 //icons from react
 //import { FaDollarSign } from "react-icons/fa";
 
+
 const useStyles = makeStyles({
-  expense: {
-    maxWidth: 400,
+  
+  title: {
+    text: props => props.text,
   },
 
-  task: {
-    maxWidth: 200,
-
+  container: {
+    justifyContent: 'space-evenly',
+    
 
   },
+
+  root: {
+    background: 'linear-gradient(45deg, #c0d6b9 30%, #d6ebd7 90%)',
+    border: 0,
+    borderRadius: 5,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 350,
+    width: 500,
+    padding: '0 30px'
+  
+  
+  },
+  
+  
+
 });
 
 export default function ImgMediaCard() {
   const classes = useStyles();
+  const props = {}
 
-  return (
-
- <Grid
-  container sm={12}
- >
-
-  <Grid item sm>
-  <Card className={classes.expenses}> 
+return (
+  <div>
+  <Grid container className={classes.container}>
+  <Grid item>
+      <Card className={classes.root} align="right"> 
       <CardActionArea>
         <CardMedia
           component="img"
-          alt="Contemplative Reptile"
+          alt="dollar sign"
           height="200"
-          image = ''
-          title="Contemplative Reptile"
+          src ={exp}
+          title="dollar sign"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography variant="h2">
             Expenses
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
-  </Grid> 
-
-  <Grid item sm>
-  <Card className={classes.tasks}> 
+</Grid>
+<Grid item> 
+    <Card className={classes.root}> 
       <CardActionArea>
         <CardMedia
           component="img"
-          alt="Contemplative Reptile"
+          alt="dollar sign"
           height="200"
-          image="/static/images/cards/contemplative-reptile.jpg"
-          title="Contemplative Reptile"
+          src ={task}
+          title="dollar sign"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            Task
+          <Typography variant="h2">
+            Tasks
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
-    </Grid>  
- </Grid>
+</Grid>
+</Grid>
+<Grid container className={classes.container}>
+  <Grid item>
+      <Card className={classes.root}> 
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          alt="dollar sign"
+          height="200"
+          src ={chat}
+          title="dollar sign"
+        />
+        <CardContent>
+          <Typography variant="h2">
+            ChatRoom
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+</Grid>
+<Grid item>  
+    <Card className={classes.root} > 
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          alt="dollar sign"
+          height="200"
+          src ={calendar}
+          title="dollar sign"
+        />
+        <CardContent>
+          <Typography variant="h2">
+            Calendar
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+</Grid>
+</Grid>
+  </div>
 
-    
+ 
   );
 }
