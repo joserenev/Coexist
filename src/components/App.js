@@ -8,6 +8,7 @@ import Main from "../components/Main"
 //pages
 import Login from "../pages/login/Login";
 import HomePage from "../pages/homepage/HomePage";
+import GroupHomePage from "../components/Groups/GroupHomePage";
 
 //component
 import Layout from "../components/Layout/Layout";

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 // <img src={logo} alt="logo" className={classes.logotypeImage} />
 import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router-dom";
@@ -51,14 +52,26 @@ class HomePage extends React.Component{
 
   )
   }
-}
+=======
 
-function MatchStateToProps(state) {
-  return {
-      user: state.user,
-      isLoaded: state.isLoaded
-  }
-}
+import { makeStyles } from "@material-ui/core/styles";
 
+import SideBar from "../../components/SideBar/SideBar";
+
+const useStyles = makeStyles(theme => ({
+    homePage: {
+        backgroundColor: "#c8dbfa",
+        fontSize: "32vh",
+        height: "100%",
+        position: "absolute",
+        width: "100%"
+    }
+}));
+
+function HomePage(): React.MixedElement {
+    const classes = useStyles();
+    return <div className={classes.homePage}>Hello World!</div>;
+>>>>>>> 3bd621f0bc70125c38e83ef87b59c7947afd7e2f
+}
 //export default connect(MatchStateToProps, {getUserConnect, getLoaded})(Homepage)
-export default withRouter(HomePage)
+export default HomePage;
