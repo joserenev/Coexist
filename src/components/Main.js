@@ -17,6 +17,9 @@ import ProfilePage from "../pages/Profile/ProfilePage.js";
 import GroupHomePage from "../components/Groups/GroupHomePage";
 import ErrorPage from "../pages/Error/ErrorPage";
 import LoadingPage from "../pages/Loading/LoadingPage";
+import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
+import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
+
 
 import Authentication from "../authentication/Authentication";
 
@@ -143,6 +146,44 @@ function Main(props): React.MixedElement {
                                     isSideBarOpen={isSideBarOpen}
                                 >
                                     <GroupHomePage />
+                                </ComponentContainer>
+                            </>
+                        );
+                    }}
+                />
+                <Route
+                    exact
+                    path="/createGroup"
+                    render={props => {
+                        return (
+                            <>
+                                <SideBar
+                                    isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                />
+                                <ComponentContainer
+                                    isSideBarOpen={isSideBarOpen}
+                                >
+                                    <CreateGroupSettings />
+                                </ComponentContainer>
+                            </>
+                        );
+                    }}
+                />
+                <Route
+                    exact
+                    path="/noGroupFound"
+                    render={props => {
+                        return (
+                            <>
+                                <SideBar
+                                    isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                />
+                                <ComponentContainer
+                                    isSideBarOpen={isSideBarOpen}
+                                >
+                                    <NoGroupFoundPage />
                                 </ComponentContainer>
                             </>
                         );
