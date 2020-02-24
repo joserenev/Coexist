@@ -23,7 +23,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-			<h5 class="modal-title text-center w-100" id="exampleModalLabel"><b>Settings for 'Group Name'</b></h5>
+			<h5 class="modal-title text-center w-100" id="exampleModalLabel"><b>Settings for </b><b id="groupNameEdit">'Group Name'</b></h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
@@ -54,6 +54,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		  <button type="button" class="btn btn-default text-center w-100" data-dismiss="modal">Save</button>
+		  <button type="button" class="btn btn-default" onclick="document.getElementById('groupNameEdit').setAttribute('contentEditable', 'true');">Edit</button>
         </div>
       </div>
     </div>
