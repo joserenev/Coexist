@@ -134,6 +134,7 @@ function CreateGroupSettings(): React.MixedElement {
           </div>
         </div>
         </div>
+		<Button id="createGroupButton" onClick="">Create Group</Button>
       </div>
     );
 }
