@@ -17,6 +17,8 @@ import { Link } from 'react-router-dom'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import PropTypes from 'prop-types';
 
+import GroupSettings from "../group/Settings";
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -37,6 +39,7 @@ export default function AlignItemsList() {
   return (
     <List className={classes.root}>
       <ListItem alignItems="flex-start">
+		<GroupSettings/> //Group settings
         <ListItemAvatar>
           <Avatar variant="rounded" alt="Group Avatar" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
