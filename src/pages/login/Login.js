@@ -53,38 +53,15 @@ function Login(props) {
     const [showConfirmResponse, setShowConfirmResponse] = useState(false);
 
     const handleLogin = async () => {
-<<<<<<< HEAD
-      console.log(loginValue);
-      await Authentication.signIn(loginValue, passwordValue)
-        
-          .then(function (data) {
-              console.log(loginValue);
-              console.log(data);
-
-              console.log("Caching this ID at sign in: ", data.attributes);
-              localStorage.setItem("id", data.attributes.sub);
-              window.location.replace("/homepage"); //CHANGE BACK
-              
-
-
-          }).catch(function (err) {
-              // that.setState({
-              //     showResponse: true,
-              //     response: "Invalid Username or Password"
-              // })
-              console.log("Something wrong in handle log in Function");
-      })
-=======
         console.log(loginValue);
         await Authentication.signIn(loginValue, passwordValue)
 
             .then(function(data) {
                 // console.log(loginValue);
                 // console.log(data);
-                //
                 // console.log("Caching this ID at sign in: ", data.attributes);
                 localStorage.setItem("id", data.attributes.sub);
-                window.location.replace("/homepage");
+                window.location.replace("/homepage"); //CHANGE BACK
             })
             .catch(function(err) {
                 // that.setState({
@@ -93,7 +70,6 @@ function Login(props) {
                 // })
                 console.log("Something wrong in handle log in Function");
             });
->>>>>>> 3bd621f0bc70125c38e83ef87b59c7947afd7e2f
     };
 
     const handleSignUp = async () => {

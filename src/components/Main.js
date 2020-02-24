@@ -3,8 +3,11 @@
 
 import React from "react";
 import { Route, Switch } from "react-router-dom";
+import type QueryStatusType from "../components/util/QueryUtil";
+import type QueryStatusEnum from "../components/util/QueryUtil";
 
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
+import { QueryStatus } from "../components/util/QueryUtil";
 
 //pages
 import Login from "../pages/login/Login";
@@ -13,35 +16,47 @@ import SideBar from "../components/SideBar/SideBar.js";
 import ProfilePage from "../pages/Profile/ProfilePage.js";
 import GroupHomePage from "../components/Groups/GroupHomePage";
 import ErrorPage from "../pages/Error/ErrorPage";
+import LoadingPage from "../pages/Loading/LoadingPage";
 
 import Authentication from "../authentication/Authentication";
 
 import ComponentContainer from "../components/util/ComponentContainer.react";
 
 import { useEffect, useState } from "react";
+const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
 
 function Main(props): React.MixedElement {
     const [isSideBarOpen, setSideBarOpen] = useState<boolean>(false);
-    const [currentUser, setCurrentUser] = useState<object>(null);
+    const [currentUser, setCurrentUser] = useState<Object>(null);
+    const [queryStatus, setQueryStatus] = useState<QueryStatusEnum>(IDLE);
 
     useEffect(() => {
-        if (!currentUser) {
+        if (!currentUser && queryStatus === IDLE) {
             getCurrentUser();
         }
     });
 
     const getCurrentUser = async (): Object => {
+        setQueryStatus(PENDING);
         await Authentication.getAuthenticatedUserObject()
             .then(user => {
+                setQueryStatus(SUCCESS);
                 setCurrentUser(user);
             })
             .catch(error => {
                 console.log(error);
+                setQueryStatus(ERROR);
                 setCurrentUser(null);
             });
     };
 
-    if (currentUser == null) {
+    if (queryStatus === PENDING || queryStatus === IDLE) {
+        // Query request to check if user is logged in is being made
+        return <LoadingPage />;
+    }
+
+    if (currentUser == null && queryStatus === ERROR) {
+        // The user is not logged in
         return (
             <Router>
                 <Switch>
@@ -58,10 +73,15 @@ function Main(props): React.MixedElement {
                             return <Login />;
                         }}
                     />
-                    <Redirect to="login" />
+                    <Redirect to="/login" />
                 </Switch>
             </Router>
         );
+    }
+
+    if (currentUser == null) {
+        // The request still hasn't completed yet.
+        return <LoadingPage />;
     }
 
     return (
@@ -101,7 +121,9 @@ function Main(props): React.MixedElement {
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
                                 >
-                                    <ProfilePage />
+                                    <ProfilePage
+                                        userID={currentUser.attributes.sub}
+                                    />
                                 </ComponentContainer>
                             </>
                         );
