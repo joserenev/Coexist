@@ -4,11 +4,21 @@ type User @model {
   email: String!
   name: String
   phone: String
+  groups: [UserGroups] @connection(name: "UserGroups")
+}
+
+type UserGroups @model (queries: null){
+  id: ID!
+  user: User @connection(name: "UserGroups")
   group: Group @connection(name: "GroupUsers")
 }
 
 type Group @model {
   id: ID!
   name: String
-  users: [User] @connection(name: "GroupUsers")
+  owner: User @connection
+  type: String
+  description: String
+  users: [UserGroups] @connection(name: "GroupUsers")
+
 }

@@ -4,13 +4,22 @@ type User {
   email: String!
   name: String
   phone: String
+  groups(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
+}
+
+type UserGroups {
+  id: ID!
+  user: User
   group: Group
 }
 
 type Group {
   id: ID!
   name: String
-  users(filter: ModelUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserConnection
+  owner: User
+  type: String
+  description: String
+  users(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
 }
 
 enum ModelSortDirection {
@@ -120,7 +129,6 @@ input CreateUserInput {
   email: String!
   name: String
   phone: String
-  userGroupId: ID
 }
 
 input UpdateUserInput {
@@ -129,7 +137,6 @@ input UpdateUserInput {
   email: String
   name: String
   phone: String
-  userGroupId: ID
 }
 
 input DeleteUserInput {
@@ -140,6 +147,9 @@ type Mutation {
   createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User
   updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User
   deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User
+  createUserGroups(input: CreateUserGroupsInput!, condition: ModelUserGroupsConditionInput): UserGroups
+  updateUserGroups(input: UpdateUserGroupsInput!, condition: ModelUserGroupsConditionInput): UserGroups
+  deleteUserGroups(input: DeleteUserGroupsInput!, condition: ModelUserGroupsConditionInput): UserGroups
   createGroup(input: CreateGroupInput!, condition: ModelGroupConditionInput): Group
   updateGroup(input: UpdateGroupInput!, condition: ModelGroupConditionInput): Group
   deleteGroup(input: DeleteGroupInput!, condition: ModelGroupConditionInput): Group
@@ -172,9 +182,41 @@ type Subscription {
   onCreateUser: User @aws_subscribe(mutations: ["createUser"])
   onUpdateUser: User @aws_subscribe(mutations: ["updateUser"])
   onDeleteUser: User @aws_subscribe(mutations: ["deleteUser"])
+  onCreateUserGroups: UserGroups @aws_subscribe(mutations: ["createUserGroups"])
+  onUpdateUserGroups: UserGroups @aws_subscribe(mutations: ["updateUserGroups"])
+  onDeleteUserGroups: UserGroups @aws_subscribe(mutations: ["deleteUserGroups"])
   onCreateGroup: Group @aws_subscribe(mutations: ["createGroup"])
   onUpdateGroup: Group @aws_subscribe(mutations: ["updateGroup"])
   onDeleteGroup: Group @aws_subscribe(mutations: ["deleteGroup"])
+}
+
+input ModelUserGroupsFilterInput {
+  id: ModelIDInput
+  and: [ModelUserGroupsFilterInput]
+  or: [ModelUserGroupsFilterInput]
+  not: ModelUserGroupsFilterInput
+}
+
+input CreateUserGroupsInput {
+  id: ID
+  userGroupsUserId: ID
+  userGroupsGroupId: ID
+}
+
+input UpdateUserGroupsInput {
+  id: ID!
+  userGroupsUserId: ID
+  userGroupsGroupId: ID
+}
+
+input DeleteUserGroupsInput {
+  id: ID
+}
+
+input ModelUserGroupsConditionInput {
+  and: [ModelUserGroupsConditionInput]
+  or: [ModelUserGroupsConditionInput]
+  not: ModelUserGroupsConditionInput
 }
 
 type ModelGroupConnection {
@@ -185,6 +227,8 @@ type ModelGroupConnection {
 input ModelGroupFilterInput {
   id: ModelIDInput
   name: ModelStringInput
+  type: ModelStringInput
+  description: ModelStringInput
   and: [ModelGroupFilterInput]
   or: [ModelGroupFilterInput]
   not: ModelGroupFilterInput
@@ -193,11 +237,17 @@ input ModelGroupFilterInput {
 input CreateGroupInput {
   id: ID
   name: String
+  type: String
+  description: String
+  groupOwnerId: ID
 }
 
 input UpdateGroupInput {
   id: ID!
   name: String
+  type: String
+  description: String
+  groupOwnerId: ID
 }
 
 input DeleteGroupInput {
@@ -206,7 +256,14 @@ input DeleteGroupInput {
 
 input ModelGroupConditionInput {
   name: ModelStringInput
+  type: ModelStringInput
+  description: ModelStringInput
   and: [ModelGroupConditionInput]
   or: [ModelGroupConditionInput]
   not: ModelGroupConditionInput
+}
+
+type ModelUserGroupsConnection {
+  items: [UserGroups]
+  nextToken: String
 }

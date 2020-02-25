@@ -2,7 +2,7 @@
 #set( $query = {
   "expression": "#connectionAttribute = :connectionAttribute",
   "expressionNames": {
-      "#connectionAttribute": "userGroupsGroupId"
+      "#connectionAttribute": "userGroupsUserId"
   },
   "expressionValues": {
       ":connectionAttribute": {
@@ -34,5 +34,5 @@ null
   #else
 null
   #end,
-  "index": "gsi-GroupUsers"
+  "index": "gsi-UserGroups"
 }

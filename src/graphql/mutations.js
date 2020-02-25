@@ -11,12 +11,11 @@ export const createUser = `mutation CreateUser(
     email
     name
     phone
-    group {
-      id
-      name
-      users {
-        nextToken
+    groups {
+      items {
+        id
       }
+      nextToken
     }
   }
 }
@@ -31,12 +30,11 @@ export const updateUser = `mutation UpdateUser(
     email
     name
     phone
-    group {
-      id
-      name
-      users {
-        nextToken
+    groups {
+      items {
+        id
       }
+      nextToken
     }
   }
 }
@@ -51,9 +49,113 @@ export const deleteUser = `mutation DeleteUser(
     email
     name
     phone
+    groups {
+      items {
+        id
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const createUserGroups = `mutation CreateUserGroups(
+  $input: CreateUserGroupsInput!
+  $condition: ModelUserGroupsConditionInput
+) {
+  createUserGroups(input: $input, condition: $condition) {
+    id
+    user {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
     group {
       id
       name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const updateUserGroups = `mutation UpdateUserGroups(
+  $input: UpdateUserGroupsInput!
+  $condition: ModelUserGroupsConditionInput
+) {
+  updateUserGroups(input: $input, condition: $condition) {
+    id
+    user {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const deleteUserGroups = `mutation DeleteUserGroups(
+  $input: DeleteUserGroupsInput!
+  $condition: ModelUserGroupsConditionInput
+) {
+  deleteUserGroups(input: $input, condition: $condition) {
+    id
+    user {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+      }
+      type
+      description
       users {
         nextToken
       }
@@ -68,13 +170,21 @@ export const createGroup = `mutation CreateGroup(
   createGroup(input: $input, condition: $condition) {
     id
     name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    type
+    description
     users {
       items {
         id
-        username
-        email
-        name
-        phone
       }
       nextToken
     }
@@ -88,13 +198,21 @@ export const updateGroup = `mutation UpdateGroup(
   updateGroup(input: $input, condition: $condition) {
     id
     name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    type
+    description
     users {
       items {
         id
-        username
-        email
-        name
-        phone
       }
       nextToken
     }
@@ -108,13 +226,21 @@ export const deleteGroup = `mutation DeleteGroup(
   deleteGroup(input: $input, condition: $condition) {
     id
     name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    type
+    description
     users {
       items {
         id
-        username
-        email
-        name
-        phone
       }
       nextToken
     }
