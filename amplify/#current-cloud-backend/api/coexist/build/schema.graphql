@@ -1,7 +1,7 @@
 type User {
   id: ID!
-  username: String!
-  email: String!
+  username: String
+  email: String
   name: String
   phone: String
   groups(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
@@ -125,8 +125,8 @@ type Query {
 
 input CreateUserInput {
   id: ID
-  username: String!
-  email: String!
+  username: String
+  email: String
   name: String
   phone: String
 }

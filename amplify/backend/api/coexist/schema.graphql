@@ -1,7 +1,7 @@
 type User @model {
   id: ID!
-  username: String!
-  email: String!
+  username: String
+  email: String
   name: String
   phone: String
   groups: [UserGroups] @connection(name: "UserGroups")
