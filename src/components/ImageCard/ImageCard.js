@@ -8,8 +8,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { Route, Switch } from "react-router-dom";
 
 import { NavRight } from 'aws-amplify-react';
+//pages
+import Login from "../../pages/login/Login";
 
 //images:
 import exp from '../../images/expense.png'
@@ -38,8 +41,8 @@ const useStyles = makeStyles({
     borderRadius: 5,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
-    height: 350,
-    width: 500,
+    height: 300,
+    width: 450,
     padding: '0 30px'
   
   
@@ -49,6 +52,10 @@ const useStyles = makeStyles({
 
 });
 
+const handlegotoExp = async () => {
+  
+};
+
 export default function ImgMediaCard() {
   const classes = useStyles();
   const props = {}
@@ -57,7 +64,7 @@ return (
   <div>
   <Grid container className={classes.container}>
   <Grid item>
-      <Card className={classes.root} align="right"> 
+      <Card className={classes.root} align="right" onClick={handlegotoExp}> 
       <CardActionArea>
         <CardMedia
           component="img"
