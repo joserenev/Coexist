@@ -16,7 +16,7 @@ import { withRouter, Link } from "react-router-dom";
 import useStyles from "./styles";
 
 // logo
-import logo from "./logo.svg";
+import logo from "./LogoC.svg";
 import google from "../../images/google.svg";
 
 import Authentication from "../../authentication/Authentication";
@@ -233,7 +233,7 @@ function Login(props) {
     return (
         <Grid container className={classes.container}>
             <div className={classes.logotypeContainer}>
-                <img src={logo} alt="logo" className={classes.logotypeImage} />
+                <img src={logo} alt="logo" className={classes.logotypeImage}  />
                 <Typography className={classes.logotypeText}>
                     Coexist
                 </Typography>
