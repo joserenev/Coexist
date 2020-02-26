@@ -27,7 +27,7 @@ function CreateGroupButton(): React.MixedElement {
             alignItems="center"
             className={classes.group}
             component={Link}
-            to="createGroup"
+            to="/createGroup"
         >
             <AddIcon color="action" />
             <ListItemText
