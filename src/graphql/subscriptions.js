@@ -8,12 +8,11 @@ export const onCreateUser = `subscription OnCreateUser {
     email
     name
     phone
-    group {
-      id
-      name
-      users {
-        nextToken
+    groups {
+      items {
+        id
       }
+      nextToken
     }
   }
 }
@@ -25,12 +24,11 @@ export const onUpdateUser = `subscription OnUpdateUser {
     email
     name
     phone
-    group {
-      id
-      name
-      users {
-        nextToken
+    groups {
+      items {
+        id
       }
+      nextToken
     }
   }
 }
@@ -42,9 +40,104 @@ export const onDeleteUser = `subscription OnDeleteUser {
     email
     name
     phone
+    groups {
+      items {
+        id
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onCreateUserGroups = `subscription OnCreateUserGroups {
+  onCreateUserGroups {
+    id
+    user {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
     group {
       id
       name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
+  onUpdateUserGroups {
+    id
+    user {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
+  onDeleteUserGroups {
+    id
+    user {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+      }
+      type
+      description
       users {
         nextToken
       }
@@ -56,13 +149,21 @@ export const onCreateGroup = `subscription OnCreateGroup {
   onCreateGroup {
     id
     name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    type
+    description
     users {
       items {
         id
-        username
-        email
-        name
-        phone
       }
       nextToken
     }
@@ -73,13 +174,21 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
   onUpdateGroup {
     id
     name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    type
+    description
     users {
       items {
         id
-        username
-        email
-        name
-        phone
       }
       nextToken
     }
@@ -90,13 +199,21 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
   onDeleteGroup {
     id
     name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+    }
+    type
+    description
     users {
       items {
         id
-        username
-        email
-        name
-        phone
       }
       nextToken
     }

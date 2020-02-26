@@ -86,7 +86,7 @@
         }
     },
     "Resources": {
-        "UserTable": {
+        "UserGroupsTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "TableName": {
@@ -96,7 +96,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "User",
+                                    "UserGroups",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     },
@@ -110,7 +110,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "User",
+                                    "UserGroups",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
                                     }
@@ -128,6 +128,14 @@
                 "AttributeDefinitions": [
                     {
                         "AttributeName": "id",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "userGroupsUserId",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "userGroupsGroupId",
                         "AttributeType": "S"
                     }
                 ],
@@ -178,11 +186,69 @@
                             "Ref": "AWS::NoValue"
                         }
                     ]
-                }
+                },
+                "GlobalSecondaryIndexes": [
+                    {
+                        "IndexName": "gsi-UserGroups",
+                        "KeySchema": [
+                            {
+                                "AttributeName": "userGroupsUserId",
+                                "KeyType": "HASH"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        },
+                        "ProvisionedThroughput": {
+                            "Fn::If": [
+                                "ShouldUsePayPerRequestBilling",
+                                {
+                                    "Ref": "AWS::NoValue"
+                                },
+                                {
+                                    "ReadCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableReadIOPS"
+                                    },
+                                    "WriteCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableWriteIOPS"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "IndexName": "gsi-GroupUsers",
+                        "KeySchema": [
+                            {
+                                "AttributeName": "userGroupsGroupId",
+                                "KeyType": "HASH"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        },
+                        "ProvisionedThroughput": {
+                            "Fn::If": [
+                                "ShouldUsePayPerRequestBilling",
+                                {
+                                    "Ref": "AWS::NoValue"
+                                },
+                                {
+                                    "ReadCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableReadIOPS"
+                                    },
+                                    "WriteCapacityUnits": {
+                                        "Ref": "DynamoDBModelTableWriteIOPS"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
             },
             "DeletionPolicy": "Delete"
         },
-        "UserIAMRole": {
+        "UserGroupsIAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName": {
@@ -192,7 +258,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "User",
+                                    "UserGroups",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -207,7 +273,7 @@
                             "Fn::Join": [
                                 "-",
                                 [
-                                    "User",
+                                    "UserGroups",
                                     "role",
                                     {
                                         "Ref": "GetAttGraphQLAPIApiId"
@@ -259,7 +325,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "UserGroups",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -273,7 +339,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "UserGroups",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -296,7 +362,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "UserGroups",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         },
@@ -310,7 +376,7 @@
                                                                 "Fn::Join": [
                                                                     "-",
                                                                     [
-                                                                        "User",
+                                                                        "UserGroups",
                                                                         {
                                                                             "Ref": "GetAttGraphQLAPIApiId"
                                                                         }
@@ -330,17 +396,17 @@
                 ]
             }
         },
-        "UserDataSource": {
+        "UserGroupsDataSource": {
             "Type": "AWS::AppSync::DataSource",
             "Properties": {
                 "ApiId": {
                     "Ref": "GetAttGraphQLAPIApiId"
                 },
-                "Name": "UserTable",
+                "Name": "UserGroupsTable",
                 "Type": "AMAZON_DYNAMODB",
                 "ServiceRoleArn": {
                     "Fn::GetAtt": [
-                        "UserIAMRole",
+                        "UserGroupsIAMRole",
                         "Arn"
                     ]
                 },
@@ -355,7 +421,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "User",
+                                        "UserGroups",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         },
@@ -369,7 +435,7 @@
                                 "Fn::Join": [
                                     "-",
                                     [
-                                        "User",
+                                        "UserGroups",
                                         {
                                             "Ref": "GetAttGraphQLAPIApiId"
                                         }
@@ -381,10 +447,10 @@
                 }
             },
             "DependsOn": [
-                "UserIAMRole"
+                "UserGroupsIAMRole"
             ]
         },
-        "GetUserResolver": {
+        "CreateUserGroupsResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -392,139 +458,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "UserGroupsDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getUser",
-                "TypeName": "Query",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Query",
-                                        "getUser",
-                                        "req",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Query",
-                                        "getUser",
-                                        "res",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "ListUserResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Ref": "GetAttGraphQLAPIApiId"
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "UserDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "listUsers",
-                "TypeName": "Query",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Query",
-                                        "listUsers",
-                                        "req",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Sub": [
-                        "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
-                        {
-                            "S3DeploymentBucket": {
-                                "Ref": "S3DeploymentBucket"
-                            },
-                            "S3DeploymentRootKey": {
-                                "Ref": "S3DeploymentRootKey"
-                            },
-                            "ResolverFileName": {
-                                "Fn::Join": [
-                                    ".",
-                                    [
-                                        "Query",
-                                        "listUsers",
-                                        "res",
-                                        "vtl"
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "CreateUserResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Ref": "GetAttGraphQLAPIApiId"
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "UserDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "createUser",
+                "FieldName": "createUserGroups",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -541,7 +479,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createUser",
+                                        "createUserGroups",
                                         "req",
                                         "vtl"
                                     ]
@@ -565,7 +503,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "createUser",
+                                        "createUserGroups",
                                         "res",
                                         "vtl"
                                     ]
@@ -576,7 +514,7 @@
                 }
             }
         },
-        "UpdateUserResolver": {
+        "UpdateUserGroupsResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -584,11 +522,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "UserGroupsDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "updateUser",
+                "FieldName": "updateUserGroups",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -605,7 +543,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updateUser",
+                                        "updateUserGroups",
                                         "req",
                                         "vtl"
                                     ]
@@ -629,7 +567,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "updateUser",
+                                        "updateUserGroups",
                                         "res",
                                         "vtl"
                                     ]
@@ -640,7 +578,7 @@
                 }
             }
         },
-        "DeleteUserResolver": {
+        "DeleteUserGroupsResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -648,11 +586,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "UserDataSource",
+                        "UserGroupsDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "deleteUser",
+                "FieldName": "deleteUserGroups",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Sub": [
@@ -669,7 +607,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deleteUser",
+                                        "deleteUserGroups",
                                         "req",
                                         "vtl"
                                     ]
@@ -693,7 +631,7 @@
                                     ".",
                                     [
                                         "Mutation",
-                                        "deleteUser",
+                                        "deleteUserGroups",
                                         "res",
                                         "vtl"
                                     ]
@@ -706,11 +644,11 @@
         }
     },
     "Outputs": {
-        "GetAttUserTableStreamArn": {
+        "GetAttUserGroupsTableStreamArn": {
             "Description": "Your DynamoDB table StreamArn.",
             "Value": {
                 "Fn::GetAtt": [
-                    "UserTable",
+                    "UserGroupsTable",
                     "StreamArn"
                 ]
             },
@@ -723,18 +661,18 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "UserTable",
+                            "UserGroupsTable",
                             "StreamArn"
                         ]
                     ]
                 }
             }
         },
-        "GetAttUserDataSourceName": {
+        "GetAttUserGroupsDataSourceName": {
             "Description": "Your model DataSource name.",
             "Value": {
                 "Fn::GetAtt": [
-                    "UserDataSource",
+                    "UserGroupsDataSource",
                     "Name"
                 ]
             },
@@ -747,17 +685,17 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "UserDataSource",
+                            "UserGroupsDataSource",
                             "Name"
                         ]
                     ]
                 }
             }
         },
-        "GetAttUserTableName": {
+        "GetAttUserGroupsTableName": {
             "Description": "Your DynamoDB table name.",
             "Value": {
-                "Ref": "UserTable"
+                "Ref": "UserGroupsTable"
             },
             "Export": {
                 "Name": {
@@ -768,7 +706,7 @@
                                 "Ref": "AppSyncApiId"
                             },
                             "GetAtt",
-                            "UserTable",
+                            "UserGroupsTable",
                             "Name"
                         ]
                     ]
