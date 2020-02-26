@@ -19,7 +19,7 @@
 
 
   <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -38,24 +38,40 @@
 			</div>
 			<input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Name your group" value="Current Group Name">
 		</div>
-		<input type="file" class="custom-file-input" id="imageUploadHidden" style="">
-	
 		
+	
 		<div class="input-group">
 			<div class="input-group-prepend">
 				<span class="input-group-text">Description</span>
 			</div>
 			<textarea class="form-control" aria-label="With textarea"></textarea>
 		</div>
+		
+		<br>
+		<h5>Members</h5>
+		<div class="member-list">
+			
+		</div>
+		
+		
+		<br>
+		<h5>Statistics</h5>
+		
+		<div class="card" style="width: 18rem;">
+		  <ul class="list-group list-group-flush">
+			<li class="list-group-item">Money spent: <span style="color: green;">$1,000</span></li>
+			<li class="list-group-item">Budget: <span style="color: green;">$800</span></li>
+		  </ul>
+		</div>
 
 		
+		<input type="file" class="custom-file-input" id="imageUploadHidden" style="position: absolute;">
 
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		  <button type="button" class="btn btn-default text-center w-100" data-dismiss="modal">Save</button>
-		  <button type="button" class="btn btn-default" onclick="document.getElementById('groupNameEdit').setAttribute('contentEditable', 'true');">Edit</button>
-        </div>
+		  </div>
       </div>
     </div>
   </div>
