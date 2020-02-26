@@ -109,7 +109,7 @@ function Main(props): React.MixedElement {
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
                                 >
-                                    <User/>
+                                    <GroupHomePage />
                                 </ComponentContainer>
                             </>
                         );

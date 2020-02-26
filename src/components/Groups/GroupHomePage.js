@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from "@material-ui/core/Avatar";
 import { BrowserRouter as Router, useHistory, Link } from "react-router-dom";
+import Typography from '@material-ui/core/Typography';
 
 import ExpensesIcon from '@material-ui/icons/AttachMoney';
 import ChatIcon from '@material-ui/icons/Forum';
@@ -28,7 +29,11 @@ const useStyles = makeStyles(theme => ({
     buttonContainer: {
       margin: 40,
       flex:1,
-      backgroundColor: 'white',
+      background: 'linear-gradient(45deg, #c0d6b9 30%, #d6ebd7 90%)',
+      borderRadius: 5,
+      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+      height: 300,
+      width: 450,
       justifyContent: 'center',
       display: "flex",
       alignItems: "center"
@@ -60,7 +65,11 @@ function GroupHomePage(): React.MixedElement {
       <div className={classes.homePageContainer}>
         <div className={classes.buttonContainer} onClick={navigateToExpenses}>
           <ExpensesIcon fontSize="large" className={classes.largeIcons}/>
+          <div>
+      
         </div>
+        </div>
+        
         <div className={classes.buttonContainer}>
           <TasksIcon fontSize="large" className={classes.largeIcons}/>
         </div>

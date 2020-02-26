@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
 function HomePage(): React.MixedElement {
     const classes = useStyles();
     return <div className={classes.homePage}>
+        
         </div>;
 }
 
