@@ -19,7 +19,8 @@ import ErrorPage from "../pages/Error/ErrorPage";
 import LoadingPage from "../pages/Loading/LoadingPage";
 import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
 import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
-import ImageCards from "../components/ImageCard/ImageCard";
+import ImageCard from "../components/ImageCard/ImageCard";
+import User from "../components/User/User";
 
 
 import Authentication from "../authentication/Authentication";
@@ -108,7 +109,7 @@ function Main(props): React.MixedElement {
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
                                 >
-                                    <ImageCards />
+                                    <User/>
                                 </ComponentContainer>
                             </>
                         );
