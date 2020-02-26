@@ -1,7 +1,7 @@
 // @flow
 // @format
 
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { graphqlOperation } from "aws-amplify";
 
 import { Typography, Button } from "@material-ui/core";
@@ -15,6 +15,9 @@ import LoadingPage from "../Loading/LoadingPage";
 
 import Chip from "@material-ui/core/Chip";
 import PersonIcon from "@material-ui/icons/Person";
+import SettingsIcon from '@material-ui/icons/Settings';
+
+import ProfileSettingsPage from "./ProfileSettings";
 
 const useStyles = makeStyles(() => ({
     headContainer: {
@@ -73,6 +76,19 @@ const useStyles = makeStyles(() => ({
         padding: 20
     },
 
+    settingsButton: {
+        marginleft: 20,
+        backgroundColor: "#ecf0f1",
+        float: "right",
+        "&:hover": {
+          background: "#ecf0f1",
+          color: "black",
+          cursor: "pointer"
+        },
+        height: 40,
+        width: 40,
+    },
+
     budgetContainers: {
         float: "left",
         justifyContent: "space-between",
@@ -100,6 +116,12 @@ function ProfilePage({ userID }: Props): React.MixedElement {
         "302 NChauncey Av"
     ];
 
+    const navigateToSettings = useCallback(() => {
+      setDialogOpen(true)
+    });
+
+    const [isDialogOpen, setDialogOpen] = React.useState(false);
+
     return (
         <Connect query={graphqlOperation(getUserDetailsQuery, { id: userID })}>
             {({ data, loading, error }) => {
@@ -111,12 +133,12 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                 if (loading) {
                     return <LoadingPage />;
                 }
-
-                const userData = data.getUser ?? null;
+                const userData = data?.getUser ?? null;
                 const { username = "", email = "", name = "", phone = "" } =
                     userData ?? {};
 
                 return (
+                  <>
                     <div>
                         <div className={classes.headContainer}>
                             <div className={classes.mainInfoContainer}>
@@ -132,6 +154,7 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                                 <div className={classes.nameContainer}>
                                     <Typography variant="h1" gutterBottom>
                                         {name}
+                                        <SettingsIcon className={classes.settingsButton} onClick={navigateToSettings}/>
                                     </Typography>
                                     <Typography variant="h4" gutterBottom>
                                         {`@${username}`}
@@ -145,6 +168,7 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                                         {phone}
                                     </Typography>
                                 </div>
+
                             </div>
                             <div className={classes.secondaryInfoContainer}>
                                 <div className={classes.budgetContainers}>
@@ -186,6 +210,14 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                             </div>
                         </div>
                     </div>
+                    {isDialogOpen && (
+                        <ProfileSettingsPage
+                          isDialogOpen={isDialogOpen}
+                          setDialogOpen={setDialogOpen}
+                          userData={userData}
+                        />
+                        )}
+                  </>
                 );
             }}
         </Connect>

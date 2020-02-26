@@ -133,8 +133,9 @@ function CreateGroupSettings(): React.MixedElement {
           </FormControl>
           </div>
         </div>
+        <br/>
+        <Button variant="contained" id="createGroupButton" onClick="">Create Group</Button>
         </div>
-		<Button id="createGroupButton" onClick="">Create Group</Button>
       </div>
     );
 }
