@@ -237,6 +237,10 @@ function Login(props) {
                 <Typography className={classes.logotypeText}>
                     Coexist
                 </Typography>
+                <Typography className={classes.logotypeDescription} variant="h3">
+                    An all-in-one app to track expenses and coordinate tasks and events between you and your close ones.
+
+                </Typography>
             </div>
             <div className={classes.formContainer}>
                 <div className={classes.form}>
