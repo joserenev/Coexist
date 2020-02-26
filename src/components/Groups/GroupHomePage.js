@@ -11,6 +11,8 @@ import ChatIcon from '@material-ui/icons/Forum';
 import CalendarIcon from '@material-ui/icons/Event';
 import TasksIcon from '@material-ui/icons/Assignment';
 
+import EditGroupSettings from './EditGroupSettings'
+
 const useStyles = makeStyles(theme => ({
     homePageContainer: {
       margin: 20,
@@ -71,6 +73,7 @@ function GroupHomePage(): React.MixedElement {
           <CalendarIcon fontSize="large" className={classes.largeIcons}/>
         </div>
       </div>
+	  <EditGroupSettings/>
       </>
 
     );

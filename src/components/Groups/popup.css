@@ -1,0 +1,32 @@
+.modal-dialog {
+	width: 50vw;
+}
+
+.group-img {
+	display: block;
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 1vh;
+}
+
+.group-img:hover {
+	border-radius: 10px;
+}
+
+.money-text {
+	color: green;
+}
+
+.unanchored {
+	position: absolute;
+}
+
+.groupStats {
+	width: 18rem !important;
+	max-width: 25rem;
+}
+
+.imageUploadHidden {
+	display: none;
+}
