@@ -28,12 +28,11 @@ const useStyles = makeStyles(theme => ({
 
     buttonContainer: {
       margin: 40,
-      flex:1,
+      flex:.25,
       background: 'linear-gradient(45deg, #c0d6b9 30%, #d6ebd7 90%)',
       borderRadius: 5,
       boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-      height: 300,
-      width: 450,
+      
       justifyContent: 'center',
       display: "flex",
       alignItems: "center"

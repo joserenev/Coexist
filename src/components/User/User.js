@@ -9,6 +9,11 @@ import PersonIcon from "@material-ui/icons/Person";
 import { Link, useHistory } from "react-router-dom";
 
 const StyledBadge = withStyles(theme => ({
+	  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
     badge: {
       backgroundColor: '#44b700',
       color: '#44b700',

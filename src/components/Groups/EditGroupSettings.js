@@ -16,8 +16,9 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import './popup.css';
+import User from '../User/User';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({  
     groupStats: {
       width: 18,
     },
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
        height: 240,
        width: 240
      },
-
+	
 
 }));
 
@@ -59,9 +60,30 @@ export default function FormDialog() {
 	  document.getElementById("imageUploadHidden").click();
   };
   
+  const changeBudget = () => {
+	  document.getElementsByClassName("budgetInput")[0].style.visibility = "visible";
+  }
+  
+  const cancelBudget = () => {
+	  document.getElementsByClassName("budgetInput")[0].style.visibility = "hidden";
+  }
+  
+  const updateBudget = () => {
+	  document.getElementsByClassName("budgetInput")[0].style.visibility = "hidden";
+	  let budgetAmount = document.getElementsByClassName("budget-input")[0].value;
+	  if (parseFloat(budgetAmount) != undefined)
+	  {
+		  let budgetNum = parseFloat(budgetAmount);
+		  if (budgetNum >= 0 && budgetNum < 1000000)
+		  {
+			  document.getElementsByClassName("budget-text")[0].innerHTML = "$" + Math.floor(budgetNum).toLocaleString() + ".00";
+		  }
+	  }
+  }
+  
   return (
     <div>
-      <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Settings</button>
+      <button type="button" class="settings-button btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Settings</button>
 	  <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
@@ -75,13 +97,13 @@ export default function FormDialog() {
 				<img onClick={uploadPicture} src="https://www.sideshow.com/storage/product-images/903766/thanos_marvel_square.jpg" class="group-img img-center" id="imageUpload"></img>
 			
 			<br/>
-			<div class="input-group input-group-sm mb-3">
+			<div class="input-group mb-3">
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="inputGroup-sizing-sm">Group Name</span>
 				</div>
-				<input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Name your group" value="Current Group Name"/>
+				<input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Name your group" value="Group Name"/>
 			</div>
-			<div class="input-group">
+			<div class="input-group mb-3">
 				<div class="input-group-prepend">
 					<span class="input-group-text">Description</span>
 				</div>
@@ -91,7 +113,8 @@ export default function FormDialog() {
 			<br/>
 			<h5>Members</h5>
 			<div class="member-list">
-				
+				<User/>
+				<User/>
 			</div>
 			
 			
@@ -100,8 +123,22 @@ export default function FormDialog() {
 			
 			<div class="card groupStats">
 			  <ul class="list-group list-group-flush">
-				<li class="list-group-item">Money spent: <span class="money-text">$1,000</span></li>
-				<li class="list-group-item">Budget: <span class="money-text">$800</span></li>
+				<li class="list-group-item">Money spent: <span class="money-text">$1,000.00</span></li>
+				<li class="list-group-item">
+					Budget: <span class="money-text budget-text" onClick={changeBudget}>$800</span>
+					<div class="input-group mb-3 budgetInput">
+					  <div class="input-group-prepend">
+						<span class="input-group-text">$</span>
+					  </div>
+					  <input type="number" class="form-control budget-input" aria-label="Amount (to the nearest dollar)"/>
+					  <div class="input-group-append">
+						<span class="input-group-text accept-button" onClick={updateBudget}>✓</span>
+					  </div>
+					  <div class="input-group-append">
+						<span class="input-group-text close-button" onClick={cancelBudget}>X</span>
+					  </div>
+					</div>
+				</li>
 			  </ul>
 			</div>
 

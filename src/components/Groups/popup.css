@@ -2,6 +2,13 @@
 	width: 50vw;
 }
 
+.settings-button {
+	top: 5px;
+	left: 50%;
+	position: absolute;
+	z-index: 10;
+}
+
 .group-img {
 	display: block;
 	width: 25%;
@@ -29,4 +36,20 @@
 
 .imageUploadHidden {
 	display: none;
+}
+
+.close-button {
+	background-color: red;
+	color: white;
+	cursor: pointer;
+}
+
+.accept-button {
+	background-color: green;
+	color: white;
+	cursor: pointer;
+}
+
+.budgetInput {
+	visibility: hidden;
 }
