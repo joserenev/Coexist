@@ -81,6 +81,10 @@ export default function FormDialog() {
 	  }
   }
   
+  const addNewMember = () => {
+	  window.prompt("Type the username or email of the user you would like to add to the group");
+  }
+  
   return (
     <div>
       <button type="button" class="settings-button btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Settings</button>
@@ -116,6 +120,35 @@ export default function FormDialog() {
 				<User/>
 				<User/>
 			</div>
+			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+				Add new user
+			</Button>
+			
+			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+				<DialogTitle id="form-dialog-title">Add a User</DialogTitle>
+				<DialogContent>
+				  <DialogContentText>
+					To add a user to the group, please enter their email or username 
+					here.
+				  </DialogContentText>
+				  <TextField
+					autoFocus
+					margin="dense"
+					id="name"
+					label="Email or Username"
+					type="email"
+					fullWidth
+				  />
+				</DialogContent>
+				<DialogActions>
+				  <Button onClick={handleClose} color="primary">
+					Cancel
+				  </Button>
+				  <Button onClick={handleClose} color="primary">
+					Add
+				  </Button>
+				</DialogActions>
+			  </Dialog>
 			
 			
 			<br/>
