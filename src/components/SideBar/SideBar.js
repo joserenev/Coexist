@@ -399,21 +399,28 @@ function SideBar({
                                                     }
                                                 />
                                             )}
-                                            {groupItems.map(groupItem => {
-                                                return (
-                                                    <div key={groupItem.id}>
-                                                        <Group
-                                                            group={
-                                                                groupItem.group
-                                                            }
-                                                        />
-                                                        <Divider
-                                                            variant="inset"
-                                                            component="li"
-                                                        />
-                                                    </div>
-                                                );
-                                            })}
+                                            {groupItems
+                                                .filter(groupItem => {
+                                                    return (
+                                                        groupItem != null &&
+                                                        groupItem.group != null
+                                                    );
+                                                })
+                                                .map(groupItem => {
+                                                    return (
+                                                        <div key={groupItem.id}>
+                                                            <Group
+                                                                group={
+                                                                    groupItem.group
+                                                                }
+                                                            />
+                                                            <Divider
+                                                                variant="inset"
+                                                                component="li"
+                                                            />
+                                                        </div>
+                                                    );
+                                                })}
                                             <CreateGroupButton />
                                         </CardContent>
                                     </Card>

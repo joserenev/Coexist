@@ -150,7 +150,7 @@ function Main(props): React.MixedElement {
                                     setSideBarOpen={setSideBarOpen}
                                     userID={userID}
                                 >
-                                    <CreateGroupSettings />
+                                    <CreateGroupSettings userID={userID} />
                                 </ComponentContainer>
                             </>
                         );
