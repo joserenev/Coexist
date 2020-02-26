@@ -3,7 +3,6 @@
 
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import type QueryStatusType from "../components/util/QueryUtil";
 import type QueryStatusEnum from "../components/util/QueryUtil";
 
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
@@ -11,17 +10,12 @@ import { QueryStatus } from "../components/util/QueryUtil";
 
 //pages
 import Login from "../pages/login/Login";
-import HomePage from "../pages/homepage/HomePage";
-import SideBar from "../components/SideBar/SideBar.js";
 import ProfilePage from "../pages/Profile/ProfilePage.js";
 import GroupHomePage from "../components/Groups/GroupHomePage";
 import ErrorPage from "../pages/Error/ErrorPage";
 import LoadingPage from "../pages/Loading/LoadingPage";
 import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
 import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
-import ImageCard from "../components/ImageCard/ImageCard";
-import User from "../components/User/User";
-
 
 import Authentication from "../authentication/Authentication";
 
@@ -88,7 +82,7 @@ function Main(props): React.MixedElement {
         // The request still hasn't completed yet.
         return <LoadingPage />;
     }
-
+    const userID = currentUser.attributes.sub;
     return (
         <Router>
             <Switch>
@@ -100,16 +94,12 @@ function Main(props): React.MixedElement {
                     render={props => {
                         return (
                             <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
-                               
-                                
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                    userID={userID}
                                 >
-                                    <GroupHomePage />
+                                    <GroupHomePage {...props} />
                                 </ComponentContainer>
                             </>
                         );
@@ -121,16 +111,12 @@ function Main(props): React.MixedElement {
                     render={props => {
                         return (
                             <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                    userID={userID}
                                 >
-                                    <ProfilePage
-                                        userID={currentUser.attributes.sub}
-                                    />
+                                    <ProfilePage userID={userID} />
                                 </ComponentContainer>
                             </>
                         );
@@ -138,18 +124,16 @@ function Main(props): React.MixedElement {
                 />
                 <Route
                     exact
-                    path="/groupHomePage"
+                    path="/groupHomePage/:groupID"
                     render={props => {
                         return (
                             <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                    userID={userID}
                                 >
-                                    <GroupHomePage />
+                                    <GroupHomePage {...props} />
                                 </ComponentContainer>
                             </>
                         );
@@ -161,12 +145,10 @@ function Main(props): React.MixedElement {
                     render={props => {
                         return (
                             <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                    userID={userID}
                                 >
                                     <CreateGroupSettings />
                                 </ComponentContainer>
@@ -180,12 +162,10 @@ function Main(props): React.MixedElement {
                     render={props => {
                         return (
                             <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
                                 <ComponentContainer
                                     isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                    userID={userID}
                                 >
                                     <NoGroupFoundPage />
                                 </ComponentContainer>
