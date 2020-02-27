@@ -16,11 +16,21 @@ import EditGroupSettings from "./EditGroupSettings";
 
 const useStyles = makeStyles(theme => ({
     homePageContainer: {
-        margin: 20,
+        margin: "0px 50px",
         backgroundColor: "#ecf0f1",
         align: "center",
-        justifyContent: "space-between",
+        justifyContent: "center",
         padding: "20",
+        display: "flex",
+        flexDirection: "row",
+        minWidth: 540
+    },
+
+    groupInfoContainer: {
+        margin: "30px 50px",
+        justifyContent: "space-between",
+        backgroundColor: "#ecf0f1",
+        padding: "5px 20px",
         display: "flex",
         flexDirection: "row",
         minWidth: 540
@@ -28,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
     buttonContainer: {
         margin: 40,
-        flex: 0.25,
+        flex: 1,
         background: "linear-gradient(45deg, #c0d6b9 30%, #d6ebd7 90%)",
         borderRadius: 5,
         boxShadow: "0 3px 5px 2px rgba(55, 63, 82, .3)",
@@ -58,6 +68,10 @@ function GroupHomePage(props): React.MixedElement {
     // console.log(props.match?.params?.groupID ?? "");
     return (
         <>
+            <div className={classes.groupInfoContainer}>
+                <Typography variant="h1">GROUP NAME</Typography>
+                <EditGroupSettings />
+            </div>
             <div className={classes.homePageContainer}>
                 <div
                     className={classes.buttonContainer}
@@ -88,7 +102,6 @@ function GroupHomePage(props): React.MixedElement {
                     />
                 </div>
             </div>
-            <EditGroupSettings />
         </>
     );
 }

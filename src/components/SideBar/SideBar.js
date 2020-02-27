@@ -315,7 +315,6 @@ function SideBar({
                                     component="nav"
                                     aria-label="secondary mailbox folder"
                                 >
-                                    
                                     <ListItem
                                         button
                                         component={Link}
