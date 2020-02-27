@@ -315,19 +315,7 @@ function SideBar({
                                     component="nav"
                                     aria-label="secondary mailbox folder"
                                 >
-                                    <ListItem
-                                        button
-                                        component={Link}
-                                        to="/homepage"
-                                        //selected={selectedIndex === 2}
-                                        //onClick={event => handleListItemClick(event, 2)}
-                                        onClick={handleDrawerClose}
-                                    >
-                                        <ListItemIcon>
-                                            <HomeIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Homepage" />
-                                    </ListItem>
+                                    
                                     <ListItem
                                         button
                                         component={Link}

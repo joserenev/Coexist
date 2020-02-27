@@ -81,6 +81,7 @@ function NoGroupFoundPage(): React.MixedElement {
               color="default"
               className={classes.button}
               startIcon={<AddButton />}
+              href="/createGroup"
             >
             </Button>
           </div>
