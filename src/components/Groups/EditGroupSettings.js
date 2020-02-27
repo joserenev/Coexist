@@ -89,6 +89,14 @@ export default function FormDialog() {
 		alert("Group name: " + groupName + "\nDescription: " + groupDescription + "\nBudget: " + groupBudget + "\nImage Link: " + groupImage);
 		////Send to database
     };
+	
+	const leaveGroup = () => {
+        const isLeaving = window.confirm("Are you sure you want to leave this group?");
+		if (isLeaving == true)
+		{
+			//user leaves group, take them off page and remove from group in database
+		}
+    };
 
     return (
         <div>
@@ -166,10 +174,10 @@ export default function FormDialog() {
                                 <div class="p-2 bd-highlight">
                             <h5><b>Members</b></h5>
                             <div class="member-list">
-                                <User />
-                                <User />
-                                <User />
-                                <User />
+                                <User OnlineType="OfflineBadge" name="Person A"/>
+                                <User OnlineType="OnlineBadge" name="Person B"/>
+                                <User OnlineType="OnlineBadge" name="Person C"/>
+                                <User OnlineType="OnlineBadge" name="Person D"/>
                             </div>
                             <br/>
                             <Button
@@ -271,6 +279,14 @@ export default function FormDialog() {
                             </div>
                             </div>
 
+							
+							<br/>
+							<button
+								type="button"
+								class="btn btn-default"
+								onClick={leaveGroup}
+							>Leave Group</button>
+							
                             <input
                                 type="file"
                                 class="custom-file-input unanchored"
