@@ -18,10 +18,7 @@ import ErrorPage from "../pages/Error/ErrorPage";
 import LoadingPage from "../pages/Loading/LoadingPage";
 import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
 import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
-<<<<<<< HEAD
-import ReferralPage from "../pages/Referral/ReferralPage.js"
-=======
->>>>>>> 688caafae8304452e40397d21cd87c06f6ed3c41
+import ReferralPage from "../pages/Referral/ReferralPage.js";
 
 import Authentication from "../authentication/Authentication";
 
@@ -90,134 +87,6 @@ function Main(props): React.MixedElement {
     }
     const userID = currentUser.attributes.sub;
     return (
-        <Router>
-            <Switch>
-                <Redirect exact path="/" to="/homepage" />
-                <Redirect path="/login" to="/homepage" />
-                <Route
-                    exact
-                    path="/homepage"
-                    render={props => {
-                        return (
-                            <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
-                                <ComponentContainer
-                                    isSideBarOpen={isSideBarOpen}
-                                >
-                                    <HomePage />
-                                </ComponentContainer>
-                            </>
-                        );
-                    }}
-                />
-                <Route
-                    exact
-                    path="/profile"
-                    render={props => {
-                        return (
-                            <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
-                                <ComponentContainer
-                                    isSideBarOpen={isSideBarOpen}
-                                >
-                                    <ProfilePage
-                                        userID={currentUser.attributes.sub}
-                                    />
-                                </ComponentContainer>
-                            </>
-                        );
-                    }}
-                />
-                <Route
-                    exact
-                    path="/groupHomePage"
-                    render={props => {
-                        return (
-                            <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
-                                <ComponentContainer
-                                    isSideBarOpen={isSideBarOpen}
-                                >
-                                    <GroupHomePage />
-                                </ComponentContainer>
-                            </>
-                        );
-                    }}
-                />
-                <Route
-                    exact
-                    path="/createGroup"
-                    render={props => {
-                        return (
-                            <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
-                                <ComponentContainer
-                                    isSideBarOpen={isSideBarOpen}
-                                >
-                                    <CreateGroupSettings />
-                                </ComponentContainer>
-                            </>
-                        );
-                    }}
-                />
-                <Route
-                    exact
-                    path="/noGroupFound"
-                    render={props => {
-                        return (
-                            <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
-                                <ComponentContainer
-                                    isSideBarOpen={isSideBarOpen}
-                                >
-                                    <NoGroupFoundPage />
-                                </ComponentContainer>
-                            </>
-                        );
-                    }}
-                />
-                <Route
-                    exact
-                    path="/referralPage"
-                    render={props => {
-                        return (
-                            <>
-                                <SideBar
-                                    isSideBarOpen={isSideBarOpen}
-                                    setSideBarOpen={setSideBarOpen}
-                                />
-                                <ComponentContainer
-                                    isSideBarOpen={isSideBarOpen}
-                                >
-                                    <ReferralPage />
-                                </ComponentContainer>
-                            </>
-                        );
-                    }}
-                />
-                <Route
-                    path="*"
-                    render={props => {
-                        return <ErrorPage />;
-                    }}
-                />
-            </Switch>
-        </Router>
         <Connect query={graphqlOperation(getUserDetailsQuery, { id: userID })}>
             {({ data, loading, error }) => {
                 if (error) {
@@ -311,6 +180,23 @@ function Main(props): React.MixedElement {
                                                 <CreateGroupSettings
                                                     userID={userID}
                                                 />
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+                            <Route
+                                exact
+                                path="/referralPage"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                <ReferralPage />
                                             </ComponentContainer>
                                         </>
                                     );
