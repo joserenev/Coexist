@@ -23,7 +23,6 @@ import Authentication from "../../authentication/Authentication";
 
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
-import HomeIcon from "@material-ui/icons/Home";
 import ProfileIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import EditAttributes from "@material-ui/icons/EditAttributes"
@@ -40,7 +39,12 @@ import "../../containers/Main.css";
 import Group from "../Groups/Group";
 import CreateGroupButton from "../Groups/CreateGroupButton.react";
 
-const drawerWidth = 240;
+import { Connect } from "aws-amplify-react";
+import { graphqlOperation } from "aws-amplify";
+import { getUser as getUserDetailsQuery } from "../../customGraphql/queries";
+import SideBarLoading from "../../pages/Loading/SideBarLoading";
+
+const drawerWidth = 280;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -68,6 +72,7 @@ const useStyles = makeStyles(theme => ({
     },
     drawer: {
         width: drawerWidth,
+        maxWidth: drawerWidth,
         flexShrink: 0
     },
     drawerPaper: {
@@ -126,10 +131,15 @@ const useStyles = makeStyles(theme => ({
 
 type Props = {|
     isSideBarOpen: boolean,
-    setSideBarOpen: boolean => void
+    setSideBarOpen: boolean => void,
+    userID: string
 |};
 
-function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
+function SideBar({
+    isSideBarOpen,
+    setSideBarOpen,
+    userID
+}: Props): React.MixedElement {
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -168,10 +178,8 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
 
     const [selectedIndex, setSelectedIndex] = React.useState(1);
 
-    let imageUrl = null;
-
     return (
-        <div className={classes.root} className="drawer-nav">
+        <div className={classes.root}>
             <CssBaseline />
             <ClickAwayListener onClickAway={handleDrawerClose}>
                 <AppBar
@@ -201,7 +209,6 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
                     </Toolbar>
                 </AppBar>
             </ClickAwayListener>
-
             <Drawer
                 className={classes.drawer}
                 variant="persistent"
@@ -220,119 +227,209 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
                         )}
                     </IconButton>
                 </div>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <Card className={classes.card}>
-                            <CardMedia
-                                className={classes.media}
-                                image={imageUrl}
-                                title="profle Pic"
-                            />
-                            <CardHeader
-                                disableTypography
-                                avatar={
-                                    <Avatar
-                                        alt="Profile Pic"
-                                        src={undefined}
-                                        className={classes.avatar}
-                                    />
-                                }
-                                title={
-                                    <Typography
-                                        type="title"
-                                        className={classes.title}
+                <Connect
+                    query={graphqlOperation(getUserDetailsQuery, {
+                        id: userID
+                    })}
+                >
+                    {({ data, loading, error }) => {
+                        if (error) {
+                            //TODO: Add a dedicated ERROR Component with a message to show.
+                            return <h3>Error...</h3>;
+                        }
+                        if (loading) {
+                            return <SideBarLoading />;
+                        }
+
+                        const userData = data.getUser ?? null;
+                        const {
+                            username = "",
+                            email = "",
+                            name = "",
+                            phone = "",
+                            groups = {}
+                        } = userData ?? {};
+                        const imageUrl = null;
+                        const { items: groupItems = [] } = groups ?? [];
+                        // TODO: Sort Group Items by Created Date
+                        return (
+                            <>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Card className={classes.card}>
+                                            <CardMedia
+                                                className={classes.media}
+                                                image={imageUrl}
+                                                title="profle Pic"
+                                            />
+                                            <CardHeader
+                                                disableTypography
+                                                avatar={
+                                                    <Avatar
+                                                        alt="Profile Pic"
+                                                        src={undefined}
+                                                        className={
+                                                            classes.avatar
+                                                        }
+                                                    />
+                                                }
+                                                title={
+                                                    <Typography
+                                                        variant="body1"
+                                                        className={
+                                                            classes.title
+                                                        }
+                                                    >
+                                                        {name}
+                                                    </Typography>
+                                                }
+                                                subheader={
+                                                    <Typography
+                                                        variant="body1"
+                                                        color="textSecondary"
+                                                    >
+                                                        @{username}
+                                                    </Typography>
+                                                }
+                                            />
+
+                                            <CardContent
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "column"
+                                                }}
+                                            >
+                                                <Typography variant="body2">
+                                                    Email: {email}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    Phone: {phone}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs={12}></Grid>
+                                </Grid>
+                                <Divider />
+                                <List
+                                    component="nav"
+                                    aria-label="secondary mailbox folder"
+                                >
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="/profile"
+                                        //selected={selectedIndex === 2}
+                                        //onClick={event => handleListItemClick(event, 2)}
+                                        onClick={handleDrawerClose}
                                     >
-                                        {undefined} {undefined}
-                                    </Typography>
-                                }
-                                subheader={
-                                    <Typography type="caption">
-                                        @UserTag{undefined}
-                                    </Typography>
-                                }
-                            />
+                                        <ListItemIcon>
+                                            <ProfileIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Profile" />
+                                    </ListItem>
+                                    <ListItem
+                                        button
+                                        selected={selectedIndex === 3}
+                                        onClick={logout}
+                                    >
+                                        <ListItemIcon>
+                                            <ExitToAppIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Sign Out" />
+                                    </ListItem>
 
-                            <CardContent
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-around"
-                                }}
-                            >
-                                Content of the User
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12}></Grid>
-                </Grid>
-                <Divider />
-                <List component="nav" aria-label="secondary mailbox folder">
-                    <ListItem
-                        button
-                        component={Link}
-                        to="/homepage"
-                        //selected={selectedIndex === 2}
-                        //onClick={event => handleListItemClick(event, 2)}
-                        onClick={handleDrawerClose}
-                    >
-                        <ListItemIcon>
-                            <HomeIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Homepage" />
-                    </ListItem>
-                    <ListItem
-                        button
-                        component={Link}
-                        to="/profile"
-                        //selected={selectedIndex === 2}
-                        //onClick={event => handleListItemClick(event, 2)}
-                        onClick={handleDrawerClose}
-                    >
-                        <ListItemIcon>
-                            <ProfileIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Profile" />
-                    </ListItem>
-                    <ListItem
-                        button
-                        selected={selectedIndex === 3}
-                        onClick={logout}
-                    >
-                        <ListItemIcon>
-                            <ExitToAppIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Sign Out" />
-                    </ListItem>
+                                    <Card className={classes.card}>
+                                        <CardContent>
+                                            <Typography
+                                                className={classes.title}
+                                                color="textSecondary"
+                                                gutterBottom
+                                            >
+                                                Groups
+                                            </Typography>
+                                            {groupItems.length === 0 && (
+                                                <ListItemText
+                                                    className={
+                                                        classes.groupText
+                                                    }
+                                                    primary={
+                                                        <React.Fragment>
+                                                            <Typography
+                                                                component="span"
+                                                                className={
+                                                                    classes.groupName
+                                                                }
+                                                                color="textPrimary"
+                                                            >
+                                                                {
+                                                                    "No Groups found"
+                                                                }
+                                                            </Typography>
+                                                        </React.Fragment>
+                                                    }
+                                                    secondary={
+                                                        <React.Fragment>
+                                                            <Typography
+                                                                component="span"
+                                                                variant="body2"
+                                                                className={
+                                                                    classes.inline
+                                                                }
+                                                                color="textPrimary"
+                                                            >
+                                                                {
+                                                                    "Create or get added to a group to continue"
+                                                                }
+                                                            </Typography>
+                                                        </React.Fragment>
+                                                    }
+                                                />
+                                            )}
+                                            {groupItems
+                                                .filter(groupItem => {
+                                                    return (
+                                                        groupItem != null &&
+                                                        groupItem.group != null
+                                                    );
+                                                })
+                                                .map(groupItem => {
+                                                    return (
+                                                        <div key={groupItem.id}>
+                                                            <Group
+                                                                group={
+                                                                    groupItem.group
+                                                                }
+                                                            />
+                                                            <Divider
+                                                                variant="inset"
+                                                                component="li"
+                                                            />
+                                                        </div>
+                                                    );
+                                                })}
+                                            <CreateGroupButton />
+                                        </CardContent>
+                                    </Card>
 
-                    <Card className={classes.card}>
-                        <CardContent>
-                            <Typography
-                                className={classes.title}
-                                color="textSecondary"
-                                gutterBottom
-                            >
-                                Groups
-                            </Typography>
-                            <Group>What goes here</Group>
-                            <Divider variant="inset" component="li" />
-                            <Group>What goes here</Group>
-                            <CreateGroupButton />
-                        </CardContent>
-                    </Card>
-
-                    <ListItem
-                        button
-                        component={Link}
-                        to="/referralPage"
-                        //selected={selectedIndex === 2}
-                        //onClick={event => handleListItemClick(event, 2)}
-                        onClick={handleDrawerClose}
-                    >
-                        <ListItemIcon>
-                            <EditAttributes />
-                        </ListItemIcon>
-                        <ListItemText primary="Options" />
-                    </ListItem>
-                </List>
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="/referralPage"
+                                        //selected={selectedIndex === 2}
+                                        //onClick={event => handleListItemClick(event, 2)}
+                                        onClick={handleDrawerClose}
+                                        >
+                                        <ListItemIcon>
+                                            <EditAttributes />
+                                    </ListItemIcon>
+                                        <ListItemText primary="Options" />
+                                </ListItem>
+                            </List>
+                            </>
+                        );
+                    }}
+                </Connect>
             </Drawer>
         </div>
     );

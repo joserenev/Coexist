@@ -1,0 +1,55 @@
+.modal-dialog {
+	width: 50vw;
+}
+
+.settings-button {
+	top: 5px;
+	left: 50%;
+	position: absolute;
+	z-index: 10;
+}
+
+.group-img {
+	display: block;
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 1vh;
+}
+
+.group-img:hover {
+	border-radius: 10px;
+}
+
+.money-text {
+	color: green;
+}
+
+.unanchored {
+	position: absolute;
+}
+
+.groupStats {
+	width: 30rem !important;
+	height: auto;
+}
+
+.imageUploadHidden {
+	display: none;
+}
+
+.close-button {
+	background-color: red;
+	color: white;
+	cursor: pointer;
+}
+
+.accept-button {
+	background-color: green;
+	color: white;
+	cursor: pointer;
+}
+
+.budgetInput {
+	display: none;
+}

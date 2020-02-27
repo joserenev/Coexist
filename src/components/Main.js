@@ -3,23 +3,25 @@
 
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import type QueryStatusType from "../components/util/QueryUtil";
 import type QueryStatusEnum from "../components/util/QueryUtil";
 
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
 import { QueryStatus } from "../components/util/QueryUtil";
-
+import { graphqlOperation } from "aws-amplify";
+import { getUser as getUserDetailsQuery } from "../customGraphql/queries";
+import { Connect } from "aws-amplify-react";
 //pages
 import Login from "../pages/login/Login";
-import HomePage from "../pages/homepage/HomePage";
-import SideBar from "../components/SideBar/SideBar.js";
 import ProfilePage from "../pages/Profile/ProfilePage.js";
 import GroupHomePage from "../components/Groups/GroupHomePage";
 import ErrorPage from "../pages/Error/ErrorPage";
 import LoadingPage from "../pages/Loading/LoadingPage";
 import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
 import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
+<<<<<<< HEAD
 import ReferralPage from "../pages/Referral/ReferralPage.js"
+=======
+>>>>>>> 688caafae8304452e40397d21cd87c06f6ed3c41
 
 import Authentication from "../authentication/Authentication";
 
@@ -86,7 +88,7 @@ function Main(props): React.MixedElement {
         // The request still hasn't completed yet.
         return <LoadingPage />;
     }
-
+    const userID = currentUser.attributes.sub;
     return (
         <Router>
             <Switch>
@@ -216,6 +218,115 @@ function Main(props): React.MixedElement {
                 />
             </Switch>
         </Router>
+        <Connect query={graphqlOperation(getUserDetailsQuery, { id: userID })}>
+            {({ data, loading, error }) => {
+                if (error) {
+                    //TODO: Add a dedicated ERROR Component with a message to show.
+                    return <h3>Error</h3>;
+                }
+
+                if (loading) {
+                    return <LoadingPage />;
+                }
+                const userData = data?.getUser ?? null;
+                const { groups = {} } = userData ?? {};
+                const { items = [] } = groups ?? [];
+                const groupItems = items.filter(groupItem => {
+                    return groupItem != null && groupItem.group != null;
+                });
+                return (
+                    <Router>
+                        <Switch>
+                            <Redirect exact path="/" to="/homepage" />
+                            <Redirect path="/login" to="/homepage" />
+                            <Route
+                                exact
+                                path="/homepage"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                {groupItems == null ||
+                                                groupItems.length === 0 ? (
+                                                    <NoGroupFoundPage />
+                                                ) : (
+                                                    <Redirect
+                                                        to={`/groupHomePage/${groupItems[0].group.id}`}
+                                                    />
+                                                )}
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+                            <Route
+                                exact
+                                path="/profile"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                <ProfilePage userID={userID} />
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+                            <Route
+                                exact
+                                path="/groupHomePage/:groupID"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                <GroupHomePage {...props} />
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+                            <Route
+                                exact
+                                path="/createGroup"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                <CreateGroupSettings
+                                                    userID={userID}
+                                                />
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+                            <Route
+                                path="*"
+                                render={props => {
+                                    return <ErrorPage />;
+                                }}
+                            />
+                        </Switch>
+                    </Router>
+                );
+            }}
+        </Connect>
     );
 }
 

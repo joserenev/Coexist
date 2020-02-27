@@ -1,22 +1,28 @@
 // @flow
 // @format
 
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { graphqlOperation } from "aws-amplify";
 
 import { Typography, Button } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { getUser as getUserDetailsQuery } from "../../graphql/queries";
+import { getUser as getUserDetailsQuery } from "../../customGraphql/queries";
 
 import { Connect } from "aws-amplify-react";
 import LoadingPage from "../Loading/LoadingPage";
 
 import Chip from "@material-ui/core/Chip";
 import PersonIcon from "@material-ui/icons/Person";
+import SettingsIcon from "@material-ui/icons/Settings";
+
+import ProfileSettingsPage from "./ProfileSettings";
 
 const useStyles = makeStyles(() => ({
+    groupChip: {
+        marginBottom: 8
+    },
     headContainer: {
         margin: 20,
         backgroundColor: "#ecf0f1",
@@ -73,6 +79,19 @@ const useStyles = makeStyles(() => ({
         padding: 20
     },
 
+    settingsButton: {
+        marginleft: 20,
+        backgroundColor: "#ecf0f1",
+        float: "right",
+        "&:hover": {
+            background: "#ecf0f1",
+            color: "black",
+            cursor: "pointer"
+        },
+        height: 40,
+        width: 40
+    },
+
     budgetContainers: {
         float: "left",
         justifyContent: "space-between",
@@ -100,6 +119,12 @@ function ProfilePage({ userID }: Props): React.MixedElement {
         "302 NChauncey Av"
     ];
 
+    const navigateToSettings = useCallback(() => {
+        setDialogOpen(true);
+    });
+
+    const [isDialogOpen, setDialogOpen] = React.useState(false);
+
     return (
         <Connect query={graphqlOperation(getUserDetailsQuery, { id: userID })}>
             {({ data, loading, error }) => {
@@ -111,81 +136,147 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                 if (loading) {
                     return <LoadingPage />;
                 }
+                const userData = data?.getUser ?? null;
+                const {
+                    username = "",
+                    email = "",
+                    name = "",
+                    phone = "",
+                    groups = {}
+                } = userData ?? {};
 
-                const userData = data.getUser ?? null;
-                const { username = "", email = "", name = "", phone = "" } =
-                    userData ?? {};
+                const { items = [] } = groups;
+                const groupItems = items.filter(groupItem => {
+                    return groupItem != null && groupItem.group != null;
+                });
+                console.log({ userData });
+                console.log({ groupItems });
 
                 return (
-                    <div>
-                        <div className={classes.headContainer}>
-                            <div className={classes.mainInfoContainer}>
-                                <div className={classes.pictureContainer}>
-                                    <PersonIcon
-                                        fontSize="large"
-                                        className={classes.avatar}
-                                    />
-                                    <Button variant="contained" align="center">
-                                        EDIT
-                                    </Button>
+                    <>
+                        <div>
+                            <div className={classes.headContainer}>
+                                <div className={classes.mainInfoContainer}>
+                                    <div className={classes.pictureContainer}>
+                                        <PersonIcon
+                                            fontSize="large"
+                                            className={classes.avatar}
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            align="center"
+                                        >
+                                            EDIT
+                                        </Button>
+                                    </div>
+                                    <div className={classes.nameContainer}>
+                                        <Typography variant="h1" gutterBottom>
+                                            {name}
+                                            <SettingsIcon
+                                                className={
+                                                    classes.settingsButton
+                                                }
+                                                onClick={navigateToSettings}
+                                            />
+                                        </Typography>
+                                        <Typography variant="h4" gutterBottom>
+                                            {`@${username}`}
+                                        </Typography>
+                                        <br />
+                                        <br />
+                                        <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                        >
+                                            {email}
+                                        </Typography>
+                                        <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                        >
+                                            {phone}
+                                        </Typography>
+                                    </div>
                                 </div>
-                                <div className={classes.nameContainer}>
-                                    <Typography variant="h1" gutterBottom>
-                                        {name}
-                                    </Typography>
-                                    <Typography variant="h4" gutterBottom>
-                                        {`@${username}`}
-                                    </Typography>
-                                    <br />
-                                    <br />
-                                    <Typography variant="body1" gutterBottom>
-                                        {email}
-                                    </Typography>
-                                    <Typography variant="body1" gutterBottom>
-                                        {phone}
-                                    </Typography>
-                                </div>
-                            </div>
-                            <div className={classes.secondaryInfoContainer}>
-                                <div className={classes.budgetContainers}>
-                                    <Typography variant="body1" gutterBottom>
-                                        Personal Budget
-                                    </Typography>
-                                    <Chip label="$1,000.00" align="right" />
-                                </div>
-                                <div className={classes.budgetContainers}>
-                                    <Typography variant="body1" gutterBottom>
-                                        Total Spent
-                                    </Typography>
-                                    <Chip label="$430.30" align="right" />
-                                </div>
-                                <div className={classes.budgetContainers}>
-                                    <Typography variant="body1" gutterBottom>
-                                        Remaining Balance
-                                    </Typography>
-                                    <Chip label="$569.70" align="right" />
-                                </div>
+                                <div className={classes.secondaryInfoContainer}>
+                                    <div className={classes.budgetContainers}>
+                                        <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                        >
+                                            Personal Budget
+                                        </Typography>
+                                        <Chip label="$1,000.00" align="right" />
+                                    </div>
+                                    <div className={classes.budgetContainers}>
+                                        <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                        >
+                                            Total Spent
+                                        </Typography>
+                                        <Chip label="$430.30" align="right" />
+                                    </div>
+                                    <div className={classes.budgetContainers}>
+                                        <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                        >
+                                            Remaining Balance
+                                        </Typography>
+                                        <Chip label="$569.70" align="right" />
+                                    </div>
 
-                                <br />
-                                <div className={classes.budgetContainers}>
-                                    <Typography variant="body1" gutterBottom>
-                                        Groups I'm a part of
-                                    </Typography>
-                                    <div
-                                        className={classes.groupNamesContainer}
-                                    >
-                                        {groups.map((group, index) => {
-                                            return (
-                                                <div key={index}>
-                                                    <Chip label={group} />
-                                                </div>
-                                            );
-                                        })}
+                                    <br />
+                                    <div className={classes.budgetContainers}>
+                                        <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                        >
+                                            Groups I'm a part of
+                                        </Typography>
+                                        <div
+                                            className={
+                                                classes.groupNamesContainer
+                                            }
+                                        >
+                                            {groupItems.map(
+                                                (groupItem, index) => {
+                                                    const { group } = groupItem;
+                                                    return (
+                                                        <div key={index}>
+                                                            <Chip
+                                                                className={
+                                                                    classes.groupChip
+                                                                }
+                                                                label={
+                                                                    group.name
+                                                                }
+                                                                variant="outlined"
+                                                                clickable
+                                                                onClick={() => {
+                                                                    window.location.replace(
+                                                                        `/groupHomePage/${group.id}`
+                                                                    );
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        {isDialogOpen && (
+                            <ProfileSettingsPage
+                                isDialogOpen={isDialogOpen}
+                                setDialogOpen={setDialogOpen}
+                                userData={userData}
+                            />
+                        )}
+                    </>
                 );
             }}
         </Connect>

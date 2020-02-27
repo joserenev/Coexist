@@ -1,4 +1,5 @@
 import React from "react";
+import ImageCards from '../../components/ImageCard/ImageCard';
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,7 +15,9 @@ const useStyles = makeStyles(theme => ({
 
 function HomePage(): React.MixedElement {
     const classes = useStyles();
-    return <div className={classes.homePage}>Hello World!</div>;
+    return <div className={classes.homePage}>
+        
+        </div>;
 }
 
 export default HomePage;
