@@ -91,10 +91,12 @@ export default function FormDialog() {
     };
 	
 	const saveGroupSettings = () => {
-        let groupName = document.getElementById("group-name-input");
-		let groupDescription = document.getElementById("group-description-input");
-		let groupBudget = document.getElementById("group-budget");
-		let groupImage = document.getElementById("imageUpload").getAttribute("src");
+        let groupName = document.getElementById("group-name-input").value;
+		let groupDescription = document.getElementById("group-description-input").value;
+		let groupBudget = document.getElementById("group-budget").innerHTML;
+		let groupImage = document.getElementById("imageUpload").src;
+		
+		alert("Group name: " + groupName + "\nDescription: " + groupDescription + "\nBudget: " + groupBudget + "\nImage Link: " + groupImage);
 		////Send to database
     };
 
@@ -150,8 +152,7 @@ export default function FormDialog() {
                                     class="form-control"
                                     aria-label="Small"
                                     aria-describedby="inputGroup-sizing-sm"
-                                    placeholder="Name your group"
-                                    value="Group Name"
+                                    placeholder="Group Name"
                                 />
                             </div>
                             <div class="input-group mb-3">
