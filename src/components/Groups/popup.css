@@ -30,8 +30,8 @@
 }
 
 .groupStats {
-	width: 18rem !important;
-	max-width: 25rem;
+	width: 30rem !important;
+	height: auto;
 }
 
 .imageUploadHidden {
@@ -51,5 +51,5 @@
 }
 
 .budgetInput {
-	visibility: hidden;
+	display: none;
 }

@@ -57,16 +57,15 @@ export default function FormDialog() {
     const uploadPicture = () => {
         //document.getElementById("imageUploadHidden").click();
 		const imageLink = prompt("Enter the link of the image you want to use.");
+		document.getElementById("imageUpload").setAttribute("src", imageLink);
     };
 
     const changeBudget = () => {
-        document.getElementsByClassName("budgetInput")[0].style.visibility =
-            "visible";
+        document.getElementsByClassName("budgetInput")[0].style.display = 'flex';
     };
 
     const cancelBudget = () => {
-        document.getElementsByClassName("budgetInput")[0].style.visibility =
-            "hidden";
+        document.getElementsByClassName("budgetInput")[0].style.display = "none";
     };
 
     const updateBudget = () => {
@@ -95,7 +94,7 @@ export default function FormDialog() {
         let groupName = document.getElementById("group-name-input");
 		let groupDescription = document.getElementById("group-description-input");
 		let groupBudget = document.getElementById("group-budget");
-		
+		let groupImage = document.getElementById("imageUpload").getAttribute("src");
 		////Send to database
     };
 
@@ -224,7 +223,6 @@ export default function FormDialog() {
                             <h5>Statistics</h5>
 
                             <div class="card groupStats">
-                                <ul class="list-group list-group-flush">
                                     <li class="list-group-item">
                                         Money spent:{" "}
                                         <span class="money-text">
@@ -269,7 +267,6 @@ export default function FormDialog() {
                                             </div>
                                         </div>
                                     </li>
-                                </ul>
                             </div>
 
                             <input
