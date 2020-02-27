@@ -20,7 +20,7 @@ import User from "../User/User";
 
 const useStyles = makeStyles(theme => ({
     groupStats: {
-        width: 18
+		flex: .25
     },
 
     buttonContainer: {
@@ -55,7 +55,8 @@ export default function FormDialog() {
     };
 
     const uploadPicture = () => {
-        document.getElementById("imageUploadHidden").click();
+        //document.getElementById("imageUploadHidden").click();
+		const imageLink = prompt("Enter the link of the image you want to use.");
     };
 
     const changeBudget = () => {
@@ -83,9 +84,19 @@ export default function FormDialog() {
     };
 
     const addNewMember = () => {
-        window.prompt(
+        const enteredName = window.prompt(
             "Type the username or email of the user you would like to add to the group"
         );
+		////Code to add them to the group
+		////Display addition
+    };
+	
+	const saveGroupSettings = () => {
+        let groupName = document.getElementById("group-name-input");
+		let groupDescription = document.getElementById("group-description-input");
+		let groupBudget = document.getElementById("group-budget");
+		
+		////Send to database
     };
 
     return (
@@ -135,6 +146,7 @@ export default function FormDialog() {
                                     </span>
                                 </div>
                                 <input
+									id="group-name-input"
                                     type="text"
                                     class="form-control"
                                     aria-label="Small"
@@ -150,6 +162,7 @@ export default function FormDialog() {
                                     </span>
                                 </div>
                                 <textarea
+									id="group-description-input"
                                     class="form-control"
                                     aria-label="With textarea"
                                 ></textarea>
@@ -164,7 +177,7 @@ export default function FormDialog() {
                             <Button
                                 variant="outlined"
                                 color="primary"
-                                onClick={handleClickOpen}
+                                onClick={addNewMember}
                             >
                                 Add new user
                             </Button>
@@ -223,6 +236,7 @@ export default function FormDialog() {
                                         <span
                                             class="money-text budget-text"
                                             onClick={changeBudget}
+											id="group-budget"
                                         >
                                             $800
                                         </span>
@@ -268,7 +282,7 @@ export default function FormDialog() {
                         <div class="modal-footer">
                             <button
                                 type="button"
-                                class="btn btn-default"
+                                class="btn btn-default text-center w-100"
                                 data-dismiss="modal"
                             >
                                 Close
@@ -277,6 +291,7 @@ export default function FormDialog() {
                                 type="button"
                                 class="btn btn-default text-center w-100"
                                 data-dismiss="modal"
+								onClick={saveGroupSettings}
                             >
                                 Save
                             </button>
