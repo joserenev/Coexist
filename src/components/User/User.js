@@ -25,14 +25,14 @@ const OnlineBadge = withStyles(theme => ({
         width: '100%',
         height: '100%',
         borderRadius: '50%',
-        animation: '$ripple 1.2s infinite ease-in-out',
+        animation: '$ripple 1.8s infinite ease-in-out',
         border: '1px solid currentColor',
         content: '""',
       },
     },
     '@keyframes ripple': {
       '0%': {
-        transform: 'scale(1.6)',
+        transform: 'scale(1)',
         opacity: 1,
       },
       '100%': {
@@ -69,7 +69,7 @@ const OnlineBadge = withStyles(theme => ({
         width: '100%',
         height: '100%',
         borderRadius: '50%',
-        animation: '$ripple 2.4s infinite ease-in-out',
+        animation: '$ripple 2.8s infinite ease-in-out',
         border: '1px solid currentColor',
         content: '""',
       },
@@ -80,7 +80,7 @@ const OnlineBadge = withStyles(theme => ({
         opacity: 1,
       },
       '100%': {
-        transform: 'scale(2)',
+        transform: 'scale(2.4)',
         opacity: 0,
       },
     },

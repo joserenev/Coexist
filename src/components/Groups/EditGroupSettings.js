@@ -47,6 +47,7 @@ export default function FormDialog() {
     const uploadPicture = () => {
         //document.getElementById("imageUploadHidden").click();
 		const imageLink = prompt("Enter the link of the image you want to use.");
+		if (imageLink == undefined || imageLink.length < 1) { return; }
 		document.getElementById("imageUpload").setAttribute("src", imageLink);
     };
 
