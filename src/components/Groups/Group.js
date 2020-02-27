@@ -7,6 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import Badge from '@material-ui/core/Badge';
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -48,13 +49,15 @@ function GroupListItem({ group }: Props) {
             component={Link}
             to={`/groupHomePage/${id}`}
         >
-            <ListItemAvatar>
-                <Avatar
-                    variant="rounded"
-                    alt="Group Avatar"
-                    src="/static/images/avatar/1.jpg"
-                />
-            </ListItemAvatar>
+			<Badge badgeContent={1} color="primary" overlap="circle">
+				<ListItemAvatar>
+					<Avatar
+						variant="rounded"
+						alt="Group Avatar"
+						src="/static/images/avatar/1.jpg"
+					/>
+				</ListItemAvatar>
+			</Badge>
             <ListItemText
                 className={classes.groupText}
                 primary={
