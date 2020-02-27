@@ -20,26 +20,16 @@ import User from "../User/User";
 
 const useStyles = makeStyles(theme => ({
     groupStats: {
-		flex: .25
+  		flex: .25
     },
 
-    buttonContainer: {
+    infoContainers: {
         margin: 40,
-        flex: 1,
         backgroundColor: "white",
-        justifyContent: "center",
+        justifyContent: "space-between",
         display: "flex",
-        alignItems: "center"
-    },
-
-    buttonImage: {
-        align: "center",
-        justifyContent: "center"
-    },
-
-    largeIcons: {
-        height: 240,
-        width: 240
+        flexDirection: "row",
+        width: "100%"
     }
 }));
 
@@ -89,13 +79,13 @@ export default function FormDialog() {
 		////Code to add them to the group
 		////Display addition
     };
-	
+
 	const saveGroupSettings = () => {
         let groupName = document.getElementById("group-name-input").value;
 		let groupDescription = document.getElementById("group-description-input").value;
 		let groupBudget = document.getElementById("group-budget").innerHTML;
 		let groupImage = document.getElementById("imageUpload").src;
-		
+
 		alert("Group name: " + groupName + "\nDescription: " + groupDescription + "\nBudget: " + groupBudget + "\nImage Link: " + groupImage);
 		////Send to database
     };
@@ -108,8 +98,8 @@ export default function FormDialog() {
                 height="30px"
                 class="btn float-right shadow-none"
             />
-            <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-lg">
+            <div class="modal fade" id="myModal" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5
@@ -129,14 +119,17 @@ export default function FormDialog() {
                             </button>
                         </div>
                         <div class="modal-body">
+                        <div class="d-flex bd-highlight">
+                          <div class="p-2 bd-highlight">
                             <img
                                 onClick={uploadPicture}
                                 src="https://www.sideshow.com/storage/product-images/903766/thanos_marvel_square.jpg"
-                                class="group-img img-center"
+                                class="img-center"
+                                height="160px"
                                 id="imageUpload"
                             ></img>
-
-                            <br />
+                            </div>
+                            <div class="p-2 bd-highlight flex-grow-1">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span
@@ -167,13 +160,18 @@ export default function FormDialog() {
                                     aria-label="With textarea"
                                 ></textarea>
                             </div>
-
-                            <br />
-                            <h5>Members</h5>
+                            </div>
+                            </div>
+                            <div class="d-flex flex-row bd-highlight justify-content-around">
+                                <div class="p-2 bd-highlight">
+                            <h5><b>Members</b></h5>
                             <div class="member-list">
                                 <User />
                                 <User />
+                                <User />
+                                <User />
                             </div>
+                            <br/>
                             <Button
                                 variant="outlined"
                                 color="primary"
@@ -220,8 +218,9 @@ export default function FormDialog() {
                                 </DialogActions>
                             </Dialog>
 
-                            <br />
-                            <h5>Statistics</h5>
+                            </div>
+                            <div class="p-2 bd-highlight">
+                            <h5><b>Statistics</b></h5>
 
                             <div class="card groupStats">
                                     <li class="list-group-item">
@@ -268,6 +267,8 @@ export default function FormDialog() {
                                             </div>
                                         </div>
                                     </li>
+                            </div>
+                            </div>
                             </div>
 
                             <input
