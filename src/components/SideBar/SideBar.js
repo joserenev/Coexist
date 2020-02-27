@@ -23,7 +23,6 @@ import Authentication from "../../authentication/Authentication";
 
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
-import HomeIcon from "@material-ui/icons/Home";
 import ProfileIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
@@ -315,7 +314,6 @@ function SideBar({
                                     component="nav"
                                     aria-label="secondary mailbox folder"
                                 >
-                                    
                                     <ListItem
                                         button
                                         component={Link}

@@ -100,3 +100,23 @@ export async function createGroupAPI(
             throw err;
         });
 }
+
+export async function updateUser(userID, name, phone) {
+    const updateUserInput = {
+        id: userID,
+        name,
+        phone
+    };
+    console.log({ updateUserInput });
+    return await API.graphql(
+        graphqlOperation(mutations.updateUser, { input: updateUserInput })
+    )
+        .then(data => {
+            console.log("User updated successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Get user from DynamoDB unsuccessful", error);
+            return error;
+        });
+}

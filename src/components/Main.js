@@ -97,15 +97,11 @@ function Main(props): React.MixedElement {
                     return <LoadingPage />;
                 }
                 const userData = data?.getUser ?? null;
-                const {
-                    username = "",
-                    email = "",
-                    name = "",
-                    phone = "",
-                    groups = {}
-                } = userData ?? {};
-                const { items: groupItems = [] } = groups ?? [];
-                console.log({ groupItems });
+                const { groups = {} } = userData ?? {};
+                const { items = [] } = groups ?? [];
+                const groupItems = items.filter(groupItem => {
+                    return groupItem != null && groupItem.group != null;
+                });
                 return (
                     <Router>
                         <Switch>

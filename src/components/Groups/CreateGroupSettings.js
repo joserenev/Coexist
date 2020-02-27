@@ -87,9 +87,6 @@ function CreateGroupSettings({ userID }: Props): React.MixedElement {
         IDLE
     );
     const handleOnSubmit = async () => {
-        console.log(groupName);
-        console.log(groupDescription);
-        console.log(groupType);
         if (groupName.trim() === "") {
             setGroupNameError(true);
             return;
@@ -99,8 +96,6 @@ function CreateGroupSettings({ userID }: Props): React.MixedElement {
         setMutationStatus(PENDING);
         await createGroupAPI(groupName, groupDescription, groupType, userID)
             .then(response => {
-                console.log("group Created");
-                console.log(response);
                 window.location.replace(
                     `/groupHomePage/${response.data.createUserGroups.group.id}`
                 );
