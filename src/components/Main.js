@@ -19,7 +19,7 @@ import ErrorPage from "../pages/Error/ErrorPage";
 import LoadingPage from "../pages/Loading/LoadingPage";
 import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
 import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
-
+import ReferralPage from "../pages/Referral/ReferralPage.js"
 
 import Authentication from "../authentication/Authentication";
 
@@ -184,6 +184,25 @@ function Main(props): React.MixedElement {
                                     isSideBarOpen={isSideBarOpen}
                                 >
                                     <NoGroupFoundPage />
+                                </ComponentContainer>
+                            </>
+                        );
+                    }}
+                />
+                <Route
+                    exact
+                    path="/referralPage"
+                    render={props => {
+                        return (
+                            <>
+                                <SideBar
+                                    isSideBarOpen={isSideBarOpen}
+                                    setSideBarOpen={setSideBarOpen}
+                                />
+                                <ComponentContainer
+                                    isSideBarOpen={isSideBarOpen}
+                                >
+                                    <ReferralPage />
                                 </ComponentContainer>
                             </>
                         );

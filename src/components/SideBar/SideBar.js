@@ -26,6 +26,7 @@ import Grid from "@material-ui/core/Grid";
 import HomeIcon from "@material-ui/icons/Home";
 import ProfileIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import EditAttributes from "@material-ui/icons/EditAttributes"
 
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -318,17 +319,19 @@ function SideBar({ isSideBarOpen, setSideBarOpen }: Props): React.MixedElement {
                         </CardContent>
                     </Card>
 
-                    <Card className={classes.card}>
-                        <CardContent>
-                            <Typography
-                                className={classes.title}
-                                color="textSecondary"
-                                gutterBottom
-                            >
-                                Options
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <ListItem
+                        button
+                        component={Link}
+                        to="/referralPage"
+                        //selected={selectedIndex === 2}
+                        //onClick={event => handleListItemClick(event, 2)}
+                        onClick={handleDrawerClose}
+                    >
+                        <ListItemIcon>
+                            <EditAttributes />
+                        </ListItemIcon>
+                        <ListItemText primary="Options" />
+                    </ListItem>
                 </List>
             </Drawer>
         </div>
