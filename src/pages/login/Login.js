@@ -233,13 +233,16 @@ function Login(props) {
     return (
         <Grid container className={classes.container}>
             <div className={classes.logotypeContainer}>
-                <img src={logo} alt="logo" className={classes.logotypeImage}  />
+                <img src={logo} alt="logo" className={classes.logotypeImage} />
                 <Typography className={classes.logotypeText}>
                     Coexist
                 </Typography>
-                <Typography className={classes.logotypeDescription} variant="h3">
-                    An all-in-one app to track expenses and coordinate tasks and events between you and your close ones.
-
+                <Typography
+                    className={classes.logotypeDescription}
+                    variant="h3"
+                >
+                    An all-in-one app to track expenses, manage tasks and
+                    coordinate events between you and your close ones.
                 </Typography>
             </div>
             <div className={classes.formContainer}>
