@@ -25,7 +25,6 @@ import Authentication from "../authentication/Authentication";
 
 import ComponentContainer from "../components/util/ComponentContainer.react";
 
-
 import { useEffect, useState } from "react";
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
 
