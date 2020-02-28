@@ -273,7 +273,7 @@ function SideBar({
                                             <CardMedia
                                                 className={classes.media}
                                                 image={imageUrl}
-                                                title="profle Pic"
+                                                title="profile Pic"
                                             />
                                             <CardHeader
                                                 disableTypography
@@ -341,16 +341,7 @@ function SideBar({
                                         </ListItemIcon>
                                         <ListItemText primary="Profile" />
                                     </ListItem>
-                                    <ListItem
-                                        button
-                                        selected={selectedIndex === 3}
-                                        onClick={logout}
-                                    >
-                                        <ListItemIcon>
-                                            <ExitToAppIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Sign Out" />
-                                    </ListItem>
+                                    <Divider />
 
                                     <Card className={classes.card}>
                                         <CardContent>
@@ -417,7 +408,6 @@ function SideBar({
                                             <CreateGroupButton />
                                         </CardContent>
                                     </Card>
-
                                     <ListItem
                                         button
                                         component={Link}
@@ -431,6 +421,17 @@ function SideBar({
                                         </ListItemIcon>
                                         <ListItemText primary="Options" />
                                     </ListItem>
+                                    <ListItem
+                                        button
+                                        selected={selectedIndex === 3}
+                                        onClick={logout}
+                                    >
+                                        <ListItemIcon>
+                                            <ExitToAppIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Sign Out" />
+                                    </ListItem>
+                                    <Divider />
                                 </List>
                             </>
                         );
