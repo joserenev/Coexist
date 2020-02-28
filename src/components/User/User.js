@@ -106,8 +106,21 @@ type Props = {|
 
 export default function User({ user, deleteGroupMember }: Props) {
     const classes = useStyles();
-    let userState = "OFFLINE";
+    let userState = "ONLINE";
+	let userTimes = {
+		"ggp3": {"status": "IDLE", "lastTime":new Date(2020, 1, 28, 13, 3, 0, 0)},
+		"jotos": {"status": "OFFLINE", "lastTime":new Date(2020, 1, 28, 11, 0, 0)}
+	};
     const { id = "", username = "", name = "" } = user ?? {};
+	
+	if (new Date().getTime() > new Date(2020, 1, 28, 13, 28, 0, 0).getTime()) {
+		userTimes["ggp3"].status = "OFFLINE";
+		userTimes["ggp3"].status = new Date();
+	}
+	
+	userState = userTimes[username].status || "ONLINE";
+	let titleText = userTimes[username].status + " for " + Math.floor((new Date().getTime() - userTimes[username].lastTime.getTime()) / 1000) + " seconds.";
+	
     const handleDelete = useCallback(() => {
         deleteGroupMember(id);
     }, [deleteGroupMember, id]);
@@ -134,7 +147,7 @@ export default function User({ user, deleteGroupMember }: Props) {
                             vertical: "bottom",
                             horizontal: "right"
                         }}
-                        title="Online"
+                        title={titleText}
                         variant="dot"
                     >
                         <Avatar alt="Remy Sharp" src={<PersonIcon />} />
@@ -147,7 +160,7 @@ export default function User({ user, deleteGroupMember }: Props) {
                             vertical: "bottom",
                             horizontal: "right"
                         }}
-                        title="Online"
+                        title={titleText}
                         variant="dot"
                     >
                         <Avatar alt="Remy Sharp" src={<PersonIcon />} />
