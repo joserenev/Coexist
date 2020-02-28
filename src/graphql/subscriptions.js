@@ -16,6 +16,7 @@ export const onCreateUser = `subscription OnCreateUser {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;
@@ -34,6 +35,7 @@ export const onUpdateUser = `subscription OnUpdateUser {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;
@@ -52,6 +54,7 @@ export const onDeleteUser = `subscription OnDeleteUser {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;
@@ -69,6 +72,7 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       }
       createdAt
       updatedAt
+      pictureURL
     }
     group {
       id
@@ -81,6 +85,7 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
         phone
         createdAt
         updatedAt
+        pictureURL
       }
       type
       description
@@ -89,6 +94,7 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       }
       createdAt
       updatedAt
+      pictureURL
     }
   }
 }
@@ -107,6 +113,7 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       }
       createdAt
       updatedAt
+      pictureURL
     }
     group {
       id
@@ -119,6 +126,7 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
         phone
         createdAt
         updatedAt
+        pictureURL
       }
       type
       description
@@ -127,6 +135,7 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       }
       createdAt
       updatedAt
+      pictureURL
     }
   }
 }
@@ -145,6 +154,7 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       }
       createdAt
       updatedAt
+      pictureURL
     }
     group {
       id
@@ -157,6 +167,7 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
         phone
         createdAt
         updatedAt
+        pictureURL
       }
       type
       description
@@ -165,6 +176,7 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       }
       createdAt
       updatedAt
+      pictureURL
     }
   }
 }
@@ -184,6 +196,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
       }
       createdAt
       updatedAt
+      pictureURL
     }
     type
     description
@@ -195,6 +208,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;
@@ -213,6 +227,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       }
       createdAt
       updatedAt
+      pictureURL
     }
     type
     description
@@ -224,6 +239,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;
@@ -242,6 +258,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
       }
       createdAt
       updatedAt
+      pictureURL
     }
     type
     description
@@ -253,6 +270,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;

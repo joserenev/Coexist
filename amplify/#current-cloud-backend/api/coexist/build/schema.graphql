@@ -7,6 +7,7 @@ type User {
   groups(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
   createdAt: String
   updatedAt: String
+  pictureURL: String
 }
 
 type UserGroups {
@@ -24,6 +25,7 @@ type Group {
   users(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
   createdAt: String
   updatedAt: String
+  pictureURL: String
 }
 
 enum ModelSortDirection {
@@ -117,6 +119,7 @@ input ModelUserFilterInput {
   phone: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  pictureURL: ModelStringInput
   and: [ModelUserFilterInput]
   or: [ModelUserFilterInput]
   not: ModelUserFilterInput
@@ -137,6 +140,7 @@ input CreateUserInput {
   phone: String
   createdAt: String
   updatedAt: String
+  pictureURL: String
 }
 
 input UpdateUserInput {
@@ -147,6 +151,7 @@ input UpdateUserInput {
   phone: String
   createdAt: String
   updatedAt: String
+  pictureURL: String
 }
 
 input DeleteUserInput {
@@ -172,6 +177,7 @@ input ModelUserConditionInput {
   phone: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  pictureURL: ModelStringInput
   and: [ModelUserConditionInput]
   or: [ModelUserConditionInput]
   not: ModelUserConditionInput
@@ -243,6 +249,7 @@ input ModelGroupFilterInput {
   description: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  pictureURL: ModelStringInput
   and: [ModelGroupFilterInput]
   or: [ModelGroupFilterInput]
   not: ModelGroupFilterInput
@@ -255,6 +262,7 @@ input CreateGroupInput {
   description: String
   createdAt: String
   updatedAt: String
+  pictureURL: String
   groupOwnerId: ID
 }
 
@@ -265,6 +273,7 @@ input UpdateGroupInput {
   description: String
   createdAt: String
   updatedAt: String
+  pictureURL: String
   groupOwnerId: ID
 }
 
@@ -278,6 +287,7 @@ input ModelGroupConditionInput {
   description: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  pictureURL: ModelStringInput
   and: [ModelGroupConditionInput]
   or: [ModelGroupConditionInput]
   not: ModelGroupConditionInput

@@ -7,6 +7,7 @@ type User @model {
   groups: [UserGroups] @connection(name: "UserGroups")
   createdAt: String
   updatedAt: String
+  pictureURL: String
 }
 
 type UserGroups @model (queries: null){
@@ -24,4 +25,5 @@ type Group @model {
   users: [UserGroups] @connection(name: "GroupUsers")
   createdAt: String
   updatedAt: String
+  pictureURL: String
 }

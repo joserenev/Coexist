@@ -16,6 +16,7 @@ export const getUser = `query GetUser($id: ID!) {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;
@@ -36,6 +37,7 @@ export const listUsers = `query ListUsers(
       }
       createdAt
       updatedAt
+      pictureURL
     }
     nextToken
   }
@@ -56,6 +58,7 @@ export const getGroup = `query GetGroup($id: ID!) {
       }
       createdAt
       updatedAt
+      pictureURL
     }
     type
     description
@@ -67,6 +70,7 @@ export const getGroup = `query GetGroup($id: ID!) {
     }
     createdAt
     updatedAt
+    pictureURL
   }
 }
 `;
@@ -87,6 +91,7 @@ export const listGroups = `query ListGroups(
         phone
         createdAt
         updatedAt
+        pictureURL
       }
       type
       description
@@ -95,6 +100,7 @@ export const listGroups = `query ListGroups(
       }
       createdAt
       updatedAt
+      pictureURL
     }
     nextToken
   }
