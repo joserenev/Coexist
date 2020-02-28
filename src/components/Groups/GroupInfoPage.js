@@ -304,13 +304,6 @@ function GroupInfoPage({
                                 onChange={event =>
                                     setGroupDescription(event.target.value)
                                 }
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            @
-                                        </InputAdornment>
-                                    )
-                                }}
                                 style={{ width: 200 }}
                             />
                         </div>
