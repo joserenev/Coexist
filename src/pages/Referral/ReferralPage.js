@@ -74,10 +74,12 @@ type Props = {|
 function ReferralPage({ userID }: Props): React.MixedElement {
     const classes = useStyles();
     const [type, setType] = React.useState("");
+    const [referralContact, setReferralContact] = React.useState("");
     const handleChange = event => {
         setType(event.target.value);
     };
 
+    console.log({ referralContact });
     return (
         <div>
             <div className={classes.container}>
@@ -112,8 +114,16 @@ function ReferralPage({ userID }: Props): React.MixedElement {
                         <Typography variant="h6">
                             Select referral type:
                         </Typography>
+
                         <FormControl variant="outlined">
-                            <Select native onChange={handleChange} value={type}>
+                            <InputLabel> Referral Type </InputLabel>
+                            <Select
+                                native
+                                defaultValue={PHONE_NUM}
+                                onChange={handleChange}
+                                value={type}
+                                label="Referral Type"
+                            >
                                 <option value={PHONE_NUM}>Phone number</option>
                                 <option value={EMAIL_ADDRESS}>
                                     Email Address
@@ -125,8 +135,9 @@ function ReferralPage({ userID }: Props): React.MixedElement {
                         <TextField
                             placeholder={type}
                             variant="outlined"
-                            onChange={event => setType(event.target.value)}
-                            // error={nameError}
+                            onChange={event =>
+                                setReferralContact(event.target.value)
+                            }
                         />
                     </form>
                 </div>
