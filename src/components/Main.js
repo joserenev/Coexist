@@ -19,10 +19,12 @@ import LoadingPage from "../pages/Loading/LoadingPage";
 import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
 import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
 import ReferralPage from "../pages/Referral/ReferralPage.js";
+import ForgetPass from "../pages/ForgetPass/ForgetPass.js";
 
 import Authentication from "../authentication/Authentication";
 
 import ComponentContainer from "../components/util/ComponentContainer.react";
+
 
 import { useEffect, useState } from "react";
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
@@ -73,6 +75,12 @@ function Main(props): React.MixedElement {
                         path="/login"
                         render={props => {
                             return <Login />;
+                        }}
+                    />
+                    <Route
+                        path="/resetPass"
+                        render={props => {
+                            return <ForgetPass />;
                         }}
                     />
                     <Redirect to="/login" />

@@ -338,6 +338,8 @@ function Login(props) {
                                     color="primary"
                                     size="large"
                                     className={classes.forgetButton}
+                                    onClick={event =>  window.location.href='/resetPass'}
+
                                 >
                                     Forget Password
                                 </Button>
