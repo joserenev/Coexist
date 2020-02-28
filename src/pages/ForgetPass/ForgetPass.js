@@ -63,28 +63,20 @@ function ForgotPassowrd(props) {
     const [confirmationCodeValue, setConfirmationCodeValue] = useState(false);
     const [newPasswordValue, setNewPasswordValue] = useState("");
 
-    const handleResendCode = async () => {
+    const handleResendCode =  () => {
         console.log(emailValue);
-        await Authentication.forgotPassword(emailValue)
-            .catch(function(err) {
-                if (err.code !== "UserNotFoundException") {
-                    console.log("Existing User Found!");
-                }
-            });
+        Authentication.forgotPassword(emailValue);
+       
     };
 
-    const handleNewPassword = async () => {
+    const handleNewPassword = () => {
         console.log("new Password setUp");
-        await Authentication.forgotPasswordSubmit(
+        Authentication.forgotPasswordSubmit(
             emailValue,
             confirmationCodeValue,
             newPasswordValue
-        )
-            .catch(function(result) {
-                if (result.code === "CodeMismatchException") {
-                    console.log("Code Mismatch");
-                }
-            });
+        );
+       
     };
 
     const classes = useStyles();
