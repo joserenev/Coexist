@@ -102,7 +102,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "center"
     },
     avatar: {
-        margin: 10
+        margin: 5
     },
     bigAvatar: {
         margin: 10,
@@ -288,7 +288,7 @@ function SideBar({
                                                 }
                                                 title={
                                                     <Typography
-                                                        variant="body1"
+                                                        variant="h4"
                                                         className={
                                                             classes.title
                                                         }
@@ -298,7 +298,7 @@ function SideBar({
                                                 }
                                                 subheader={
                                                     <Typography
-                                                        variant="body1"
+                                                        variant="h5"
                                                         color="textSecondary"
                                                     >
                                                         @{username}
