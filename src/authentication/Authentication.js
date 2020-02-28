@@ -144,6 +144,19 @@ class Authentication {
             })
     }
 
+    forgotPassword(username) {
+      Auth.forgotPassword(username)
+          .then(data => console.log(data))
+          .catch(err => console.log(err));
+    }
+
+    forgotPasswordSubmit(username, code, new_password){
+      // Collect confirmation code and new password, then
+      Auth.forgotPasswordSubmit(username, code, new_password)
+          .then(data => console.log(data))
+          .catch(err => console.log(err));
+    }
+
 }
 
 export default new Authentication();
