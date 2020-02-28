@@ -72,7 +72,7 @@ function ProfileSettings({
         setErrorOpen(false);
         await updateUser(id, newName, newPhoneNumber).then(data => {
             handleClose();
-            window.location.replace("profile");
+            window.location.replace("/profile");
         });
     };
 

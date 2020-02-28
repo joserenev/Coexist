@@ -31,11 +31,12 @@ const useStyles = makeStyles(theme => ({
 
     groupInfoContainer: {
         margin: "30px 50px",
-        justifyContent: "space-between",
         backgroundColor: "#ecf0f1",
         padding: "5px 20px",
         display: "flex",
         flexDirection: "row",
+        justifyContent: "space-between",
+        align: "center",
         minWidth: 540
     },
 
@@ -49,6 +50,18 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "center",
         display: "flex",
         alignItems: "center"
+    },
+    settingsButton: {
+        marginleft: 20,
+        backgroundColor: "#ecf0f1",
+        float: "right",
+        "&:hover": {
+            background: "#ecf0f1",
+            color: "black",
+            cursor: "pointer"
+        },
+        height: 40,
+        width: 40
     },
 
     buttonImage: {

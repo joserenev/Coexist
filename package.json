@@ -8,7 +8,7 @@
     "@material-ui/core": "^4.9.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.44",
-    "@react-form-fields/material-ui": "github:react-form-fields/material-ui",
+    "@react-form-fields/material-ui": "^2.1.9",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
