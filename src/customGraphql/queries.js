@@ -20,12 +20,13 @@ export const getUser = `query GetUser($id: ID!) {
             id
             name
           }
+          createdAt
+          updatedAt
         }
       }
     }
   }
 }`;
-
 
 export const getGroup = `query GetGroup($id: ID!) {
   getGroup(id: $id) {
@@ -49,14 +50,13 @@ export const getGroup = `query GetGroup($id: ID!) {
       items {
 		  user {
 			   id
-		name
-		email
-		phone
-		createdAt
-		updatedAt
-		username
+		        name
+	            email
+		        phone
+		        createdAt
+		        updatedAt
+		        username
 		  }
-       
       }
     }
     createdAt
@@ -64,4 +64,3 @@ export const getGroup = `query GetGroup($id: ID!) {
   }
 }
 `;
-
