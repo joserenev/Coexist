@@ -2,6 +2,15 @@ import { Auth } from "aws-amplify";
 import { API, graphqlOperation } from "aws-amplify";
 import * as queries from "../graphql/queries";
 import * as mutations from "../graphql/mutations";
+import {
+    ReferralTypeConstants,
+    ReferralMedium
+} from "../components/util/ReferralTypeConstants";
+import {
+    emailInviteURL,
+    textInviteURL
+} from "../components/util/NotifConstants";
+const { EMAIL, TEXT } = ReferralMedium;
 
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
@@ -118,5 +127,33 @@ export async function updateUser(userID, name, phone) {
         .catch(error => {
             console.error("Get user from DynamoDB unsuccessful", error);
             return error;
+        });
+}
+
+export async function inviteNotificationApi(notifMedium, contact) {
+    const apiEndpoint = notifMedium === EMAIL ? emailInviteURL : textInviteURL;
+    let requestBody = {
+        phone_number: contact
+    };
+    if (notifMedium === EMAIL) {
+        requestBody = {
+            email_address: contact
+        };
+    }
+    return await fetch(apiEndpoint, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response => {
+            console.log({ response });
+            return response;
+        })
+        .catch(err => {
+            console.log({ err });
+            throw err;
         });
 }

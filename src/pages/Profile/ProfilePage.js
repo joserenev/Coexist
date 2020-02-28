@@ -154,8 +154,6 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                 const groupItems = items.filter(groupItem => {
                     return groupItem != null && groupItem.group != null;
                 });
-                console.log({ userData });
-                console.log({ groupItems });
 
                 return (
                     <>
@@ -279,7 +277,7 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                                         >
                                             Veiw Transaction History
                                         </Button>
-                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

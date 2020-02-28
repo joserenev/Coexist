@@ -10,4 +10,9 @@ const ReferralTypeConstants: ReferralType = Object.freeze({
     PHONE_NUM: "(765)777-7777"
 });
 
-export { ReferralTypeConstants };
+const ReferralMedium = Object.freeze({
+    EMAIL: "EMAIL",
+    TEXT: "TEXT"
+});
+
+export { ReferralTypeConstants, ReferralMedium };
