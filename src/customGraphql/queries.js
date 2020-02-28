@@ -48,6 +48,7 @@ export const getGroup = `query GetGroup($id: ID!) {
     description
     users {
       items {
+          id
 		  user {
 			   id
 		        name

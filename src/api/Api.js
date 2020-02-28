@@ -2,15 +2,12 @@ import { Auth } from "aws-amplify";
 import { API, graphqlOperation } from "aws-amplify";
 import * as queries from "../graphql/queries";
 import * as mutations from "../graphql/mutations";
-import {
-    ReferralTypeConstants,
-    ReferralMedium
-} from "../components/util/ReferralTypeConstants";
+import { ReferralMedium } from "../components/util/ReferralTypeConstants";
 import {
     emailInviteURL,
     textInviteURL
 } from "../components/util/NotifConstants";
-const { EMAIL, TEXT } = ReferralMedium;
+const { EMAIL } = ReferralMedium;
 
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
@@ -66,6 +63,27 @@ export async function getUserById(userID) {
 
     console.log("Finished getting user.", info);
     return info;
+}
+
+//Retrieves a user by ID from DynamoDB
+export async function getUserByUserName(username) {
+    console.log("Getting user by user name...");
+    return await API.graphql(
+        graphqlOperation(queries.listUsers, {
+            filter: {
+                username: {
+                    eq: username
+                }
+            }
+        })
+    )
+        .then(data => {
+            return data;
+        })
+        .catch(err => {
+            console.error("Get user from DynamoDB unsuccessful", err);
+            throw err;
+        });
 }
 
 export async function createGroupAPI(
@@ -155,5 +173,92 @@ export async function inviteNotificationApi(notifMedium, contact) {
         .catch(err => {
             console.log({ err });
             throw err;
+        });
+}
+
+export async function updateGroup(groupID, updateInfo) {
+    const input = {
+        id: groupID,
+        ...updateInfo
+    };
+    return await API.graphql(graphqlOperation(mutations.updateGroup, { input }))
+        .then(data => {
+            console.log("Group updated successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Update group unsuccessful", error);
+            throw error;
+        });
+}
+
+export async function addUserToGroup(groupID, userID) {
+    const input = {
+        input: {
+            userGroupsUserId: userID,
+            userGroupsGroupId: groupID
+        }
+    };
+
+    return await API.graphql(
+        graphqlOperation(mutations.createUserGroups, input)
+    )
+        .then(data => {
+            console.log("User added to group successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Add user to group unsuccessful", error);
+            throw error;
+        });
+}
+
+export async function addUsersToGroup(groupID, userIDList) {
+    const promises = userIDList.map(userID => {
+        return addUserToGroup(groupID, userID);
+    });
+    return await Promise.all(promises)
+        .then(data => {
+            console.log("All users added to group successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Add users to group unsuccessful", error);
+            throw error;
+        });
+}
+
+export async function deleteUserFromGroup(userGroupID) {
+    const input = {
+        input: {
+            id: userGroupID
+        }
+    };
+
+    return await API.graphql(
+        graphqlOperation(mutations.deleteUserGroups, input)
+    )
+        .then(data => {
+            console.log("User deleted from group successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Delete user from group unsuccessful", error);
+            throw error;
+        });
+}
+
+export async function deleteUsersFromGroup(userGroupIDList) {
+    const promises = userGroupIDList.map(userGroupID => {
+        return deleteUserFromGroup(userGroupID);
+    });
+    return await Promise.all(promises)
+        .then(data => {
+            console.log("All users deleted from group successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Delete users from group unsuccessful", error);
+            throw error;
         });
 }

@@ -1,18 +1,21 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import IconButton from "@material-ui/core/IconButton";
-import Avatar from "@material-ui/core/Avatar";
-import { BrowserRouter as Router, useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
+import { Connect } from "aws-amplify-react";
+import { graphqlOperation } from "aws-amplify";
+import { getGroup } from "../../customGraphql/queries";
+import LoadingPage from "../../pages/Loading/LoadingPage";
 
 import ExpensesIcon from "@material-ui/icons/AttachMoney";
 import ChatIcon from "@material-ui/icons/Forum";
 import CalendarIcon from "@material-ui/icons/Event";
 import TasksIcon from "@material-ui/icons/Assignment";
+import SettingsIcon from "@material-ui/icons/Settings";
 
-import EditGroupSettings from "./EditGroupSettings";
+import GroupInfoPage from "./GroupInfoPage";
 
 const useStyles = makeStyles(theme => ({
     homePageContainer: {
@@ -62,47 +65,79 @@ const useStyles = makeStyles(theme => ({
 function GroupHomePage(props): React.MixedElement {
     const classes = useStyles();
     const history = useHistory();
-    const navigateToExpenses = useCallback(() => {
+    const navigateToExpenses = () => {
         history.push("/expenses");
-    });
-    const currentGroupID = props.match?.params?.groupID ?? "";
-    return (
-        <>
-            <div className={classes.groupInfoContainer}>
-                <Typography variant="h1">GROUP NAME</Typography>
-                <EditGroupSettings groupID={currentGroupID} />
-            </div>
-            <div className={classes.homePageContainer}>
-                <div
-                    className={classes.buttonContainer}
-                    onClick={navigateToExpenses}
-                >
-                    <ExpensesIcon
-                        fontSize="large"
-                        className={classes.largeIcons}
-                    />
-                    <div></div>
-                </div>
+    };
+    const groupID = props.match?.params?.groupID ?? "";
+    const [isDialogOpen, setDialogOpen] = useState(false);
 
-                <div className={classes.buttonContainer}>
-                    <TasksIcon
-                        fontSize="large"
-                        className={classes.largeIcons}
-                    />
-                </div>
-            </div>
-            <div className={classes.homePageContainer}>
-                <div className={classes.buttonContainer}>
-                    <ChatIcon fontSize="large" className={classes.largeIcons} />
-                </div>
-                <div className={classes.buttonContainer}>
-                    <CalendarIcon
-                        fontSize="large"
-                        className={classes.largeIcons}
-                    />
-                </div>
-            </div>
-        </>
+    return (
+        <Connect query={graphqlOperation(getGroup, { id: groupID })}>
+            {({ data, loading, error }) => {
+                if (error) {
+                    //TODO: Add a dedicated ERROR Component with a message to show.
+                    return <h3>Error</h3>;
+                }
+
+                if (loading) {
+                    return <LoadingPage />;
+                }
+
+                return (
+                    <>
+                        <div className={classes.groupInfoContainer}>
+                            <Typography variant="h1">
+                                {data?.getGroup?.name ?? "Group Name"}
+                            </Typography>
+                            <SettingsIcon
+                                className={classes.settingsButton}
+                                onClick={() => {
+                                    setDialogOpen(true);
+                                }}
+                            />
+                        </div>
+                        <div className={classes.homePageContainer}>
+                            <div
+                                className={classes.buttonContainer}
+                                onClick={navigateToExpenses}
+                            >
+                                <ExpensesIcon
+                                    fontSize="large"
+                                    className={classes.largeIcons}
+                                />
+                                <div></div>
+                            </div>
+
+                            <div className={classes.buttonContainer}>
+                                <TasksIcon
+                                    fontSize="large"
+                                    className={classes.largeIcons}
+                                />
+                            </div>
+                        </div>
+                        <div className={classes.homePageContainer}>
+                            <div className={classes.buttonContainer}>
+                                <ChatIcon
+                                    fontSize="large"
+                                    className={classes.largeIcons}
+                                />
+                            </div>
+                            <div className={classes.buttonContainer}>
+                                <CalendarIcon
+                                    fontSize="large"
+                                    className={classes.largeIcons}
+                                />
+                            </div>
+                        </div>
+                        <GroupInfoPage
+                            isDialogOpen={isDialogOpen}
+                            setDialogOpen={setDialogOpen}
+                            groupData={data.getGroup}
+                        />
+                    </>
+                );
+            }}
+        </Connect>
     );
 }
 export default GroupHomePage;
