@@ -18,6 +18,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 
 import ProfileSettingsPage from "./ProfileSettings";
+import TransacHistoryPage from "./TransacHistory";
 
 const useStyles = makeStyles(() => ({
     groupChip: {
@@ -123,7 +124,11 @@ function ProfilePage({ userID }: Props): React.MixedElement {
         setDialogOpen(true);
     });
 
+    const navigateToTransacHistory = useCallback(() => {
+        setTDialogOpen(true);
+    });
     const [isDialogOpen, setDialogOpen] = React.useState(false);
+    const [isTDialogOpen, setTDialogOpen] = React.useState(false);
 
     return (
         <Connect query={graphqlOperation(getUserDetailsQuery, { id: userID })}>
@@ -266,6 +271,15 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                                             )}
                                         </div>
                                     </div>
+                                    <div>
+                                        <Button
+                                            onClick={navigateToTransacHistory}
+                                            variant="contained"
+                                            align="left"
+                                        >
+                                            Veiw Transaction History
+                                        </Button>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -273,6 +287,13 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                             <ProfileSettingsPage
                                 isDialogOpen={isDialogOpen}
                                 setDialogOpen={setDialogOpen}
+                                userData={userData}
+                            />
+                        )}
+                        {isTDialogOpen && (
+                            <TransacHistoryPage
+                                isTDialogOpen={isTDialogOpen}
+                                setTDialogOpen={setTDialogOpen}
                                 userData={userData}
                             />
                         )}
