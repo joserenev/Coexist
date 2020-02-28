@@ -65,12 +65,12 @@ function GroupHomePage(props): React.MixedElement {
     const navigateToExpenses = useCallback(() => {
         history.push("/expenses");
     });
-    // console.log(props.match?.params?.groupID ?? "");
+    const currentGroupID = props.match?.params?.groupID ?? "";
     return (
         <>
             <div className={classes.groupInfoContainer}>
                 <Typography variant="h1">GROUP NAME</Typography>
-                <EditGroupSettings />
+                <EditGroupSettings groupID={currentGroupID} />
             </div>
             <div className={classes.homePageContainer}>
                 <div

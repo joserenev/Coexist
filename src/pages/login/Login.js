@@ -52,6 +52,7 @@ function Login(props) {
     const [confirmResponse, setConfirmResponse] = useState("");
     const [showConfirmResponse, setShowConfirmResponse] = useState(false);
 
+    const [errorMessage, setErrorMessage] = useState("");
     const handleLogin = async () => {
         console.log(loginValue);
         await Authentication.signIn(loginValue, passwordValue)
@@ -121,42 +122,31 @@ function Login(props) {
         }
 
         //can add more fields top signUp later
-        let response = await Authentication.signUp(
-            loginValue,
-            passwordValue,
-            emailValue
-        ).catch(function(err) {
-            // that.setState({
-            //     showResponse: true,
-            //     response: "Error signing up. Please try again",
-            //     showVerification: false,
-            //     error: true
-            // })
-            setResponse("Error signing up. Please try again");
-            setError(true);
-        });
+        await Authentication.signUp(loginValue, passwordValue, emailValue)
+            .then(response => {
+                if (typeof response.userSub !== "undefined") {
+                    console.log("Sign Up Confirmed");
+                    // this.setState({
+                    //     response: "Sign Up Confirmed. Please confirm code.",
+                    //     showVerification: true
+                    // });
+                    setResponse("Sign Up Confirmed. Please confirm code.");
+                    setUserValidatingCode(true);
 
-        if (error === true) {
-            return;
-        }
-
-        // this.setState({
-        //     showResponse: true
-        // });
-
-        if (typeof response.userSub !== "undefined") {
-            console.log("Sign Up Confirmed");
-            // this.setState({
-            //     response: "Sign Up Confirmed. Please confirm code.",
-            //     showVerification: true
-            // });
-            setResponse("Sign Up Confirmed. Please confirm code.");
-            setUserValidatingCode(true);
-
-            return;
-        }
-
-        return;
+                    return;
+                }
+            })
+            .catch(function(err) {
+                // that.setState({
+                //     showResponse: true,
+                //     response: "Error signing up. Please try again",
+                //     showVerification: false,
+                //     error: true
+                // })
+                setErrorMessage(err.message);
+                setResponse("Error signing up. Please try again");
+                setError(true);
+            });
     };
 
     const handleConfirmCode = async () => {
@@ -376,8 +366,7 @@ function Login(props) {
                                             color="secondary"
                                             className={classes.errorMessage}
                                         >
-                                            Something is wrong with your login
-                                            or password :(
+                                            {errorMessage}
                                         </Typography>
                                     </Fade>
                                     <TextField
