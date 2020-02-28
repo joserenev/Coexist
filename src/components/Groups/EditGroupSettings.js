@@ -364,13 +364,6 @@ export default function EditGroupSettings({ groupID }: Props) {
                                         >
                                             Leave Group
                                         </button>
-
-                                        <input
-                                            type="file"
-                                            class="custom-file-input unanchored"
-                                            accept="image/*"
-                                            id="imageUploadHidden"
-                                        />
                                     </div>
                                     <div class="modal-footer">
                                         <button
