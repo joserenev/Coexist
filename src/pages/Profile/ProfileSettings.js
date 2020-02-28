@@ -26,6 +26,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Alert from "@material-ui/lab/Alert";
+import { isValidPhoneNumber } from "../../components/util/validation";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -63,14 +64,16 @@ function ProfileSettings({
             return;
         }
 
-        if (newPhoneNumber.length !== 10) {
+        if (!isValidPhoneNumber(newPhoneNumber)) {
             setErrorOpen(true);
-        } else {
-            await updateUser(id, newName, newPhoneNumber).then(data => {
-                handleClose();
-                window.location.replace("profile");
-            });
+            return;
         }
+
+        setErrorOpen(false);
+        await updateUser(id, newName, newPhoneNumber).then(data => {
+            handleClose();
+            window.location.replace("profile");
+        });
     };
 
     return (
@@ -190,7 +193,10 @@ function ProfileSettings({
                             horizontal: "center"
                         }}
                         open={isErrorOpen}
-                        onClose={handleClose}
+                        onClose={() => {
+                            setErrorOpen(false);
+                        }}
+                        autoHideDuration={6000}
                         action={
                             <React.Fragment>
                                 <IconButton
@@ -204,7 +210,12 @@ function ProfileSettings({
                             </React.Fragment>
                         }
                     >
-                        <Alert onClose={handleClose} severity="error">
+                        <Alert
+                            onClose={() => {
+                                setErrorOpen(false);
+                            }}
+                            severity="error"
+                        >
                             Error! Your phone number is invalid!
                         </Alert>
                     </Snackbar>
