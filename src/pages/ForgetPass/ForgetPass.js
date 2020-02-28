@@ -60,13 +60,12 @@ const useStyles = makeStyles(() => ({
 
 function ForgotPassowrd(props) {
     const [emailValue, setEmailValue] = useState("");
-    const [confirmationCodeValue, setConfirmationCodeValue] = useState("");
+    const [confirmationCodeValue, setConfirmationCodeValue] = useState(false);
     const [newPasswordValue, setNewPasswordValue] = useState("");
 
     const handleResendCode = async () => {
-        console.log("ReSend vercode");
+        console.log(emailValue);
         await Authentication.forgotPassword(emailValue)
-            .then(function(data) {})
             .catch(function(err) {
                 if (err.code !== "UserNotFoundException") {
                     console.log("Existing User Found!");
@@ -81,7 +80,6 @@ function ForgotPassowrd(props) {
             confirmationCodeValue,
             newPasswordValue
         )
-            .then(async function(reSign) {})
             .catch(function(result) {
                 if (result.code === "CodeMismatchException") {
                     console.log("Code Mismatch");
