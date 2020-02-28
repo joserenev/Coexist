@@ -5,7 +5,9 @@ import * as mutations from "../graphql/mutations";
 import { ReferralMedium } from "../components/util/ReferralTypeConstants";
 import {
     emailInviteURL,
-    textInviteURL
+    textInviteURL,
+    emailNewGroupURL,
+    textNewGroupURL
 } from "../components/util/NotifConstants";
 const { EMAIL } = ReferralMedium;
 
@@ -192,6 +194,51 @@ export async function updateGroup(groupID, updateInfo) {
         });
 }
 
+export async function newGroupNotication(notifMedium, contact) {
+    const apiEndpoint =
+        notifMedium === EMAIL ? emailNewGroupURL : textNewGroupURL;
+    let requestBody = {
+        phone_number: contact
+    };
+    if (notifMedium === EMAIL) {
+        requestBody = {
+            email_address: contact
+        };
+    }
+    return await fetch(apiEndpoint, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(response => {
+            console.log({ response });
+            return response;
+        })
+        .catch(err => {
+            console.log({ err });
+            throw err;
+        });
+}
+
+export async function sendNewGroupNotificationsToAll(emailList) {
+    const promises = emailList.map(email => {
+        return newGroupNotication(EMAIL, email);
+    });
+
+    return await Promise.all(promises)
+        .then(data => {
+            console.log("All group invitation emails sent out", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("All group invitation emails failed", error);
+            throw error;
+        });
+}
+
 export async function addUserToGroup(groupID, userID) {
     const input = {
         input: {
@@ -213,10 +260,11 @@ export async function addUserToGroup(groupID, userID) {
         });
 }
 
-export async function addUsersToGroup(groupID, userIDList) {
+export async function addUsersToGroup(groupID, userIDList, userEmailList) {
     const promises = userIDList.map(userID => {
         return addUserToGroup(groupID, userID);
     });
+    promises.push(sendNewGroupNotificationsToAll(userEmailList));
     return await Promise.all(promises)
         .then(data => {
             console.log("All users added to group successfully", { data });

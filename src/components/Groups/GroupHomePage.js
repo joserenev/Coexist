@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,7 +14,7 @@ import ChatIcon from "@material-ui/icons/Forum";
 import CalendarIcon from "@material-ui/icons/Event";
 import TasksIcon from "@material-ui/icons/Assignment";
 import SettingsIcon from "@material-ui/icons/Settings";
-
+import ErrorPage from "../../pages/Error/ErrorPage";
 import GroupInfoPage from "./GroupInfoPage";
 
 const useStyles = makeStyles(theme => ({
@@ -82,7 +82,18 @@ function GroupHomePage(props): React.MixedElement {
         history.push("/expenses");
     };
     const groupID = props.match?.params?.groupID ?? "";
+    const { currentUserID = "" } = props;
     const [isDialogOpen, setDialogOpen] = useState(false);
+
+    const isCurrentUserInGroup = useCallback(
+        groupData => {
+            const items = groupData?.users?.items ?? [];
+            return items.some(groupItem => {
+                return groupItem.user.id === currentUserID;
+            });
+        },
+        [currentUserID]
+    );
 
     return (
         <Connect query={graphqlOperation(getGroup, { id: groupID })}>
@@ -94,6 +105,10 @@ function GroupHomePage(props): React.MixedElement {
 
                 if (loading) {
                     return <LoadingPage />;
+                }
+
+                if (!isCurrentUserInGroup(data?.getGroup)) {
+                    return <ErrorPage />;
                 }
 
                 return (
@@ -145,7 +160,8 @@ function GroupHomePage(props): React.MixedElement {
                         <GroupInfoPage
                             isDialogOpen={isDialogOpen}
                             setDialogOpen={setDialogOpen}
-                            groupData={data.getGroup}
+                            groupData={data?.getGroup}
+                            currentUserID={currentUserID}
                         />
                     </>
                 );

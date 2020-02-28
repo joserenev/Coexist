@@ -167,7 +167,10 @@ function Main(props): React.MixedElement {
                                                 setSideBarOpen={setSideBarOpen}
                                                 userID={userID}
                                             >
-                                                <GroupHomePage {...props} />
+                                                <GroupHomePage
+                                                    {...props}
+                                                    currentUserID={userID}
+                                                />
                                             </ComponentContainer>
                                         </>
                                     );

@@ -29,15 +29,15 @@ import Slide from "@material-ui/core/Slide";
 import Alert from "@material-ui/lab/Alert";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { getUserByUserName } from "../../api/Api";
-import AddIcon from "@material-ui/icons/Add";
-import { QueryStatus } from "../../components/util/QueryUtil";
-
 import {
+    getUserByUserName,
+    deleteUserFromGroup,
     updateGroup,
     addUsersToGroup,
     deleteUsersFromGroup
 } from "../../api/Api";
+import AddIcon from "@material-ui/icons/Add";
+import { QueryStatus } from "../../components/util/QueryUtil";
 
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
 
@@ -74,7 +74,8 @@ const useStyles = makeStyles(theme => ({
 function GroupInfoPage({
     isDialogOpen,
     setDialogOpen,
-    groupData
+    groupData,
+    currentUserID
 }: Props): React.MixedElement {
     const classes = useStyles();
 
@@ -115,19 +116,15 @@ function GroupInfoPage({
             });
 
             if (deleteGroupItemElement != null) {
-                console.log("already Present");
                 setDeletedGroupMembers([
                     ...deletedGroupMembers,
                     deleteGroupItemElement.id
                 ]);
-            } else {
-                console.log("Not present");
             }
 
             setGroupMembers(
                 groupMembers.filter(member => member.id !== deleteUserID)
             );
-            console.log({ deletedGroupMembers });
         },
         [deletedGroupMembers, groupMembers, items]
     );
@@ -189,11 +186,14 @@ function GroupInfoPage({
     };
 
     const handleSubmit = async () => {
-        console.log("handle submit");
         if (!hasAnythingChanged()) {
             handleClose();
             return;
         }
+
+        // change group settings
+        // add users to group if they are not already present
+        // remove users from group if they are present
 
         setMutationStatus(PENDING);
         const promises = [];
@@ -216,8 +216,16 @@ function GroupInfoPage({
                     });
                 })
                 .map(user => user.id);
-
-            promises.push(addUsersToGroup(groupID, newMembersIDList));
+            const newMembersEmailList = groupMembers
+                .filter(groupMember => {
+                    return initialGroupMembers.every(initialMember => {
+                        return groupMember.id !== initialMember.id;
+                    });
+                })
+                .map(user => user.email);
+            promises.push(
+                addUsersToGroup(groupID, newMembersIDList, newMembersEmailList)
+            );
         }
 
         if (deletedGroupMembers.length !== 0) {
@@ -235,10 +243,25 @@ function GroupInfoPage({
                 console.error("Group Settings update unsucessful", error);
                 setMutationStatus(ERROR);
             });
+    };
 
-        // change group settings
-        // add users to group if they are Present
-        // remove users to group if they are present
+    const handleLeaveGroup = async () => {
+        const currentUserUserGroup = items.find(groupItem => {
+            return groupItem.user.id === currentUserID;
+        });
+        if (currentUserUserGroup == null || currentUserUserGroup.id == null) {
+            return;
+        }
+        setMutationStatus(PENDING);
+        await deleteUserFromGroup(currentUserUserGroup.id)
+            .then(response => {
+                console.log("leave group successful");
+                window.location.replace("/homepage");
+            })
+            .error(err => {
+                console.error("Leave group unsucessful", err);
+                setMutationStatus(ERROR);
+            });
     };
 
     if (mutationStatus === PENDING) {
@@ -413,6 +436,13 @@ function GroupInfoPage({
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
+                    <Button
+                        onClick={handleLeaveGroup}
+                        color="secondary"
+                        variant="outlined"
+                    >
+                        Leave Group
+                    </Button>
                     <Button
                         onClick={handleClose}
                         color="primary"
