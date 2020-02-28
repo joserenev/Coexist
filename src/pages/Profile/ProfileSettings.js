@@ -13,6 +13,9 @@ import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../Loading/LoadingPage";
 import { updateUser } from "../../api/Api";
 
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -22,6 +25,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import Alert from "@material-ui/lab/Alert";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -51,16 +55,22 @@ function ProfileSettings({
 
     const [newName, setNewName] = useState(name);
     const [newPhoneNumber, setNewPhoneNumber] = useState(phone);
+    const [isErrorOpen, setErrorOpen] = React.useState(false);
 
     const handleSubmit = async () => {
         if (newName === name && newPhoneNumber === phone) {
             handleClose();
             return;
         }
-        await updateUser(id, newName, newPhoneNumber).then(data => {
-            handleClose();
-            window.location.replace("profile");
-        });
+
+        if (newPhoneNumber.length !== 10) {
+            setErrorOpen(true);
+        } else {
+            await updateUser(id, newName, newPhoneNumber).then(data => {
+                handleClose();
+                window.location.replace("profile");
+            });
+        }
     };
 
     return (
@@ -174,6 +184,30 @@ function ProfileSettings({
                     >
                         SUBMIT
                     </Button>
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "center"
+                        }}
+                        open={isErrorOpen}
+                        onClose={handleClose}
+                        action={
+                            <React.Fragment>
+                                <IconButton
+                                    size="small"
+                                    aria-label="close"
+                                    color="inherit"
+                                    onClick={handleClose}
+                                >
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            </React.Fragment>
+                        }
+                    >
+                        <Alert onClose={handleClose} severity="error">
+                            Error! Your phone number is invalid!
+                        </Alert>
+                    </Snackbar>
                 </DialogActions>
             </Dialog>
         </div>

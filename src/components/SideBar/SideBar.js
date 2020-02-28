@@ -25,7 +25,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import ProfileIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import EditAttributes from "@material-ui/icons/EditAttributes"
+import EditAttributes from "@material-ui/icons/EditAttributes";
 
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -250,7 +250,20 @@ function SideBar({
                             groups = {}
                         } = userData ?? {};
                         const imageUrl = null;
-                        const { items: groupItems = [] } = groups ?? [];
+                        const { items = [] } = groups ?? [];
+                        const groupItems = items
+                            .filter(groupItem => {
+                                return (
+                                    groupItem != null && groupItem.group != null
+                                );
+                            })
+                            .sort((groupItem1, groupItem2) => {
+                                const updatedTime1 =
+                                    groupItem1.group?.updatedAt ?? "";
+                                const updatedTime2 =
+                                    groupItem2.group?.updatedAt ?? "";
+                                return updatedTime2.localeCompare(updatedTime1);
+                            });
                         // TODO: Sort Group Items by Created Date
                         return (
                             <>
@@ -386,28 +399,21 @@ function SideBar({
                                                     }
                                                 />
                                             )}
-                                            {groupItems
-                                                .filter(groupItem => {
-                                                    return (
-                                                        groupItem != null &&
-                                                        groupItem.group != null
-                                                    );
-                                                })
-                                                .map(groupItem => {
-                                                    return (
-                                                        <div key={groupItem.id}>
-                                                            <Group
-                                                                group={
-                                                                    groupItem.group
-                                                                }
-                                                            />
-                                                            <Divider
-                                                                variant="inset"
-                                                                component="li"
-                                                            />
-                                                        </div>
-                                                    );
-                                                })}
+                                            {groupItems.map(groupItem => {
+                                                return (
+                                                    <div key={groupItem.id}>
+                                                        <Group
+                                                            group={
+                                                                groupItem.group
+                                                            }
+                                                        />
+                                                        <Divider
+                                                            variant="inset"
+                                                            component="li"
+                                                        />
+                                                    </div>
+                                                );
+                                            })}
                                             <CreateGroupButton />
                                         </CardContent>
                                     </Card>
@@ -419,13 +425,13 @@ function SideBar({
                                         //selected={selectedIndex === 2}
                                         //onClick={event => handleListItemClick(event, 2)}
                                         onClick={handleDrawerClose}
-                                        >
+                                    >
                                         <ListItemIcon>
                                             <EditAttributes />
-                                    </ListItemIcon>
+                                        </ListItemIcon>
                                         <ListItemText primary="Options" />
-                                </ListItem>
-                            </List>
+                                    </ListItem>
+                                </List>
                             </>
                         );
                     }}

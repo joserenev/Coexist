@@ -8,6 +8,13 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import PersonIcon from "@material-ui/icons/Person";
 import { Link, useHistory } from "react-router-dom";
 
+import { Connect } from "aws-amplify-react";
+import { graphqlOperation } from "aws-amplify";
+import { getUser as getUserDetailsQuery } from "../../customGraphql/queries";
+import LoadingPage from "../../pages/Loading/LoadingPage";
+
+
+
 const OnlineBadge = withStyles(theme => ({
 	  root: {
     '& > *': {
@@ -99,37 +106,76 @@ const OnlineBadge = withStyles(theme => ({
 	},
   }))(Badge);
 
+  type Props = {|
+    user: Object
+|};
   
-  export default function User(props) {
+  export default function User({ user }: Props) {
     const classes = useStyles();
-  
+  let userState = 'OFFLINE';
+  const {
+                    username = "",
+                    email = "",
+                    name = "",
+                    phone = "",
+                } = user ?? {};
   return (
-    <div>
-    
-    <div className={classes.root}>
-    <OnlineBadge
-        overlap="circle"
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-		title="Online"
-        variant="dot"
-      >
-        <Avatar alt="Remy Sharp" src={<PersonIcon/>} />
-      </OnlineBadge>
-    <div>
-<Typography variant="h4" color="inherit">
-{props.name}
-</Typography>
-<Typography variant="h6" color="inherit">
-Username
-</Typography>
-</div>
-  
+  <div>
+                            <div className={classes.root}>
+								{userState === "ONLINE" && (
+									<OnlineBadge
+								overlap="circle"
+								anchorOrigin={{
+								  vertical: 'bottom',
+								  horizontal: 'right',
+								}}
+								title="Online"
+								variant="dot"
+							  >
+								<Avatar alt="Remy Sharp" src={<PersonIcon/>} />
+							  </OnlineBadge>
+								)}
+								
+								{userState === "IDLE" && (
+									<IdleBadge
+								overlap="circle"
+								anchorOrigin={{
+								  vertical: 'bottom',
+								  horizontal: 'right',
+								}}
+								title="Online"
+								variant="dot"
+							  >
+								<Avatar alt="Remy Sharp" src={<PersonIcon/>} />
+							  </IdleBadge>
+								)}
+								
+								{userState === "OFFLINE" && (
+									<OfflineBadge
+								overlap="circle"
+								anchorOrigin={{
+								  vertical: 'bottom',
+								  horizontal: 'right',
+								}}
+								title="Online"
+								variant="dot"
+							  >
+								<Avatar alt="Remy Sharp" src={<PersonIcon/>} />
+							  </OfflineBadge>
+								)}
+							
+						    <div>
+						<Typography variant="h4" color="inherit">
+						{name}
+						</Typography>
+						<Typography variant="h6" color="inherit">
+						{username}
+						</Typography>
+						</div>
+						  
 
-  </div>
-  </div>
+						  </div>
+                        </div>
    
     );
   }

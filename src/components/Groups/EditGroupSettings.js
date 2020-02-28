@@ -12,7 +12,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
-import { getGroup } from "../../graphql/queries";
+import { getGroup } from "../../customGraphql/queries";
 import LoadingPage from "../../pages/Loading/LoadingPage";
 
 import { Link } from "react-router-dom";
@@ -21,6 +21,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import "./popup.css";
 import User from "../User/User";
+
+
 
 const useStyles = makeStyles(theme => ({
     groupStats: {
@@ -41,6 +43,7 @@ type Props = {|
     groupID: string
 |};
 export default function EditGroupSettings({ groupID }: Props) {
+	console.log(groupID);
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -156,7 +159,7 @@ export default function EditGroupSettings({ groupID }: Props) {
                                         >
                                             <b>Settings for </b>
                                             <b id="groupNameEdit">
-                                                'Group Name'
+                                                '{groupData.name}'
                                             </b>
                                         </h5>
                                         <button
@@ -197,7 +200,7 @@ export default function EditGroupSettings({ groupID }: Props) {
                                                         class="form-control"
                                                         aria-label="Small"
                                                         aria-describedby="inputGroup-sizing-sm"
-                                                        placeholder="Group Name"
+                                                        defaultValue={groupData.name}
                                                     />
                                                 </div>
                                                 <div class="input-group mb-3">
@@ -210,8 +213,12 @@ export default function EditGroupSettings({ groupID }: Props) {
                                                         id="group-description-input"
                                                         class="form-control"
                                                         aria-label="With textarea"
+														defaultValue={groupData.description}
                                                     ></textarea>
                                                 </div>
+												<div>Owner: {groupData.owner.name}</div>
+												<div>Group type: {groupData.type}</div>
+												<div>Created at: {groupData.createdAt}</div>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row bd-highlight justify-content-around">
@@ -220,22 +227,21 @@ export default function EditGroupSettings({ groupID }: Props) {
                                                     <b>Members</b>
                                                 </h5>
                                                 <div class="member-list">
-                                                    <User
-                                                        OnlineType="OfflineBadge"
-                                                        name="Person A"
-                                                    />
-                                                    <User
-                                                        OnlineType="OnlineBadge"
-                                                        name="Person B"
-                                                    />
-                                                    <User
-                                                        OnlineType="OnlineBadge"
-                                                        name="Person C"
-                                                    />
-                                                    <User
-                                                        OnlineType="OnlineBadge"
-                                                        name="Person D"
-                                                    />
+												{groupData.users.items.map(
+													(member, index) => {
+														const {user} = member
+														return (
+															<div key={index}>
+																<User
+																	OnlineType="OfflineBadge"
+																	user={user}
+																/>
+															</div>
+														);
+													}
+												)}
+													
+                                                    
                                                 </div>
                                                 <br />
                                                 <Button
@@ -358,13 +364,6 @@ export default function EditGroupSettings({ groupID }: Props) {
                                         >
                                             Leave Group
                                         </button>
-
-                                        <input
-                                            type="file"
-                                            class="custom-file-input unanchored"
-                                            accept="image/*"
-                                            id="imageUploadHidden"
-                                        />
                                     </div>
                                     <div class="modal-footer">
                                         <button
