@@ -10,6 +10,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import SettingsIcon from "@material-ui/icons/Settings";
+import { Connect } from "aws-amplify-react";
+import { graphqlOperation } from "aws-amplify";
+import { getGroup } from "../../graphql/queries";
+import LoadingPage from "../../pages/Loading/LoadingPage";
 
 import { Link } from "react-router-dom";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -20,7 +24,7 @@ import User from "../User/User";
 
 const useStyles = makeStyles(theme => ({
     groupStats: {
-  		flex: .25
+        flex: 0.25
     },
 
     infoContainers: {
@@ -33,7 +37,10 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function FormDialog() {
+type Props = {|
+    groupID: string
+|};
+export default function EditGroupSettings({ groupID }: Props) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -43,20 +50,25 @@ export default function FormDialog() {
     const handleClose = () => {
         setOpen(false);
     };
-
     const uploadPicture = () => {
         //document.getElementById("imageUploadHidden").click();
-		const imageLink = prompt("Enter the link of the image you want to use.");
-		if (imageLink == undefined || imageLink.length < 1) { return; }
-		document.getElementById("imageUpload").setAttribute("src", imageLink);
+        const imageLink = prompt(
+            "Enter the link of the image you want to use."
+        );
+        if (imageLink == undefined || imageLink.length < 1) {
+            return;
+        }
+        document.getElementById("imageUpload").setAttribute("src", imageLink);
     };
 
     const changeBudget = () => {
-        document.getElementsByClassName("budgetInput")[0].style.display = 'flex';
+        document.getElementsByClassName("budgetInput")[0].style.display =
+            "flex";
     };
 
     const cancelBudget = () => {
-        document.getElementsByClassName("budgetInput")[0].style.display = "none";
+        document.getElementsByClassName("budgetInput")[0].style.display =
+            "none";
     };
 
     const updateBudget = () => {
@@ -77,244 +89,306 @@ export default function FormDialog() {
         const enteredName = window.prompt(
             "Type the username or email of the user you would like to add to the group"
         );
-		////Code to add them to the group
-		////Display addition
+        ////Code to add them to the group
+        ////Display addition
     };
 
-	const saveGroupSettings = () => {
+    const saveGroupSettings = () => {
         let groupName = document.getElementById("group-name-input").value;
-		let groupDescription = document.getElementById("group-description-input").value;
-		let groupBudget = document.getElementById("group-budget").innerHTML;
-		let groupImage = document.getElementById("imageUpload").src;
+        let groupDescription = document.getElementById(
+            "group-description-input"
+        ).value;
+        let groupBudget = document.getElementById("group-budget").innerHTML;
+        let groupImage = document.getElementById("imageUpload").src;
 
-		alert("Group name: " + groupName + "\nDescription: " + groupDescription + "\nBudget: " + groupBudget + "\nImage Link: " + groupImage);
-		////Send to database
+        alert(
+            "Group name: " +
+                groupName +
+                "\nDescription: " +
+                groupDescription +
+                "\nBudget: " +
+                groupBudget +
+                "\nImage Link: " +
+                groupImage
+        );
+        ////Send to database
     };
-	
-	const leaveGroup = () => {
-        const isLeaving = window.confirm("Are you sure you want to leave this group?");
-		if (isLeaving == true)
-		{
-			//user leaves group, take them off page and remove from group in database
-		}
+
+    const leaveGroup = () => {
+        const isLeaving = window.confirm(
+            "Are you sure you want to leave this group?"
+        );
+        if (isLeaving == true) {
+            //user leaves group, take them off page and remove from group in database
+        }
     };
 
     return (
-        <div>
-            <SettingsIcon
-                data-toggle="modal"
-                data-target="#myModal"
-                height="30px"
-                class="btn float-right shadow-none"
-            />
-            <div class="modal fade" id="myModal" tabindex="-1">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5
-                                class="modal-title text-center w-100"
-                                id="exampleModalLabel"
-                            >
-                                <b>Settings for </b>
-                                <b id="groupNameEdit">'Group Name'</b>
-                            </h5>
-                            <button
-                                type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                        <div class="d-flex bd-highlight">
-                          <div class="p-2 bd-highlight">
-                            <img
-                                onClick={uploadPicture}
-                                src="https://www.sideshow.com/storage/product-images/903766/thanos_marvel_square.jpg"
-                                class="img-center"
-                                height="160px"
-                                id="imageUpload"
-                            ></img>
-                            </div>
-                            <div class="p-2 bd-highlight flex-grow-1">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span
-                                        class="input-group-text"
-                                        id="inputGroup-sizing-sm"
-                                    >
-                                        Group Name
-                                    </span>
-                                </div>
-                                <input
-									id="group-name-input"
-                                    type="text"
-                                    class="form-control"
-                                    aria-label="Small"
-                                    aria-describedby="inputGroup-sizing-sm"
-                                    placeholder="Group Name"
-                                />
-                            </div>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        Description
-                                    </span>
-                                </div>
-                                <textarea
-									id="group-description-input"
-                                    class="form-control"
-                                    aria-label="With textarea"
-                                ></textarea>
-                            </div>
-                            </div>
-                            </div>
-                            <div class="d-flex flex-row bd-highlight justify-content-around">
-                                <div class="p-2 bd-highlight">
-                            <h5><b>Members</b></h5>
-                            <div class="member-list">
-                                <User OnlineType="OfflineBadge" name="Person A"/>
-                                <User OnlineType="OnlineBadge" name="Person B"/>
-                                <User OnlineType="OnlineBadge" name="Person C"/>
-                                <User OnlineType="OnlineBadge" name="Person D"/>
-                            </div>
-                            <br/>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={addNewMember}
-                            >
-                                Add new user
-                            </Button>
+        <Connect query={graphqlOperation(getGroup, { id: groupID })}>
+            {({ data, loading, error }) => {
+                if (error) {
+                    //TODO: Add a dedicated ERROR Component with a message to show.
+                    return <h3>Error</h3>;
+                }
 
-                            <Dialog
-                                open={open}
-                                onClose={handleClose}
-                                aria-labelledby="form-dialog-title"
-                            >
-                                <DialogTitle id="form-dialog-title">
-                                    Add a User
-                                </DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        To add a user to the group, please enter
-                                        their email or username here.
-                                    </DialogContentText>
-                                    <TextField
-                                        autoFocus
-                                        margin="dense"
-                                        id="name"
-                                        label="Email or Username"
-                                        type="email"
-                                        fullWidth
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button
-                                        onClick={handleClose}
-                                        color="primary"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        onClick={handleClose}
-                                        color="primary"
-                                    >
-                                        Add
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
+                if (loading) {
+                    return <LoadingPage />;
+                }
 
-                            </div>
-                            <div class="p-2 bd-highlight">
-                            <h5><b>Statistics</b></h5>
+                const groupData = data.getGroup;
+                console.log({ groupData });
 
-                            <div class="card groupStats">
-                                    <li class="list-group-item">
-                                        Money spent:{" "}
-                                        <span class="money-text">
-                                            $1,000.00
-                                        </span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        Budget:{" "}
-                                        <span
-                                            class="money-text budget-text"
-                                            onClick={changeBudget}
-											id="group-budget"
+                return (
+                    <div>
+                        <SettingsIcon
+                            data-toggle="modal"
+                            data-target="#myModal"
+                            height="30px"
+                            class="btn float-right shadow-none"
+                        />
+                        <div class="modal fade" id="myModal" tabindex="-1">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5
+                                            class="modal-title text-center w-100"
+                                            id="exampleModalLabel"
                                         >
-                                            $800
-                                        </span>
-                                        <div class="input-group mb-3 budgetInput">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    $
-                                                </span>
+                                            <b>Settings for </b>
+                                            <b id="groupNameEdit">
+                                                'Group Name'
+                                            </b>
+                                        </h5>
+                                        <button
+                                            type="button"
+                                            class="close"
+                                            data-dismiss="modal"
+                                            aria-label="Close"
+                                        >
+                                            <span aria-hidden="true">
+                                                &times;
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="d-flex bd-highlight">
+                                            <div class="p-2 bd-highlight">
+                                                <img
+                                                    onClick={uploadPicture}
+                                                    src="https://www.sideshow.com/storage/product-images/903766/thanos_marvel_square.jpg"
+                                                    class="img-center"
+                                                    height="160px"
+                                                    id="imageUpload"
+                                                ></img>
                                             </div>
-                                            <input
-                                                type="number"
-                                                class="form-control budget-input"
-                                                aria-label="Amount (to the nearest dollar)"
-                                            />
-                                            <div class="input-group-append">
-                                                <span
-                                                    class="input-group-text accept-button"
-                                                    onClick={updateBudget}
-                                                >
-                                                    ✓
-                                                </span>
-                                            </div>
-                                            <div class="input-group-append">
-                                                <span
-                                                    class="input-group-text close-button"
-                                                    onClick={cancelBudget}
-                                                >
-                                                    X
-                                                </span>
+                                            <div class="p-2 bd-highlight flex-grow-1">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span
+                                                            class="input-group-text"
+                                                            id="inputGroup-sizing-sm"
+                                                        >
+                                                            Group Name
+                                                        </span>
+                                                    </div>
+                                                    <input
+                                                        id="group-name-input"
+                                                        type="text"
+                                                        class="form-control"
+                                                        aria-label="Small"
+                                                        aria-describedby="inputGroup-sizing-sm"
+                                                        placeholder="Group Name"
+                                                    />
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            Description
+                                                        </span>
+                                                    </div>
+                                                    <textarea
+                                                        id="group-description-input"
+                                                        class="form-control"
+                                                        aria-label="With textarea"
+                                                    ></textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                    </li>
-                            </div>
-                            </div>
-                            </div>
+                                        <div class="d-flex flex-row bd-highlight justify-content-around">
+                                            <div class="p-2 bd-highlight">
+                                                <h5>
+                                                    <b>Members</b>
+                                                </h5>
+                                                <div class="member-list">
+                                                    <User
+                                                        OnlineType="OfflineBadge"
+                                                        name="Person A"
+                                                    />
+                                                    <User
+                                                        OnlineType="OnlineBadge"
+                                                        name="Person B"
+                                                    />
+                                                    <User
+                                                        OnlineType="OnlineBadge"
+                                                        name="Person C"
+                                                    />
+                                                    <User
+                                                        OnlineType="OnlineBadge"
+                                                        name="Person D"
+                                                    />
+                                                </div>
+                                                <br />
+                                                <Button
+                                                    variant="outlined"
+                                                    color="primary"
+                                                    onClick={addNewMember}
+                                                >
+                                                    Add new user
+                                                </Button>
 
-							
-							<br/>
-							<button
-								type="button"
-								class="btn btn-default"
-								onClick={leaveGroup}
-							>Leave Group</button>
-							
-                            <input
-                                type="file"
-                                class="custom-file-input unanchored"
-                                accept="image/*"
-                                id="imageUploadHidden"
-                            />
-                        </div>
-                        <div class="modal-footer">
-                            <button
-                                type="button"
-                                class="btn btn-default text-center w-100"
-                                data-dismiss="modal"
-                            >
-                                Close
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-default text-center w-100"
-                                data-dismiss="modal"
-								onClick={saveGroupSettings}
-                            >
-                                Save
-                            </button>
+                                                <Dialog
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    aria-labelledby="form-dialog-title"
+                                                >
+                                                    <DialogTitle id="form-dialog-title">
+                                                        Add a User
+                                                    </DialogTitle>
+                                                    <DialogContent>
+                                                        <DialogContentText>
+                                                            To add a user to the
+                                                            group, please enter
+                                                            their email or
+                                                            username here.
+                                                        </DialogContentText>
+                                                        <TextField
+                                                            autoFocus
+                                                            margin="dense"
+                                                            id="name"
+                                                            label="Email or Username"
+                                                            type="email"
+                                                            fullWidth
+                                                        />
+                                                    </DialogContent>
+                                                    <DialogActions>
+                                                        <Button
+                                                            onClick={
+                                                                handleClose
+                                                            }
+                                                            color="primary"
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                        <Button
+                                                            onClick={
+                                                                handleClose
+                                                            }
+                                                            color="primary"
+                                                        >
+                                                            Add
+                                                        </Button>
+                                                    </DialogActions>
+                                                </Dialog>
+                                            </div>
+                                            <div class="p-2 bd-highlight">
+                                                <h5>
+                                                    <b>Statistics</b>
+                                                </h5>
+
+                                                <div class="card groupStats">
+                                                    <li class="list-group-item">
+                                                        Money spent:{" "}
+                                                        <span class="money-text">
+                                                            $1,000.00
+                                                        </span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        Budget:{" "}
+                                                        <span
+                                                            class="money-text budget-text"
+                                                            onClick={
+                                                                changeBudget
+                                                            }
+                                                            id="group-budget"
+                                                        >
+                                                            $800
+                                                        </span>
+                                                        <div class="input-group mb-3 budgetInput">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">
+                                                                    $
+                                                                </span>
+                                                            </div>
+                                                            <input
+                                                                type="number"
+                                                                class="form-control budget-input"
+                                                                aria-label="Amount (to the nearest dollar)"
+                                                            />
+                                                            <div class="input-group-append">
+                                                                <span
+                                                                    class="input-group-text accept-button"
+                                                                    onClick={
+                                                                        updateBudget
+                                                                    }
+                                                                >
+                                                                    ✓
+                                                                </span>
+                                                            </div>
+                                                            <div class="input-group-append">
+                                                                <span
+                                                                    class="input-group-text close-button"
+                                                                    onClick={
+                                                                        cancelBudget
+                                                                    }
+                                                                >
+                                                                    X
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                        <button
+                                            type="button"
+                                            class="btn btn-default"
+                                            onClick={leaveGroup}
+                                        >
+                                            Leave Group
+                                        </button>
+
+                                        <input
+                                            type="file"
+                                            class="custom-file-input unanchored"
+                                            accept="image/*"
+                                            id="imageUploadHidden"
+                                        />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button
+                                            type="button"
+                                            class="btn btn-default text-center w-100"
+                                            data-dismiss="modal"
+                                        >
+                                            Close
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-default text-center w-100"
+                                            data-dismiss="modal"
+                                            onClick={saveGroupSettings}
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                );
+            }}
+        </Connect>
     );
 }
