@@ -17,6 +17,8 @@ export const createUser = `mutation CreateUser(
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -36,6 +38,8 @@ export const updateUser = `mutation UpdateUser(
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -55,6 +59,8 @@ export const deleteUser = `mutation DeleteUser(
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -73,6 +79,8 @@ export const createUserGroups = `mutation CreateUserGroups(
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     group {
       id
@@ -83,12 +91,16 @@ export const createUserGroups = `mutation CreateUserGroups(
         email
         name
         phone
+        createdAt
+        updatedAt
       }
       type
       description
       users {
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 }
@@ -108,6 +120,8 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     group {
       id
@@ -118,12 +132,16 @@ export const updateUserGroups = `mutation UpdateUserGroups(
         email
         name
         phone
+        createdAt
+        updatedAt
       }
       type
       description
       users {
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 }
@@ -143,6 +161,8 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     group {
       id
@@ -153,12 +173,16 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
         email
         name
         phone
+        createdAt
+        updatedAt
       }
       type
       description
       users {
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 }
@@ -179,6 +203,8 @@ export const createGroup = `mutation CreateGroup(
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     type
     description
@@ -188,6 +214,8 @@ export const createGroup = `mutation CreateGroup(
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -207,6 +235,8 @@ export const updateGroup = `mutation UpdateGroup(
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     type
     description
@@ -216,6 +246,8 @@ export const updateGroup = `mutation UpdateGroup(
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -235,6 +267,8 @@ export const deleteGroup = `mutation DeleteGroup(
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     type
     description
@@ -244,6 +278,8 @@ export const deleteGroup = `mutation DeleteGroup(
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;

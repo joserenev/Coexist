@@ -14,6 +14,8 @@ export const onCreateUser = `subscription OnCreateUser {
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -30,6 +32,8 @@ export const onUpdateUser = `subscription OnUpdateUser {
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -46,6 +50,8 @@ export const onDeleteUser = `subscription OnDeleteUser {
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -61,6 +67,8 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     group {
       id
@@ -71,12 +79,16 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
         email
         name
         phone
+        createdAt
+        updatedAt
       }
       type
       description
       users {
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 }
@@ -93,6 +105,8 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     group {
       id
@@ -103,12 +117,16 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
         email
         name
         phone
+        createdAt
+        updatedAt
       }
       type
       description
       users {
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 }
@@ -125,6 +143,8 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     group {
       id
@@ -135,12 +155,16 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
         email
         name
         phone
+        createdAt
+        updatedAt
       }
       type
       description
       users {
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 }
@@ -158,6 +182,8 @@ export const onCreateGroup = `subscription OnCreateGroup {
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     type
     description
@@ -167,6 +193,8 @@ export const onCreateGroup = `subscription OnCreateGroup {
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -183,6 +211,8 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     type
     description
@@ -192,6 +222,8 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -208,6 +240,8 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
       groups {
         nextToken
       }
+      createdAt
+      updatedAt
     }
     type
     description
@@ -217,6 +251,8 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
       }
       nextToken
     }
+    createdAt
+    updatedAt
   }
 }
 `;

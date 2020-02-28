@@ -5,6 +5,8 @@ export const getUser = `query GetUser($id: ID!) {
     email
     name
     phone
+    createdAt
+    updatedAt
     groups {
       items {
         id

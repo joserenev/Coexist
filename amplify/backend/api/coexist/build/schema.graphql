@@ -5,6 +5,8 @@ type User {
   name: String
   phone: String
   groups(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
+  createdAt: String
+  updatedAt: String
 }
 
 type UserGroups {
@@ -20,6 +22,8 @@ type Group {
   type: String
   description: String
   users(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
+  createdAt: String
+  updatedAt: String
 }
 
 enum ModelSortDirection {
@@ -111,6 +115,8 @@ input ModelUserFilterInput {
   email: ModelStringInput
   name: ModelStringInput
   phone: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
   and: [ModelUserFilterInput]
   or: [ModelUserFilterInput]
   not: ModelUserFilterInput
@@ -129,6 +135,8 @@ input CreateUserInput {
   email: String
   name: String
   phone: String
+  createdAt: String
+  updatedAt: String
 }
 
 input UpdateUserInput {
@@ -137,6 +145,8 @@ input UpdateUserInput {
   email: String
   name: String
   phone: String
+  createdAt: String
+  updatedAt: String
 }
 
 input DeleteUserInput {
@@ -160,6 +170,8 @@ input ModelUserConditionInput {
   email: ModelStringInput
   name: ModelStringInput
   phone: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
   and: [ModelUserConditionInput]
   or: [ModelUserConditionInput]
   not: ModelUserConditionInput
@@ -229,6 +241,8 @@ input ModelGroupFilterInput {
   name: ModelStringInput
   type: ModelStringInput
   description: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
   and: [ModelGroupFilterInput]
   or: [ModelGroupFilterInput]
   not: ModelGroupFilterInput
@@ -239,6 +253,8 @@ input CreateGroupInput {
   name: String
   type: String
   description: String
+  createdAt: String
+  updatedAt: String
   groupOwnerId: ID
 }
 
@@ -247,6 +263,8 @@ input UpdateGroupInput {
   name: String
   type: String
   description: String
+  createdAt: String
+  updatedAt: String
   groupOwnerId: ID
 }
 
@@ -258,6 +276,8 @@ input ModelGroupConditionInput {
   name: ModelStringInput
   type: ModelStringInput
   description: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
   and: [ModelGroupConditionInput]
   or: [ModelGroupConditionInput]
   not: ModelGroupConditionInput

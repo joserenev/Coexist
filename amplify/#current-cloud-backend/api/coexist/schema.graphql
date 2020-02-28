@@ -5,6 +5,8 @@ type User @model {
   name: String
   phone: String
   groups: [UserGroups] @connection(name: "UserGroups")
+  createdAt: String
+  updatedAt: String
 }
 
 type UserGroups @model (queries: null){
@@ -20,5 +22,6 @@ type Group @model {
   type: String
   description: String
   users: [UserGroups] @connection(name: "GroupUsers")
-
+  createdAt: String
+  updatedAt: String
 }
