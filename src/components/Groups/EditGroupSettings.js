@@ -216,6 +216,9 @@ export default function EditGroupSettings({ groupID }: Props) {
 														defaultValue={groupData.description}
                                                     ></textarea>
                                                 </div>
+												<div>Owner: {groupData.owner.name}</div>
+												<div>Group type: {groupData.type}</div>
+												<div>Created at: {groupData.createdAt}</div>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row bd-highlight justify-content-around">
@@ -361,13 +364,6 @@ export default function EditGroupSettings({ groupID }: Props) {
                                         >
                                             Leave Group
                                         </button>
-
-                                        <input
-                                            type="file"
-                                            class="custom-file-input unanchored"
-                                            accept="image/*"
-                                            id="imageUploadHidden"
-                                        />
                                     </div>
                                     <div class="modal-footer">
                                         <button
