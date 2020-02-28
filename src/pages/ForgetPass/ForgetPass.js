@@ -18,6 +18,7 @@ import { ReferralTypeConstants } from "../../components/util/ReferralTypeConstan
 import FormValidation from '@react-form-fields/material-ui/components/FormValidation';
 import FieldText from '@react-form-fields/material-ui/components/Text';
 import  { PureComponent } from 'react';
+import Authentication from "../../authentication/Authentication";
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -76,13 +77,43 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-
     
 
 
-function ForgotPassowrd(): React.MixedElement {
-    const [nameValue, setNameValue] = useState("");
-    const [loginValue, setLoginValue] = useState(""); // login value is "username"
+function ForgotPassowrd(props) {
+
+    const [emailValue, setEmailValue] = useState("");
+    const [confirmationCodeValue, setConfirmationCodeValue] = useState("");
+    const [newPasswordValue, setNewPasswordValue] = useState("");
+    
+    
+    const handleResendCode = async () =>{
+        console.log("ReSend vercode");
+        await Authentication.forgotPassword(emailValue)
+            .then(function(data){})
+            .catch(function (err) {
+                if (err.code !== "UserNotFoundException") {
+                        console.log("Existing User Found!");
+                    }
+            })
+    };
+
+    const handleNewPassword = async () => {
+        console.log("new Password setUp");
+        await Authentication.forgotPasswordSubmit(emailValue,confirmationCodeValue,newPasswordValue)
+            .then(async function(reSign){
+    
+            })
+            .catch(function(result){
+                 if (result.code === "CodeMismatchException") {
+                    console.log("Code Mismatch")
+                }
+            });
+
+    };
+
+    
+
     const classes = useStyles();
     return (
         <div>
@@ -108,18 +139,20 @@ function ForgotPassowrd(): React.MixedElement {
                                     input: classes.textField
                                 }
                             }}
-                            value={nameValue}
-                                        
+                            value={emailValue}
+                            onChange={e =>
+                                setEmailValue(e.target.value)
+                            }
                             margin="normal"
-                            placeholder="Email"
+                            placeholder="Username"
                             type="email"
                             fullWidth
                         />
                     <Button
                         
                         size="large"
-                         variant="outlined" color="primary"
-                        //onClick={event =>  window.location.href='/resetPass'}
+                        variant="outlined" color="primary"
+                        onClick={handleResendCode}
                         >
                             Submit
                         </Button>
@@ -140,8 +173,10 @@ function ForgotPassowrd(): React.MixedElement {
                                     input: classes.textField
                                 }
                             }}
-                            value={nameValue}
-                                        
+                            value={confirmationCodeValue}       
+                            onChange={e =>
+                                setConfirmationCodeValue(e.target.value)
+                            }
                             margin="normal"
                             placeholder="Reset Code"
                             type="password"
@@ -159,8 +194,10 @@ function ForgotPassowrd(): React.MixedElement {
                                     input: classes.textField
                                 }
                             }}
-                            value={nameValue}
-                                        
+                            value={newPasswordValue}
+                            onChange={e =>
+                                setNewPasswordValue(e.target.value)
+                            }  
                             margin="normal"
                             placeholder="New Password"
                             type="password"
@@ -174,7 +211,7 @@ function ForgotPassowrd(): React.MixedElement {
                         
                         size="large"
                          variant="outlined" color="primary"
-                        //onClick={event =>  window.location.href='/resetPass'}
+                        onClick={handleNewPassword}
                         >
                             Submit
                 </Button>
