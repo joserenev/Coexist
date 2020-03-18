@@ -20,6 +20,7 @@ import NoGroupFoundPage from "../pages/homepage/NoGroupFoundPage";
 import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
 import ReferralPage from "../pages/Referral/ReferralPage.js";
 import ForgetPass from "../pages/ForgetPass/ForgetPass.js";
+import ExpensesPage from "../pages/Expenses/ExpensesPage.js";
 
 import Authentication from "../authentication/Authentication";
 
@@ -207,6 +208,23 @@ function Main(props): React.MixedElement {
                                                 userID={userID}
                                             >
                                                 <ReferralPage />
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+                            <Route
+                                exact
+                                path="/expenses"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                <ExpensesPage />
                                             </ComponentContainer>
                                         </>
                                     );
