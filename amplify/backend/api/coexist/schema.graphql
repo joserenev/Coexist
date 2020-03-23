@@ -26,4 +26,15 @@ type Group @model {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  receipts: [Receipt] @connection(name: "GroupReceipts")
+}
+
+type Receipt @model {
+  id: ID!
+  name: String
+  description: String
+  totalAmount: String
+  createdAt: String
+  updatedAt: String
+  group: Group @connection(name: "GroupReceipts")
 }

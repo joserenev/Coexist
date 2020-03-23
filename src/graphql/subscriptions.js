@@ -95,6 +95,9 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       createdAt
       updatedAt
       pictureURL
+      receipts {
+        nextToken
+      }
     }
   }
 }
@@ -136,6 +139,9 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       createdAt
       updatedAt
       pictureURL
+      receipts {
+        nextToken
+      }
     }
   }
 }
@@ -177,6 +183,9 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       createdAt
       updatedAt
       pictureURL
+      receipts {
+        nextToken
+      }
     }
   }
 }
@@ -209,6 +218,17 @@ export const onCreateGroup = `subscription OnCreateGroup {
     createdAt
     updatedAt
     pictureURL
+    receipts {
+      items {
+        id
+        name
+        description
+        totalAmount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -240,6 +260,17 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
     createdAt
     updatedAt
     pictureURL
+    receipts {
+      items {
+        id
+        name
+        description
+        totalAmount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -271,6 +302,125 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
     createdAt
     updatedAt
     pictureURL
+    receipts {
+      items {
+        id
+        name
+        description
+        totalAmount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onCreateReceipt = `subscription OnCreateReceipt {
+  onCreateReceipt {
+    id
+    name
+    description
+    totalAmount
+    createdAt
+    updatedAt
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      receipts {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const onUpdateReceipt = `subscription OnUpdateReceipt {
+  onUpdateReceipt {
+    id
+    name
+    description
+    totalAmount
+    createdAt
+    updatedAt
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      receipts {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const onDeleteReceipt = `subscription OnDeleteReceipt {
+  onDeleteReceipt {
+    id
+    name
+    description
+    totalAmount
+    createdAt
+    updatedAt
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      receipts {
+        nextToken
+      }
+    }
   }
 }
 `;

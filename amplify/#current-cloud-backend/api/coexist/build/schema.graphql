@@ -26,6 +26,17 @@ type Group {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  receipts(filter: ModelReceiptFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelReceiptConnection
+}
+
+type Receipt {
+  id: ID!
+  name: String
+  description: String
+  totalAmount: String
+  createdAt: String
+  updatedAt: String
+  group: Group
 }
 
 enum ModelSortDirection {
@@ -130,6 +141,8 @@ type Query {
   listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
   getGroup(id: ID!): Group
   listGroups(filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection
+  getReceipt(id: ID!): Receipt
+  listReceipts(filter: ModelReceiptFilterInput, limit: Int, nextToken: String): ModelReceiptConnection
 }
 
 input CreateUserInput {
@@ -168,6 +181,9 @@ type Mutation {
   createGroup(input: CreateGroupInput!, condition: ModelGroupConditionInput): Group
   updateGroup(input: UpdateGroupInput!, condition: ModelGroupConditionInput): Group
   deleteGroup(input: DeleteGroupInput!, condition: ModelGroupConditionInput): Group
+  createReceipt(input: CreateReceiptInput!, condition: ModelReceiptConditionInput): Receipt
+  updateReceipt(input: UpdateReceiptInput!, condition: ModelReceiptConditionInput): Receipt
+  deleteReceipt(input: DeleteReceiptInput!, condition: ModelReceiptConditionInput): Receipt
 }
 
 input ModelUserConditionInput {
@@ -206,6 +222,9 @@ type Subscription {
   onCreateGroup: Group @aws_subscribe(mutations: ["createGroup"])
   onUpdateGroup: Group @aws_subscribe(mutations: ["updateGroup"])
   onDeleteGroup: Group @aws_subscribe(mutations: ["deleteGroup"])
+  onCreateReceipt: Receipt @aws_subscribe(mutations: ["createReceipt"])
+  onUpdateReceipt: Receipt @aws_subscribe(mutations: ["updateReceipt"])
+  onDeleteReceipt: Receipt @aws_subscribe(mutations: ["deleteReceipt"])
 }
 
 input ModelUserGroupsFilterInput {
@@ -291,6 +310,58 @@ input ModelGroupConditionInput {
   and: [ModelGroupConditionInput]
   or: [ModelGroupConditionInput]
   not: ModelGroupConditionInput
+}
+
+type ModelReceiptConnection {
+  items: [Receipt]
+  nextToken: String
+}
+
+input ModelReceiptFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  totalAmount: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelReceiptFilterInput]
+  or: [ModelReceiptFilterInput]
+  not: ModelReceiptFilterInput
+}
+
+input CreateReceiptInput {
+  id: ID
+  name: String
+  description: String
+  totalAmount: String
+  createdAt: String
+  updatedAt: String
+  receiptGroupId: ID
+}
+
+input UpdateReceiptInput {
+  id: ID!
+  name: String
+  description: String
+  totalAmount: String
+  createdAt: String
+  updatedAt: String
+  receiptGroupId: ID
+}
+
+input DeleteReceiptInput {
+  id: ID
+}
+
+input ModelReceiptConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  totalAmount: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelReceiptConditionInput]
+  or: [ModelReceiptConditionInput]
+  not: ModelReceiptConditionInput
 }
 
 type ModelUserGroupsConnection {
