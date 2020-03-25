@@ -17,7 +17,9 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import AddButton from "@material-ui/icons/AddCircle";
 import Avatar from "@material-ui/core/Avatar";
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
+// import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
+// import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 const drawerWidth = 240;
 
@@ -50,8 +52,8 @@ const useStyles = makeStyles(theme => ({
 
     largeIcons: {
         marginTop: 40,
-        height: 140,
-        width: 140
+        height: 180,
+        width: 180
     }
 }));
 
@@ -62,18 +64,12 @@ function NoGroupFoundPage(): React.MixedElement {
         <div>
             <div className={classes.headContainer}>
                 <div className={classes.errorContainer}>
-                    4
-                    <MonetizationOnIcon
+                    <GroupAddIcon
                         fontSize="large"
                         className={classes.largeIcons}
                     />
-                    4
                 </div>
-                <Typography variant="h3" gutterBottom>
-                    -GROUP NOT FOUND-
-                </Typography>
                 <div className={classes.addButton}>
-                    <br />
                     <Typography variant="h6" gutterBottom>
                         Seems like you're not added to any groups.
                         <br />

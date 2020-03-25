@@ -71,6 +71,17 @@ export const getGroup = `query GetGroup($id: ID!) {
     createdAt
     updatedAt
     pictureURL
+    receipts {
+      items {
+        id
+        name
+        description
+        totalAmount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -101,6 +112,72 @@ export const listGroups = `query ListGroups(
       createdAt
       updatedAt
       pictureURL
+      receipts {
+        nextToken
+      }
+    }
+    nextToken
+  }
+}
+`;
+export const getReceipt = `query GetReceipt($id: ID!) {
+  getReceipt(id: $id) {
+    id
+    name
+    description
+    totalAmount
+    createdAt
+    updatedAt
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      receipts {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const listReceipts = `query ListReceipts(
+  $filter: ModelReceiptFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listReceipts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      description
+      totalAmount
+      createdAt
+      updatedAt
+      group {
+        id
+        name
+        type
+        description
+        createdAt
+        updatedAt
+        pictureURL
+      }
     }
     nextToken
   }

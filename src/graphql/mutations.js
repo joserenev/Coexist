@@ -107,6 +107,9 @@ export const createUserGroups = `mutation CreateUserGroups(
       createdAt
       updatedAt
       pictureURL
+      receipts {
+        nextToken
+      }
     }
   }
 }
@@ -151,6 +154,9 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       createdAt
       updatedAt
       pictureURL
+      receipts {
+        nextToken
+      }
     }
   }
 }
@@ -195,6 +201,9 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       createdAt
       updatedAt
       pictureURL
+      receipts {
+        nextToken
+      }
     }
   }
 }
@@ -230,6 +239,17 @@ export const createGroup = `mutation CreateGroup(
     createdAt
     updatedAt
     pictureURL
+    receipts {
+      items {
+        id
+        name
+        description
+        totalAmount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -264,6 +284,17 @@ export const updateGroup = `mutation UpdateGroup(
     createdAt
     updatedAt
     pictureURL
+    receipts {
+      items {
+        id
+        name
+        description
+        totalAmount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -298,6 +329,134 @@ export const deleteGroup = `mutation DeleteGroup(
     createdAt
     updatedAt
     pictureURL
+    receipts {
+      items {
+        id
+        name
+        description
+        totalAmount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const createReceipt = `mutation CreateReceipt(
+  $input: CreateReceiptInput!
+  $condition: ModelReceiptConditionInput
+) {
+  createReceipt(input: $input, condition: $condition) {
+    id
+    name
+    description
+    totalAmount
+    createdAt
+    updatedAt
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      receipts {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const updateReceipt = `mutation UpdateReceipt(
+  $input: UpdateReceiptInput!
+  $condition: ModelReceiptConditionInput
+) {
+  updateReceipt(input: $input, condition: $condition) {
+    id
+    name
+    description
+    totalAmount
+    createdAt
+    updatedAt
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      receipts {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const deleteReceipt = `mutation DeleteReceipt(
+  $input: DeleteReceiptInput!
+  $condition: ModelReceiptConditionInput
+) {
+  deleteReceipt(input: $input, condition: $condition) {
+    id
+    name
+    description
+    totalAmount
+    createdAt
+    updatedAt
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      receipts {
+        nextToken
+      }
+    }
   }
 }
 `;
