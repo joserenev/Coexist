@@ -330,3 +330,34 @@ export async function uploadCloudinaryImage(imageFile) {
             throw error;
         });
 }
+
+export async function createNewReceipt(
+    name,
+    description = "",
+    memberSplit = "",
+    totalAmount: String = "0",
+    receiptImageUrl: String = "",
+    receiptOwnerId: String,
+    receiptGroupId: String
+) {
+    const receiptInfo = {
+        name,
+        description,
+        memberSplit,
+        totalAmount,
+        receiptImageUrl,
+        receiptOwnerId,
+        receiptGroupId
+    };
+    return await API.graphql(
+        graphqlOperation(mutations.createReceipt, { input: receiptInfo })
+    )
+        .then(async response => {
+            console.log("Receipt creation response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error creating receipt", err);
+            throw err;
+        });
+}

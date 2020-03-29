@@ -5,16 +5,12 @@ import React, { useState, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import { Link } from "react-router-dom";
-
-import { getUser as getUserDetailsQuery } from "../../graphql/queries";
 import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../../pages/Loading/LoadingPage";
-import { updateUser } from "../../api/Api";
+import { createNewReceipt } from "../../api/Api";
 import User from "../../components/User/User";
 
-import Input from "@material-ui/core/Input";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -28,14 +24,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Alert from "@material-ui/lab/Alert";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import CardMedia from "@material-ui/core/CardMedia";
 import { getGroup } from "../../customGraphql/queries";
 import Checkbox from "@material-ui/core/Checkbox";
 
 import { uploadCloudinaryImage } from "../../api/Api";
-import AddIcon from "@material-ui/icons/Add";
 import { QueryStatus } from "../../components/util/QueryUtil";
 
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
@@ -44,20 +36,6 @@ const tolerance = 0.0005;
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
-function areArraysEqual(arr1, arr2) {
-    if (arr1.length !== arr2.length) {
-        return false;
-    }
-
-    for (var i = 0; i < arr1.length; i++) {
-        if (arr1[i].id !== arr2[i].id) {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 function isNullOrEmpty(str) {
     return str == null || str.trim() === "";
@@ -97,7 +75,15 @@ function CreateExpense({
     const classes = useStyles();
 
     const handleClose = useCallback(() => {
+        setName("");
+        setDescription("");
+        setAmount(0);
+        setSelectedImage(null);
+        setImageURL("");
+        setIsEqualSplit(true);
+        setGroupMembers([]);
         setDialogOpen(false);
+        setSplitMap(new Map());
     }, [setDialogOpen]);
 
     // Page Handling
@@ -186,6 +172,76 @@ function CreateExpense({
         });
         return amount - sum;
     }, [amount, splitMap]);
+
+    const isNonNegativeSplit = useCallback(() => {
+        let isNonNegative = true;
+        splitMap.forEach(value => {
+            if (Number(value) < 0) {
+                isNonNegative = false;
+            }
+        });
+        return isNonNegative;
+    }, [splitMap]);
+
+    const checkValidInput = useCallback((): boolean => {
+        if (name.trim() === "") {
+            setErrorOpen(true);
+            setErrorMessage("Name is required");
+        } else if (Number(amount) === 0) {
+            setErrorOpen(true);
+            setErrorMessage("Total Amount cannot be zero");
+        } else if (Number(amount) < 0) {
+            setErrorOpen(true);
+            setErrorMessage("Total Amount cannot be negative");
+        } else if (Number(getBalanceAmount()) !== 0) {
+            setErrorOpen(true);
+            setErrorMessage("Balance amount for receipt should be zero");
+        } else if (!isNonNegativeSplit()) {
+            setErrorOpen(true);
+            setErrorMessage("Split amounts cannot be negative");
+        } else {
+            setErrorOpen(false);
+            setErrorMessage("");
+            return true;
+        }
+        return false;
+    }, [amount, getBalanceAmount, isNonNegativeSplit, name]);
+
+    const handleSubmit = async () => {
+        if (!checkValidInput()) {
+            return;
+        }
+        setMutationStatus(PENDING);
+
+        // Stringify map to split.
+        const stringifiedSplit = JSON.stringify(Array.from(splitMap.entries()));
+        // to reverse -> map = new Map(JSON.parse(jsonText));
+
+        await createNewReceipt(
+            name,
+            description,
+            stringifiedSplit,
+            amount,
+            imageURL,
+            currentUserID,
+            groupID
+        )
+            .then(res => {
+                setMutationStatus(SUCCESS);
+                setErrorOpen(false);
+                setErrorMessage("");
+                handleClose();
+                window.location.reload(true);
+            })
+            .catch(error => {
+                console.error("Create Receipt  unsucessful", error);
+                setMutationStatus(ERROR);
+                setErrorOpen(true);
+                setErrorMessage(
+                    "Failed to create new expense. Please try again."
+                );
+            });
+    };
 
     return (
         <div>
@@ -403,7 +459,11 @@ function CreateExpense({
                     >
                         CANCEL
                     </Button>
-                    <Button onClick={null} color="primary" variant="outlined">
+                    <Button
+                        onClick={handleSubmit}
+                        color="primary"
+                        variant="outlined"
+                    >
                         SUBMIT
                     </Button>
 
