@@ -23,6 +23,7 @@ type Group @model {
   type: String
   description: String
   users: [UserGroups] @connection(name: "GroupUsers")
+  lastReceiptCalculationTime: String
   createdAt: String
   updatedAt: String
   pictureURL: String

@@ -104,6 +104,7 @@ export const createUserGroups = `mutation CreateUserGroups(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -151,6 +152,7 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -198,6 +200,7 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -236,6 +239,7 @@ export const createGroup = `mutation CreateGroup(
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -283,6 +287,7 @@ export const updateGroup = `mutation UpdateGroup(
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -330,6 +335,7 @@ export const deleteGroup = `mutation DeleteGroup(
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -392,6 +398,7 @@ export const createReceipt = `mutation CreateReceipt(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -446,6 +453,7 @@ export const updateReceipt = `mutation UpdateReceipt(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -500,6 +508,7 @@ export const deleteReceipt = `mutation DeleteReceipt(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL

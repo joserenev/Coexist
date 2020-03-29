@@ -68,6 +68,7 @@ export const getGroup = `query GetGroup($id: ID!) {
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -111,6 +112,7 @@ export const listGroups = `query ListGroups(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -162,6 +164,7 @@ export const getReceipt = `query GetReceipt($id: ID!) {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -202,6 +205,7 @@ export const listReceipts = `query ListReceipts(
         name
         type
         description
+        lastReceiptCalculationTime
         createdAt
         updatedAt
         pictureURL

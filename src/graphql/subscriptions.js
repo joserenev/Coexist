@@ -92,6 +92,7 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -136,6 +137,7 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -180,6 +182,7 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -215,6 +218,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -259,6 +263,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -303,6 +308,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -362,6 +368,7 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -413,6 +420,7 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -464,6 +472,7 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL

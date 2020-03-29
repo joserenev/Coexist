@@ -23,6 +23,7 @@ type Group {
   type: String
   description: String
   users(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
+  lastReceiptCalculationTime: String
   createdAt: String
   updatedAt: String
   pictureURL: String
@@ -269,6 +270,7 @@ input ModelGroupFilterInput {
   name: ModelStringInput
   type: ModelStringInput
   description: ModelStringInput
+  lastReceiptCalculationTime: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   pictureURL: ModelStringInput
@@ -282,6 +284,7 @@ input CreateGroupInput {
   name: String
   type: String
   description: String
+  lastReceiptCalculationTime: String
   createdAt: String
   updatedAt: String
   pictureURL: String
@@ -293,6 +296,7 @@ input UpdateGroupInput {
   name: String
   type: String
   description: String
+  lastReceiptCalculationTime: String
   createdAt: String
   updatedAt: String
   pictureURL: String
@@ -307,6 +311,7 @@ input ModelGroupConditionInput {
   name: ModelStringInput
   type: ModelStringInput
   description: ModelStringInput
+  lastReceiptCalculationTime: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   pictureURL: ModelStringInput
