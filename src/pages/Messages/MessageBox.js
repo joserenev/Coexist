@@ -27,38 +27,66 @@ import Input from '@material-ui/core/Input';
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import Message from "./Message";
+// import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
+	root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: 200,
+    },
+  },
 	box: {
 		width: "75vw",
-		height: "15vh",
+		height: "8vw",
 		background: "#B2D8A3",
 		zindex: 10,
-		left: "5%"
+		left: "5%",
 	},
 	buttonClass: {
-		width: "15vh",
-		height: "15vh",
+		width: "15%",
+		height: "100%",
 		float: "right",
 		backgroundColor: "#33B5E1"
 	},
 	input: {
-		width: "calc(75vw-15vh)",
-		height: "15vh"
+		width: "83%",
+		height: "100%",
+		float: "left",
+		
 	}
 }));
 
 function MessageBox(): React.MixedElement {
     const classes = useStyles();
     const theme = useTheme();
+	const [value, setValue] = React.useState('Controlled');
+	
+	const handleChange = event => {
+		setValue(event.target.value);
+	  };
+	  
     return (
         <div className={classes.box}>
             <Button className={classes.buttonClass}>
 			Send
 			</Button>
-			<Input className={classes.input}>
-			Enter text here
-			</Input>
+			<div>
+			<TextField
+			  id="filled-full-width"
+			  label="Message"
+			  style={{ margin: 8 }}
+			  placeholder="Enter your message here."
+			  helperText=""
+			  fullWidth
+			  margin="normal"
+			  className={classes.input}
+			  InputLabelProps={{
+				shrink: true,
+			  }}
+			  variant="filled"
+			/>
+			</div>
         </div>
     );
 }
