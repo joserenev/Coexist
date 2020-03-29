@@ -76,9 +76,11 @@ export const getGroup = `query GetGroup($id: ID!) {
         id
         name
         description
+        memberSplit
         totalAmount
         createdAt
         updatedAt
+        receiptImageUrl
       }
       nextToken
     }
@@ -123,8 +125,22 @@ export const listGroups = `query ListGroups(
 export const getReceipt = `query GetReceipt($id: ID!) {
   getReceipt(id: $id) {
     id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+    }
     name
     description
+    memberSplit
     totalAmount
     createdAt
     updatedAt
@@ -153,6 +169,7 @@ export const getReceipt = `query GetReceipt($id: ID!) {
         nextToken
       }
     }
+    receiptImageUrl
   }
 }
 `;
@@ -164,8 +181,19 @@ export const listReceipts = `query ListReceipts(
   listReceipts(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+      }
       name
       description
+      memberSplit
       totalAmount
       createdAt
       updatedAt
@@ -178,6 +206,7 @@ export const listReceipts = `query ListReceipts(
         updatedAt
         pictureURL
       }
+      receiptImageUrl
     }
     nextToken
   }

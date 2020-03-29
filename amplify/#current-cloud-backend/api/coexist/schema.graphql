@@ -31,10 +31,13 @@ type Group @model {
 
 type Receipt @model {
   id: ID!
+  owner: User @connection
   name: String
   description: String
+  memberSplit: String
   totalAmount: String
   createdAt: String
   updatedAt: String
   group: Group @connection(name: "GroupReceipts")
+  receiptImageUrl: String
 }

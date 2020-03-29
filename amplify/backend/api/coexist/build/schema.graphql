@@ -31,12 +31,15 @@ type Group {
 
 type Receipt {
   id: ID!
+  owner: User
   name: String
   description: String
+  memberSplit: String
   totalAmount: String
   createdAt: String
   updatedAt: String
   group: Group
+  receiptImageUrl: String
 }
 
 enum ModelSortDirection {
@@ -321,9 +324,11 @@ input ModelReceiptFilterInput {
   id: ModelIDInput
   name: ModelStringInput
   description: ModelStringInput
+  memberSplit: ModelStringInput
   totalAmount: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  receiptImageUrl: ModelStringInput
   and: [ModelReceiptFilterInput]
   or: [ModelReceiptFilterInput]
   not: ModelReceiptFilterInput
@@ -333,9 +338,12 @@ input CreateReceiptInput {
   id: ID
   name: String
   description: String
+  memberSplit: String
   totalAmount: String
   createdAt: String
   updatedAt: String
+  receiptImageUrl: String
+  receiptOwnerId: ID
   receiptGroupId: ID
 }
 
@@ -343,9 +351,12 @@ input UpdateReceiptInput {
   id: ID!
   name: String
   description: String
+  memberSplit: String
   totalAmount: String
   createdAt: String
   updatedAt: String
+  receiptImageUrl: String
+  receiptOwnerId: ID
   receiptGroupId: ID
 }
 
@@ -356,9 +367,11 @@ input DeleteReceiptInput {
 input ModelReceiptConditionInput {
   name: ModelStringInput
   description: ModelStringInput
+  memberSplit: ModelStringInput
   totalAmount: ModelStringInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
+  receiptImageUrl: ModelStringInput
   and: [ModelReceiptConditionInput]
   or: [ModelReceiptConditionInput]
   not: ModelReceiptConditionInput
