@@ -18,8 +18,8 @@ import { makeStyles, useTheme, MuiThemeProvider,createMuiTheme} from "@material-
 import AddIcon from '@material-ui/icons/Add';
 import { green } from '@material-ui/core/colors';
 
-import ExpensesReceiptRow from "./ExpensesReceiptRow";
-import ExpenseCreate from "./ExpenseCreate";
+import MessagePanel from "./MessagePanel";
+import MessageBox from "./MessageBox";
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
@@ -52,24 +52,8 @@ function MessagesPage(): React.MixedElement {
     const [isDialogOpen, setDialogOpen] = useState(false);
     return (
         <div className={classes.headContainer}>
-            <MuiThemeProvider theme={greenTheme}>
-                <Button
-                variant="contained"
-                color="secondary"
-                className={classes.submit}
-                endIcon={<AddIcon />}
-                onClick={() => {
-                    setDialogOpen(true);
-                }}
-                
-                >
-                    Add Receipt
-                </Button>
-            </MuiThemeProvider>
-            <ExpensesReceiptRow />
-            <ExpensesReceiptRow />
-            <ExpensesReceiptRow />
-            <ExpenseCreate isDialogOpen={isDialogOpen} setDialogOpen={setDialogOpen} />
+            <MessagePanel />
+			<MessageBox />
         </div>
     );
 }
