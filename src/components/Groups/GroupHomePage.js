@@ -78,11 +78,11 @@ const useStyles = makeStyles(theme => ({
 function GroupHomePage(props): React.MixedElement {
     const classes = useStyles();
     const history = useHistory();
-    const navigateToExpenses = () => {
-        history.push("/expenses");
-    };
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
+    const navigateToExpenses = () => {
+        history.push(`/expenses/${groupID}`);
+    };
     const [isDialogOpen, setDialogOpen] = useState(false);
 
     const isCurrentUserInGroup = useCallback(

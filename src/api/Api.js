@@ -9,8 +9,13 @@ import {
     emailNewGroupURL,
     textNewGroupURL
 } from "../components/util/NotifConstants";
-const { EMAIL } = ReferralMedium;
+import superagent from "superagent";
 
+import {
+    CLOUDINARY_UPLOAD_PRESET,
+    CLOUDINARY_UPLOAD_URL
+} from "../components/util/CloudinaryUtil";
+const { EMAIL } = ReferralMedium;
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
     console.log("Getting user...");
@@ -307,6 +312,21 @@ export async function deleteUsersFromGroup(userGroupIDList) {
         })
         .catch(error => {
             console.error("Delete users from group unsuccessful", error);
+            throw error;
+        });
+}
+
+export async function uploadCloudinaryImage(imageFile) {
+    return superagent
+        .post(CLOUDINARY_UPLOAD_URL)
+        .field("upload_preset", CLOUDINARY_UPLOAD_PRESET)
+        .field("file", imageFile)
+        .then(res => {
+            console.log("Upload image successful.", res.body.secure_url);
+            return res.body.secure_url;
+        })
+        .catch(error => {
+            console.error("Upload image failed for idk why", error);
             throw error;
         });
 }

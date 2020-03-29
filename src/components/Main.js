@@ -215,7 +215,7 @@ function Main(props): React.MixedElement {
                             />
                             <Route
                                 exact
-                                path="/expenses"
+                                path="/expenses/:groupID"
                                 render={props => {
                                     return (
                                         <>
@@ -224,7 +224,10 @@ function Main(props): React.MixedElement {
                                                 setSideBarOpen={setSideBarOpen}
                                                 userID={userID}
                                             >
-                                                <ExpensesPage />
+                                                <ExpensesPage
+                                                    {...props}
+                                                    currentUserID={userID}
+                                                />
                                             </ComponentContainer>
                                         </>
                                     );

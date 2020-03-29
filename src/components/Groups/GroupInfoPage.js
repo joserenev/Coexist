@@ -271,7 +271,7 @@ function GroupInfoPage({
     return (
         <div>
             <Dialog
-                fullWidth="md"
+                fullWidth
                 open={isDialogOpen}
                 TransitionComponent={Transition}
                 onClose={handleClose}

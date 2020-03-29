@@ -104,7 +104,11 @@ type Props = {|
     user: Object
 |};
 
-export default function User({ user, deleteGroupMember }: Props) {
+export default function User({
+    user,
+    deleteGroupMember,
+    isDeleteDisabled = false
+}: Props) {
     const classes = useStyles();
     let userState = "OFFLINE";
     const { id = "", username = "", name = "" } = user ?? {};
@@ -162,13 +166,15 @@ export default function User({ user, deleteGroupMember }: Props) {
                         {username}
                     </Typography>
                 </div>
-                <IconButton
-                    aria-label="delete"
-                    className={classes.margin}
-                    onClick={handleDelete}
-                >
-                    <DeleteOutlineOutlinedIcon fontSize="small" />
-                </IconButton>
+                {!isDeleteDisabled && (
+                    <IconButton
+                        aria-label="delete"
+                        className={classes.margin}
+                        onClick={handleDelete}
+                    >
+                        <DeleteOutlineOutlinedIcon fontSize="small" />
+                    </IconButton>
+                )}
                   
             </div>
         </div>
