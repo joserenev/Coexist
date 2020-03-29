@@ -38,10 +38,11 @@ const useStyles = makeStyles(theme => ({
   },
 	box: {
 		width: "75vw",
-		height: "8vw",
 		background: "#B2D8A3",
 		zindex: 10,
 		left: "5%",
+		padding: "5px",
+		margin: "0px"
 	},
 	buttonClass: {
 		width: "15%",
@@ -50,10 +51,9 @@ const useStyles = makeStyles(theme => ({
 		backgroundColor: "#33B5E1"
 	},
 	input: {
-		width: "83%",
+		width: "85%",
 		height: "100%",
-		float: "left",
-		
+		float: "left"		
 	}
 }));
 
@@ -73,13 +73,15 @@ function MessageBox(): React.MixedElement {
 			</Button>
 			<div>
 			<TextField
-			  id="filled-full-width"
+			  id="filled-multiline-flexible"
 			  label="Message"
-			  style={{ margin: 8 }}
+			  style={{ }}
 			  placeholder="Enter your message here."
 			  helperText=""
+			  multiline
 			  fullWidth
-			  margin="normal"
+			  rows="4"
+			  rowsMax="4"
 			  className={classes.input}
 			  InputLabelProps={{
 				shrink: true,
