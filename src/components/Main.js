@@ -21,6 +21,7 @@ import CreateGroupSettings from "../components/Groups/CreateGroupSettings";
 import ReferralPage from "../pages/Referral/ReferralPage.js";
 import ForgetPass from "../pages/ForgetPass/ForgetPass.js";
 import ExpensesPage from "../pages/Expenses/ExpensesPage.js";
+import MessagesPage from "../pages/Messages/MessagesPage.js";
 
 import Authentication from "../authentication/Authentication";
 
@@ -228,6 +229,23 @@ function Main(props): React.MixedElement {
                                                     {...props}
                                                     currentUserID={userID}
                                                 />
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+							<Route
+                                exact
+                                path="/messages"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                <MessagesPage />
                                             </ComponentContainer>
                                         </>
                                     );

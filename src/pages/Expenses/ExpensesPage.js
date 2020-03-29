@@ -1,18 +1,7 @@
 import React, { useState } from "react";
-import {
-    Grid,
-    CircularProgress,
-    Typography,
-    Button,
-    Tabs,
-    Tab,
-    TextField,
-    Fade
-} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
-import { withRouter } from "react-router-dom";
-import { withStyles } from "@material-ui/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import ExpensesReceiptRow from "./ExpensesReceiptRow";
@@ -34,6 +23,11 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "center",
         display: "flex",
         alignItems: "center"
+    },
+    submit: {
+        marginTop: theme.spacing.unit * 3,
+        marginLeft: "745px",
+        padding: "15px"
     }
 }));
 
@@ -43,7 +37,7 @@ function ExpensesPage(props): React.MixedElement {
     const theme = useTheme();
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
-    const [isDialogOpen, setDialogOpen] = useState(true);
+    const [isDialogOpen, setDialogOpen] = useState(false);
 
     return (
         <>

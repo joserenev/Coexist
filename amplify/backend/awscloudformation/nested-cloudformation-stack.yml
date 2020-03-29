@@ -131,7 +131,7 @@
 						]
 					},
 					"S3DeploymentBucket": "amplify-coexist-dev-144528-deployment",
-					"S3DeploymentRootKey": "amplify-appsync-files/0661a6654deced3c3782bbb0a0e4194a65f75a6a",
+					"S3DeploymentRootKey": "amplify-appsync-files/78b2765aa99d8dd730cfc29c551cba391ffb2b6c",
 					"env": "dev"
 				}
 			}

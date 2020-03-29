@@ -75,14 +75,11 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function GroupHomePage(props): React.MixedElement {
+function MessageInputBox(props): React.MixedElement {
     const classes = useStyles();
     const history = useHistory();
     const navigateToExpenses = () => {
-        history.push(`/expenses/${groupID}`);
-    };
-    const navigateToChat = () => {
-        history.push("/messages");
+        history.push("/expenses");
     };
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
@@ -147,10 +144,7 @@ function GroupHomePage(props): React.MixedElement {
                             </div>
                         </div>
                         <div className={classes.homePageContainer}>
-                            <div
-                                className={classes.buttonContainer}
-                                onClick={navigateToChat}
-                            >
+                            <div className={classes.buttonContainer}>
                                 <ChatIcon
                                     fontSize="large"
                                     className={classes.largeIcons}
@@ -175,4 +169,4 @@ function GroupHomePage(props): React.MixedElement {
         </Connect>
     );
 }
-export default GroupHomePage;
+export default MessageInputBox;

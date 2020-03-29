@@ -187,8 +187,6 @@ function CreateExpense({
         return amount - sum;
     }, [amount, splitMap]);
 
-    console.log({ splitMap });
-
     return (
         <div>
             <Dialog

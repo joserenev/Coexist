@@ -92,6 +92,7 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -136,6 +137,7 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -180,6 +182,7 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -215,6 +218,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -223,9 +227,11 @@ export const onCreateGroup = `subscription OnCreateGroup {
         id
         name
         description
+        memberSplit
         totalAmount
         createdAt
         updatedAt
+        receiptImageUrl
       }
       nextToken
     }
@@ -257,6 +263,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -265,9 +272,11 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
         id
         name
         description
+        memberSplit
         totalAmount
         createdAt
         updatedAt
+        receiptImageUrl
       }
       nextToken
     }
@@ -299,6 +308,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -307,9 +317,11 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
         id
         name
         description
+        memberSplit
         totalAmount
         createdAt
         updatedAt
+        receiptImageUrl
       }
       nextToken
     }
@@ -319,8 +331,22 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
 export const onCreateReceipt = `subscription OnCreateReceipt {
   onCreateReceipt {
     id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+    }
     name
     description
+    memberSplit
     totalAmount
     createdAt
     updatedAt
@@ -342,6 +368,7 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -349,14 +376,29 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
         nextToken
       }
     }
+    receiptImageUrl
   }
 }
 `;
 export const onUpdateReceipt = `subscription OnUpdateReceipt {
   onUpdateReceipt {
     id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+    }
     name
     description
+    memberSplit
     totalAmount
     createdAt
     updatedAt
@@ -378,6 +420,7 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -385,14 +428,29 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
         nextToken
       }
     }
+    receiptImageUrl
   }
 }
 `;
 export const onDeleteReceipt = `subscription OnDeleteReceipt {
   onDeleteReceipt {
     id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+    }
     name
     description
+    memberSplit
     totalAmount
     createdAt
     updatedAt
@@ -414,6 +472,7 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -421,6 +480,7 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
         nextToken
       }
     }
+    receiptImageUrl
   }
 }
 `;

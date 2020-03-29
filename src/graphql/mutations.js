@@ -104,6 +104,7 @@ export const createUserGroups = `mutation CreateUserGroups(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -151,6 +152,7 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -198,6 +200,7 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -236,6 +239,7 @@ export const createGroup = `mutation CreateGroup(
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -244,9 +248,11 @@ export const createGroup = `mutation CreateGroup(
         id
         name
         description
+        memberSplit
         totalAmount
         createdAt
         updatedAt
+        receiptImageUrl
       }
       nextToken
     }
@@ -281,6 +287,7 @@ export const updateGroup = `mutation UpdateGroup(
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -289,9 +296,11 @@ export const updateGroup = `mutation UpdateGroup(
         id
         name
         description
+        memberSplit
         totalAmount
         createdAt
         updatedAt
+        receiptImageUrl
       }
       nextToken
     }
@@ -326,6 +335,7 @@ export const deleteGroup = `mutation DeleteGroup(
       }
       nextToken
     }
+    lastReceiptCalculationTime
     createdAt
     updatedAt
     pictureURL
@@ -334,9 +344,11 @@ export const deleteGroup = `mutation DeleteGroup(
         id
         name
         description
+        memberSplit
         totalAmount
         createdAt
         updatedAt
+        receiptImageUrl
       }
       nextToken
     }
@@ -349,8 +361,22 @@ export const createReceipt = `mutation CreateReceipt(
 ) {
   createReceipt(input: $input, condition: $condition) {
     id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+    }
     name
     description
+    memberSplit
     totalAmount
     createdAt
     updatedAt
@@ -372,6 +398,7 @@ export const createReceipt = `mutation CreateReceipt(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -379,6 +406,7 @@ export const createReceipt = `mutation CreateReceipt(
         nextToken
       }
     }
+    receiptImageUrl
   }
 }
 `;
@@ -388,8 +416,22 @@ export const updateReceipt = `mutation UpdateReceipt(
 ) {
   updateReceipt(input: $input, condition: $condition) {
     id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+    }
     name
     description
+    memberSplit
     totalAmount
     createdAt
     updatedAt
@@ -411,6 +453,7 @@ export const updateReceipt = `mutation UpdateReceipt(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -418,6 +461,7 @@ export const updateReceipt = `mutation UpdateReceipt(
         nextToken
       }
     }
+    receiptImageUrl
   }
 }
 `;
@@ -427,8 +471,22 @@ export const deleteReceipt = `mutation DeleteReceipt(
 ) {
   deleteReceipt(input: $input, condition: $condition) {
     id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+    }
     name
     description
+    memberSplit
     totalAmount
     createdAt
     updatedAt
@@ -450,6 +508,7 @@ export const deleteReceipt = `mutation DeleteReceipt(
       users {
         nextToken
       }
+      lastReceiptCalculationTime
       createdAt
       updatedAt
       pictureURL
@@ -457,6 +516,7 @@ export const deleteReceipt = `mutation DeleteReceipt(
         nextToken
       }
     }
+    receiptImageUrl
   }
 }
 `;
