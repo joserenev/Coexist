@@ -236,7 +236,7 @@ function Main(props): React.MixedElement {
                             />
 							<Route
                                 exact
-                                path="/messages"
+                                path="/messages/:groupID"
                                 render={props => {
                                     return (
                                         <>
