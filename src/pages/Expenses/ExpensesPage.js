@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
@@ -11,7 +11,6 @@ import { listReceipts } from "../../customGraphql/queries";
 
 import ExpensesReceiptRow from "./ExpensesReceiptRow";
 import CreateExpense from "./CreateExpense";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
@@ -38,12 +37,9 @@ const useStyles = makeStyles(theme => ({
 
 function ExpensesPage(props): React.MixedElement {
     const classes = useStyles();
-    const history = useHistory();
-    const theme = useTheme();
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
     const [isDialogOpen, setDialogOpen] = useState(false);
-
     return (
         <Connect query={graphqlOperation(listReceipts, { id: groupID })}>
             {({ data, loading, error }) => {
@@ -79,6 +75,8 @@ function ExpensesPage(props): React.MixedElement {
                                         <div key={index}>
                                             <ExpensesReceiptRow
                                                 receipt={receipt}
+                                                currentUserID={currentUserID}
+                                                groupID={groupID}
                                             />
                                         </div>
                                     );

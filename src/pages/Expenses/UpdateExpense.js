@@ -5,10 +5,7 @@ import React, { useState, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import { Connect } from "aws-amplify-react";
-import { graphqlOperation } from "aws-amplify";
-import LoadingPage from "../../pages/Loading/LoadingPage";
-import { createNewReceipt } from "../../api/Api";
+import { updateReceipt } from "../../api/Api";
 import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -24,7 +21,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Alert from "@material-ui/lab/Alert";
-import { getGroup } from "../../customGraphql/queries";
+
 import Checkbox from "@material-ui/core/Checkbox";
 
 import { uploadCloudinaryImage } from "../../api/Api";
@@ -66,24 +63,37 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function CreateExpense({
+function getGroupMembers(receipt) {
+    const items = receipt.group.users.items;
+    return items.map(groupItem => {
+        return groupItem.user;
+    });
+}
+
+function checkEvenSplit(evenSplitAmount, splitMap) {
+    let isEvenSplit = true;
+    splitMap.forEach(value => {
+        if (Math.abs(Number(value) - evenSplitAmount) >= tolerance) {
+            isEvenSplit = false;
+        }
+    });
+    return isEvenSplit;
+}
+
+function UpdateExpense({
     currentUserID,
     groupID,
     isDialogOpen,
-    setDialogOpen
+    setDialogOpen,
+    receipt: editReceipt
 }: Props): React.MixedElement {
     const classes = useStyles();
-    const handleClose = useCallback(() => {
-        setName("");
-        setDescription("");
-        setAmount(0);
-        setSelectedImage(null);
-        setImageURL("");
-        setIsEqualSplit(true);
-        setGroupMembers([]);
-        setDialogOpen(false);
-        setSplitMap(new Map());
-    }, [setDialogOpen]);
+    const {
+        name: originalName,
+        description: originalDescription,
+        totalAmount: originalAmount,
+        receiptImageUrl: originalImageURL
+    } = editReceipt;
 
     // Page Handling
     const [errorMessage, setErrorMessage] = useState("");
@@ -91,14 +101,18 @@ function CreateExpense({
     const [mutationStatus, setMutationStatus] = useState<QueryStatusEnum>(IDLE);
 
     //state values
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [amount, setAmount] = useState(0);
+    const [name, setName] = useState(originalName ?? "");
+    const [description, setDescription] = useState(originalDescription ?? "");
+    const [amount, setAmount] = useState(originalAmount ?? 0);
     const [selectedImage, setSelectedImage] = useState<>(null);
-    const [imageURL, setImageURL] = useState<>("");
-    const [isEqualSplit, setIsEqualSplit] = useState(true);
-    const [groupMembers, setGroupMembers] = useState([]);
-    const [splitMap, setSplitMap] = useState<>(new Map());
+    const [imageURL, setImageURL] = useState<>(originalImageURL ?? "");
+
+    const [groupMembers, setGroupMembers] = useState(
+        getGroupMembers(editReceipt)
+    );
+    const [splitMap, setSplitMap] = useState<>(
+        new Map(JSON.parse(editReceipt.memberSplit))
+    );
 
     const handleImageChange = async event => {
         setSelectedImage(event.target.files[0]);
@@ -111,22 +125,37 @@ function CreateExpense({
             });
     };
 
-    const checkEvenSplit = useCallback(
-        evenSplitAmount => {
-            let isEvenSplit = true;
-            splitMap.forEach(value => {
-                if (Math.abs(Number(value) - evenSplitAmount) >= tolerance) {
-                    isEvenSplit = false;
-                }
-            });
-            return isEvenSplit;
-        },
-        [splitMap]
+    const [isEqualSplit, setIsEqualSplit] = useState(
+        checkEvenSplit(amount / groupMembers.length, splitMap)
     );
+
+    const handleClose = useCallback(() => {
+        const oldSplitMap = new Map(JSON.parse(editReceipt.memberSplit));
+        setName(originalName);
+        setDescription(originalDescription);
+        setAmount(originalAmount);
+        setSelectedImage(null);
+        setImageURL(originalImageURL);
+        setIsEqualSplit(
+            checkEvenSplit(originalAmount / groupMembers.length, oldSplitMap)
+        );
+        setGroupMembers(getGroupMembers(editReceipt));
+        setSplitMap(oldSplitMap);
+        setDialogOpen(false);
+    }, [
+        editReceipt,
+        groupMembers.length,
+        originalAmount,
+        originalDescription,
+        originalImageURL,
+        originalName,
+        setDialogOpen
+    ]);
+
     const handleEqualSplit = useCallback(
         newAmount => {
             const evenSplit = newAmount / groupMembers.length;
-            if (checkEvenSplit(evenSplit) && splitMap.size !== 0) {
+            if (checkEvenSplit(evenSplit, splitMap) && splitMap.size !== 0) {
                 return;
             }
             const newSplitMap = new Map();
@@ -135,7 +164,7 @@ function CreateExpense({
             });
             setSplitMap(newSplitMap);
         },
-        [checkEvenSplit, splitMap, groupMembers]
+        [splitMap, groupMembers]
     );
 
     const getSplitValue = useCallback(
@@ -198,36 +227,57 @@ function CreateExpense({
         } else if (!isNonNegativeSplit()) {
             setErrorOpen(true);
             setErrorMessage("Split amounts cannot be negative");
-        } else if (imageURL === "") {
-            setErrorOpen(true);
-            setErrorMessage("Upload image of Receipt");
         } else {
             setErrorOpen(false);
             setErrorMessage("");
             return true;
         }
         return false;
-    }, [amount, getBalanceAmount, imageURL, isNonNegativeSplit, name]);
+    }, [amount, getBalanceAmount, isNonNegativeSplit, name]);
 
     const handleSubmit = async () => {
         if (!checkValidInput()) {
             return;
         }
         setMutationStatus(PENDING);
+        let receiptInfo = {
+            id: editReceipt.id
+        };
 
-        // Stringify map to split.
-        const stringifiedSplit = JSON.stringify(Array.from(splitMap.entries()));
-        // to reverse -> map = new Map(JSON.parse(jsonText));
+        if (name !== originalName) {
+            receiptInfo = {
+                ...receiptInfo,
+                name
+            };
+        }
+        if (description !== originalDescription) {
+            receiptInfo = {
+                ...receiptInfo,
+                description
+            };
+        }
+        const newMemberSplit = JSON.stringify(Array.from(splitMap.entries()));
+        if (newMemberSplit !== editReceipt.memberSplit) {
+            receiptInfo = {
+                ...receiptInfo,
+                memberSplit: newMemberSplit
+            };
+        }
+        if (amount !== originalAmount) {
+            receiptInfo = {
+                ...receiptInfo,
+                totalAmount: amount
+            };
+        }
 
-        await createNewReceipt(
-            name,
-            description,
-            stringifiedSplit,
-            amount,
-            imageURL,
-            currentUserID,
-            groupID
-        )
+        if (originalImageURL !== imageURL) {
+            receiptInfo = {
+                ...receiptInfo,
+                receiptImageUrl: imageURL
+            };
+        }
+
+        await updateReceipt(receiptInfo)
             .then(res => {
                 setMutationStatus(SUCCESS);
                 setErrorOpen(false);
@@ -236,12 +286,10 @@ function CreateExpense({
                 window.location.reload(true);
             })
             .catch(error => {
-                console.error("Create Receipt  unsucessful", error);
+                console.error("Update Receipt  unsucessful", error);
                 setMutationStatus(ERROR);
                 setErrorOpen(true);
-                setErrorMessage(
-                    "Failed to create new expense. Please try again."
-                );
+                setErrorMessage("Failed to update expense. Please try again.");
             });
     };
 
@@ -254,7 +302,7 @@ function CreateExpense({
                 onClose={handleClose}
             >
                 <DialogTitle>
-                    <b>Create Expense</b>
+                    <b>Edit Expense</b>
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -308,7 +356,7 @@ function CreateExpense({
                         </div>
                         <div className={classes.fields}>
                             <Typography variant="body1">
-                                Upload Receipt
+                                Upload New Receipt
                             </Typography>
                             <TextField
                                 id="image"
@@ -328,7 +376,7 @@ function CreateExpense({
                         {!isNullOrEmpty(imageURL) && (
                             <div className={classes.imagePreviewContainer}>
                                 <Typography variant="body1">
-                                    Image Preview
+                                    Current Receipt Preview
                                 </Typography>
                                 <img
                                     className={classes.imagePreview}
@@ -339,101 +387,55 @@ function CreateExpense({
                             </div>
                         )}
 
-                        <Connect
-                            query={graphqlOperation(getGroup, { id: groupID })}
-                        >
-                            {({ data, loading, error }) => {
-                                if (error) {
-                                    //TODO: Add a dedicated ERROR Component with a message to show.
-                                    return <h3>Error</h3>;
-                                }
+                        <>
+                            <Typography variant="h5">Member Split</Typography>
+                            <div className={classes.fields}>
+                                <Typography variant="body1" gutterBottom>
+                                    Split Evenly Among all group members
+                                </Typography>
+                                <Checkbox
+                                    color="primary"
+                                    checked={isEqualSplit}
+                                    onChange={event => {
+                                        setIsEqualSplit(event.target.checked);
+                                        if (event.target.checked) {
+                                            handleEqualSplit(amount);
+                                        }
+                                    }}
+                                />
+                            </div>
 
-                                if (loading) {
-                                    return <LoadingPage />;
-                                }
-
-                                const items =
-                                    data?.getGroup?.users?.items ?? [];
-
-                                if (groupMembers.length === 0) {
-                                    setGroupMembers(
-                                        items.map(groupItem => {
-                                            return groupItem.user;
-                                        })
-                                    );
-                                }
-
+                            {groupMembers.map((user, index) => {
                                 return (
-                                    <>
-                                        <Typography variant="h5">
-                                            Member Split
-                                        </Typography>
-                                        <div className={classes.fields}>
-                                            <Typography
-                                                variant="body1"
-                                                gutterBottom
-                                            >
-                                                Split Evenly Among all group
-                                                members
-                                            </Typography>
-                                            <Checkbox
-                                                color="primary"
-                                                checked={isEqualSplit}
-                                                onChange={event => {
-                                                    setIsEqualSplit(
-                                                        event.target.checked
-                                                    );
-                                                    if (event.target.checked) {
-                                                        handleEqualSplit(
-                                                            amount
-                                                        );
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-
-                                        {groupMembers.map((user, index) => {
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    className={classes.fields}
-                                                >
-                                                    <SimpleUserProfileView
-                                                        user={user}
-                                                    />
-                                                    <TextField
-                                                        id={user.id}
-                                                        margin="dense"
-                                                        onChange={event => {
-                                                            handleSplitChange(
-                                                                event.target.id,
-                                                                event.target
-                                                                    .value
-                                                            );
-                                                        }}
-                                                        value={getSplitValue(
-                                                            user.id
-                                                        )}
-                                                        style={{
-                                                            width: 200
-                                                        }}
-                                                        InputProps={{
-                                                            startAdornment: (
-                                                                <InputAdornment position="start">
-                                                                    $
-                                                                </InputAdornment>
-                                                            )
-                                                        }}
-                                                        disabled={isEqualSplit}
-                                                        type="number"
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-                                    </>
+                                    <div key={index} className={classes.fields}>
+                                        <SimpleUserProfileView user={user} />
+                                        <TextField
+                                            id={user.id}
+                                            margin="dense"
+                                            onChange={event => {
+                                                handleSplitChange(
+                                                    event.target.id,
+                                                    event.target.value
+                                                );
+                                            }}
+                                            value={getSplitValue(user.id)}
+                                            style={{
+                                                width: 200
+                                            }}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        $
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                            disabled={isEqualSplit}
+                                            type="number"
+                                        />
+                                    </div>
                                 );
-                            }}
-                        </Connect>
+                            })}
+                        </>
                         <div className={classes.fields}>
                             <Typography variant="body1" gutterBottom>
                                 Balance Amount
@@ -506,4 +508,4 @@ function CreateExpense({
     );
 }
 
-export default CreateExpense;
+export default UpdateExpense;

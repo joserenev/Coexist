@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
-
+import EditIcon from "@material-ui/icons/Edit";
 import Dialog from "@material-ui/core/Dialog";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import Paper from "@material-ui/core/Paper";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import AcceptIcon from "@material-ui/icons/CheckCircle";
 import RejectIcon from "@material-ui/icons/Cancel";
+import UpdateExpense from "./UpdateExpense";
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
@@ -45,8 +46,13 @@ function ImagePreivew(props) {
     );
 }
 
-function ExpensesReceiptRow({ receipt }): React.MixedElement {
-    const [open, setOpen] = React.useState(false);
+function ExpensesReceiptRow({
+    receipt,
+    setSelectedEditReceipt,
+    currentUserID,
+    groupID
+}): React.MixedElement {
+    const [open, setOpen] = useState(false);
     const classes = useStyles();
 
     const handleClickOpen = () => {
@@ -55,6 +61,8 @@ function ExpensesReceiptRow({ receipt }): React.MixedElement {
     const handleClose = value => {
         setOpen(false);
     };
+
+    const [isEditDialogOpen, setEditDialogOpen] = useState(false);
 
     const {
         name = "",
@@ -76,6 +84,10 @@ function ExpensesReceiptRow({ receipt }): React.MixedElement {
         return userAmount == undefined
             ? "0".toFixed(2)
             : Number(userAmount).toFixed(2);
+    };
+
+    const handleEdit = () => {
+        setEditDialogOpen(true);
     };
 
     return (
@@ -215,9 +227,23 @@ function ExpensesReceiptRow({ receipt }): React.MixedElement {
                                 })}
                             </Grid>
                         </Grid>
+                        {currentUserID === owner.id && (
+                            <EditIcon
+                                fontSize="small"
+                                className={classes.addButton}
+                                onClick={handleEdit}
+                            />
+                        )}
                     </Grid>
                 </Grid>
             </Paper>
+            <UpdateExpense
+                isDialogOpen={isEditDialogOpen}
+                setDialogOpen={setEditDialogOpen}
+                currentUserID={currentUserID}
+                groupID={groupID}
+                receipt={receipt}
+            />
         </div>
     );
 }

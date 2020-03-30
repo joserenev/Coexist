@@ -361,3 +361,17 @@ export async function createNewReceipt(
             throw err;
         });
 }
+
+export async function updateReceipt(receiptInfo) {
+    return await API.graphql(
+        graphqlOperation(mutations.updateReceipt, { input: receiptInfo })
+    )
+        .then(async response => {
+            console.log("Receipt update response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error update receipt", err);
+            throw err;
+        });
+}
