@@ -15,6 +15,7 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
+import Dialog from "@material-ui/core/Dialog";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import Paper from "@material-ui/core/Paper";
 import ButtonBase from "@material-ui/core/ButtonBase";
@@ -41,10 +42,40 @@ const useStyles = makeStyles(theme => ({
         minWidth: 500
     }
 }));
+function ImagePreivew(props) {
+    const classes = useStyles();
+    const { onClose, selectedValue, open } = props;
+
+    const handleClose = () => {
+        onClose(selectedValue);
+    };
+
+    const handleListItemClick = value => {
+        onClose(value);
+    };
+
+    return (
+        <Dialog
+            onClose={handleClose}
+            aria-labelledby="simple-dialog-title"
+            open={open}
+        >
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/ReceiptSwiss.jpg/340px-ReceiptSwiss.jpg" />
+        </Dialog>
+    );
+}
 
 function ExpensesReceiptRow(): React.MixedElement {
+    const [open, setOpen] = React.useState(false);
     const classes = useStyles();
     const theme = useTheme();
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = value => {
+        setOpen(false);
+    };
     return (
         <div className={classes.headContainer}>
             <Paper className={classes.paper}>
@@ -60,9 +91,10 @@ function ExpensesReceiptRow(): React.MixedElement {
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <ButtonBase>
+                            <ButtonBase onClick={handleClickOpen}>
                                 <ReceiptIcon className={classes.largeIcons} />
                             </ButtonBase>
+                            <ImagePreivew open={open} onClose={handleClose} />
                         </Grid>
                     </Grid>
                     <Grid item xs={12} sm container>
@@ -75,7 +107,7 @@ function ExpensesReceiptRow(): React.MixedElement {
                                     variant="body2"
                                     color="textSecondary"
                                 >
-                                    Jose Valbuena: paid $15
+                                    Jose Valbuena: spent $15
                                 </Typography>
                             </Grid>
                             <Grid item>
@@ -92,8 +124,8 @@ function ExpensesReceiptRow(): React.MixedElement {
                                 <b>DEBTERS</b>
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                                Paul Krivacka: $5 <br />
-                                Dhriti Chawla: $5
+                                Paul Krivacka: owes $5 <br />
+                                Dhriti Chawla: owes $5
                             </Typography>
                         </Grid>
                     </Grid>

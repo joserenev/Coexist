@@ -54,8 +54,6 @@ function ExpensesPage(props): React.MixedElement {
                 </Typography>
                 <div className={classes.expenseList}>
                     <ExpensesReceiptRow />
-                    <ExpensesReceiptRow />
-                    <ExpensesReceiptRow />
                 </div>
             </div>
             <CreateExpense
