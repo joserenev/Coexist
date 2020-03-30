@@ -364,7 +364,6 @@ function GroupInfoPage({
                                 id="budget"
                                 defaultValue="1000.00"
                                 style={{ width: 200 }}
-                                disabled
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">

@@ -22,8 +22,8 @@ app.post('/newpageheartbeat', (req, res) => {
 	console.log(req);
 	if (req.username)
 	{
-		if (userList[username] == undefined) { userList[username] = [new Date(), new Date()]; }
-		userList[username][0] = new Date();
+		if (userList[username] == undefined) { userList[username] = [new Date().getTime(), new Date().getTime()]; }
+		userList[username][0] = new Date().getTime();
 	}
 	/*var myUID = req.body.uid;
 	var emailToFollow = req.body.otherEmail;
@@ -39,8 +39,8 @@ app.post('/updateheartbeat', (req, res) => {
 	console.log(req);
 	if (req.username)
 	{
-		if (userList[username] == undefined) { userList[username] = [new Date(), new Date()]; }
-		userList[username][1] = new Date();
+		if (userList[username] == undefined) { userList[username] = [new Date().getTime(), new Date().getTime()]; }
+		userList[username][1] = new Date().getTime();
 	}
 });
 
@@ -49,18 +49,18 @@ app.get('/getonlinestatus', (req, res) => {
 	var postData = {"status":"ABORTED", "title":"Null"};
 	if (userList[username] != undefined)
 	{
-		if (new Date() - userList[username][0] < 300000)
+		if (new Date().getTime() - userList[username][0] < 300000)
 		{
 			postData = {"status": "ONLINE", "title":""};
 		}
-		else if (new Date() - userList[username][1] < 21000)
+		else if (new Date().getTime() - userList[username][1] < 21000)
 		{
-			let titleText = "Idle for " + Math.floor((new Date() - userList[username][0]) / 1000) + " seconds.";
+			let titleText = "Idle for " + Math.floor((new Date().getTime() - userList[username][0]) / 1000) + " seconds.";
 			postData = {"status": "IDLE", "title":titleText};
 		}
 		else
 		{
-			let titleText = "Offline for " + Math.floor((new Date() - userList[username][1]) / 1000) + " seconds.";
+			let titleText = "Offline for " + Math.floor((new Date().getTime() - userList[username][1]) / 1000) + " seconds.";
 			postData = {"status": "OFFLINE", "title":titleText};
 		}
 	}
@@ -93,13 +93,13 @@ app.get('/getonlinestatus', (req, res) => {
 
 function updatePageTime(userString)
 {
-	userList[userString] = [new Date(), new Date()];
+	userList[userString] = [new Date().getTime(), new Date().getTime()];
 }
 
 function updateHeartbeat(userString)
 {
-	if (userList[userString] == undefined) { userList[userString] = [new Date(), new Date()]; }
-	userList[userString][1] = new Date();
+	if (userList[userString] == undefined) { userList[userString] = [new Date().getTime(), new Date().getTime()]; }
+	userList[userString][1] = new Date().getTime();
 }
 
 server.listen(8080, () => {

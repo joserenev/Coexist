@@ -323,8 +323,8 @@ export default function EditGroupSettings({ groupData }: Props) {
                                     <div class="card groupStats">
                                         <li class="list-group-item">
                                             Money spent:{" "}
-                                            <span class="money-text">
-                                                $1,000.00
+                                            <span class="money-text" editable>
+                                                $1,000.01
                                             </span>
                                         </li>
                                         <li class="list-group-item">
@@ -333,8 +333,9 @@ export default function EditGroupSettings({ groupData }: Props) {
                                                 class="money-text budget-text"
                                                 onClick={changeBudget}
                                                 id="group-budget"
+												editable="true"
                                             >
-                                                $800
+                                                $809
                                             </span>
                                             <div class="input-group mb-3 budgetInput">
                                                 <div class="input-group-prepend">

@@ -98,6 +98,8 @@ function GroupHomePage(props): React.MixedElement {
         [currentUserID]
     );
 
+	
+	
     return (
         <Connect query={graphqlOperation(getGroup, { id: groupID })}>
             {({ data, loading, error }) => {

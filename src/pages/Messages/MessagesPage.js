@@ -21,6 +21,8 @@ import { green } from '@material-ui/core/colors';
 import MessagePanel from "./MessagePanel";
 import MessageBox from "./MessageBox";
 
+// import axios from 'axios';
+
 const useStyles = makeStyles(theme => ({
     headContainer: {
         backgroundColor: "#ecf0f1",
@@ -50,6 +52,7 @@ function MessagesPage(): React.MixedElement {
     const classes = useStyles();
     const theme = useTheme();
     const [isDialogOpen, setDialogOpen] = useState(false);
+	
     return (
         <div className={classes.headContainer}>
             <MessagePanel />
