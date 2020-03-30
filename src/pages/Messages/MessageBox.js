@@ -66,9 +66,44 @@ function MessageBox(): React.MixedElement {
 		setValue(event.target.value);
 	  };
 	  
+	  const sendMessage = function()
+	  {
+		  var textBox = document.getElementById("filled-multiline-flexible");
+		  if (textBox.value.length == 0 || textBox.value.length > 256 * 4) { return; }
+		  for (var i = 0; i < Math.ceil(textBox.value.length / 256); i++)
+		  {
+			  var str = textBox.value.substr(i * 256, (i + 1) * 256);
+			  //send string
+			  
+		  }
+		  textBox.value = "";
+	  }
+	  
+	  const textInput = function()
+	  {
+		  var maxLength = 256;
+		  var maxLines = 4;
+		  var textBox = document.getElementById("filled-multiline-flexible");
+		  if (textBox.value.length > maxLength)
+		  {
+			  textBox.value = textBox.value.substring(0, maxLength);
+		  }
+		  var newLines = textBox.value.split("\n");
+		  if (newLines.length > maxLines)
+		  {
+			  var newStr = "";
+			  var lineCount = 1;
+			  for (var i = 0; i < newLines.length; i++)
+			  {
+				  newStr = newStr + newLines[i] + ((lineCount++ < maxLines && "\n") || "");
+			  }
+			  textBox.value = newStr;
+		  }
+	  }
+	  
     return (
         <div className={classes.box}>
-            <Button className={classes.buttonClass}>
+            <Button className={classes.buttonClass} id="sendMessageButton" onClick={sendMessage}>
 			Send
 			</Button>
 			<div>
@@ -83,6 +118,7 @@ function MessageBox(): React.MixedElement {
 			  rows="4"
 			  rowsMax="4"
 			  className={classes.input}
+			  onChange={textInput}
 			  InputLabelProps={{
 				shrink: true,
 			  }}
