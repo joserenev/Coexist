@@ -9,7 +9,7 @@ import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../../pages/Loading/LoadingPage";
 import { createNewReceipt } from "../../api/Api";
-import User from "../../components/User/User";
+import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -199,13 +199,16 @@ function CreateExpense({
         } else if (!isNonNegativeSplit()) {
             setErrorOpen(true);
             setErrorMessage("Split amounts cannot be negative");
+        } else if (imageURL === "") {
+            setErrorOpen(true);
+            setErrorMessage("Upload image of Receipt");
         } else {
             setErrorOpen(false);
             setErrorMessage("");
             return true;
         }
         return false;
-    }, [amount, getBalanceAmount, isNonNegativeSplit, name]);
+    }, [amount, getBalanceAmount, imageURL, isNonNegativeSplit, name]);
 
     const handleSubmit = async () => {
         if (!checkValidInput()) {
@@ -396,9 +399,8 @@ function CreateExpense({
                                                     key={index}
                                                     className={classes.fields}
                                                 >
-                                                    <User
+                                                    <SimpleUserProfileView
                                                         user={user}
-                                                        isDeleteDisabled={true}
                                                     />
                                                     <TextField
                                                         id={user.id}

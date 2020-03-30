@@ -4,6 +4,11 @@ import AddIcon from "@material-ui/icons/Add";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
+import { Connect } from "aws-amplify-react";
+import { graphqlOperation } from "aws-amplify";
+import LoadingPage from "../../pages/Loading/LoadingPage";
+import { listReceipts } from "../../customGraphql/queries";
+
 import ExpensesReceiptRow from "./ExpensesReceiptRow";
 import CreateExpense from "./CreateExpense";
 import { useHistory } from "react-router-dom";
@@ -40,29 +45,63 @@ function ExpensesPage(props): React.MixedElement {
     const [isDialogOpen, setDialogOpen] = useState(false);
 
     return (
-        <>
-            <div className={classes.headContainer}>
-                <AddIcon
-                    fontSize="large"
-                    className={classes.addButton}
-                    onClick={() => {
-                        setDialogOpen(true);
-                    }}
-                />
-                <Typography variant="h2" gutterBottom>
-                    Recent Expenses
-                </Typography>
-                <div className={classes.expenseList}>
-                    <ExpensesReceiptRow />
-                </div>
-            </div>
-            <CreateExpense
-                isDialogOpen={isDialogOpen}
-                setDialogOpen={setDialogOpen}
-                currentUserID={currentUserID}
-                groupID={groupID}
-            />
-        </>
+        <Connect query={graphqlOperation(listReceipts, { id: groupID })}>
+            {({ data, loading, error }) => {
+                if (error) {
+                    //TODO: Add a dedicated ERROR Component with a message to show.
+                    return <h3>Error</h3>;
+                }
+
+                if (loading) {
+                    return <LoadingPage />;
+                }
+
+                const allReceipts = data?.listReceipts?.items ?? [];
+                const filteredReceipts = allReceipts.filter(receipt => {
+                    return receipt.group?.id === groupID;
+                });
+                return (
+                    <>
+                        <div className={classes.headContainer}>
+                            <AddIcon
+                                fontSize="large"
+                                className={classes.addButton}
+                                onClick={() => {
+                                    setDialogOpen(true);
+                                }}
+                            />
+                            <Typography variant="h2" gutterBottom>
+                                Recent Expenses
+                            </Typography>
+                            <div className={classes.expenseList}>
+                                {filteredReceipts.map((receipt, index) => {
+                                    return (
+                                        <div key={index}>
+                                            <ExpensesReceiptRow
+                                                receipt={receipt}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                                {(filteredReceipts == null ||
+                                    filteredReceipts.length === 0) && (
+                                    <Typography variant="h3" gutterBottom>
+                                        No receipts found for this group. Create
+                                        one.
+                                    </Typography>
+                                )}
+                            </div>
+                        </div>
+                        <CreateExpense
+                            isDialogOpen={isDialogOpen}
+                            setDialogOpen={setDialogOpen}
+                            currentUserID={currentUserID}
+                            groupID={groupID}
+                        />
+                    </>
+                );
+            }}
+        </Connect>
     );
 }
 
