@@ -36,9 +36,9 @@ import { PubNubProvider, PubNubConsumer } from 'pubnub-react';
 const pubnub = new PubNub({
   publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
   subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
-  uuid: ""
+  uuid: "12445"
 });
-const channels = ['awesomeChannel'];
+var channels = ['awesomeChannel']; ////change to group id
 
 function MessagePanel(): React.MixedElement {
      const [messages, addMessage] = useState([]);
@@ -63,6 +63,7 @@ function MessagePanel(): React.MixedElement {
             {client => {
               client.addListener({
                 message: messageEvent => {
+					
                   addMessage([...messages, messageEvent.message]);
                 },
               });

@@ -56,7 +56,6 @@ function MessagesPage(): React.MixedElement {
     return (
         <div className={classes.headContainer}>
             <MessagePanel />
-			<MessageBox />
         </div>
     );
 }

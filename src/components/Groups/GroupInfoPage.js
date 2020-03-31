@@ -91,6 +91,7 @@ function GroupInfoPage({
     });
     const [groupMembers, setGroupMembers] = useState(initialGroupMembers);
     const [addMemberUserName, setAddMemberUserName] = useState("");
+	const groupBudget = groupData?.budget ?? 1000.01;
 
     // Page render components
     const [errorMessage, setErrorMessage] = useState("");
@@ -128,6 +129,24 @@ function GroupInfoPage({
         },
         [deletedGroupMembers, groupMembers, items]
     );
+	
+	const handleBudgetInput = function()
+	{
+		var budget = document.getElementById("budget");
+		if (budget.value.indexOf(".") > -1 && budget.value.indexOf(".") < budget.value.length - 2)
+		{
+			budget.value = budget.value.substr(0, budget.value.indexOf(".") + 3)
+		}
+		while (parseFloat(budget.value) == undefined)
+		{
+			budget.value = budget.value.substring(0, budget.value.length - 1);
+			if (budget.value.length == 0) { break; }
+		}
+		while (parseFloat(budget.value) > 100000)
+		{
+			budget.value = parseFloat(budget.value) / 10;
+		}
+	}
 
     const addGroupMember = useCallback(
         newMember => {
@@ -149,6 +168,7 @@ function GroupInfoPage({
         if (
             groupName === groupData?.name &&
             groupDescription === groupData?.description &&
+			groupBudget === groupData?.budget &&
             areArraysEqual(groupMembers, initialGroupMembers) &&
             deletedGroupMembers.length === 0
         ) {
@@ -161,7 +181,7 @@ function GroupInfoPage({
         groupDescription,
         groupMembers,
         groupName,
-        initialGroupMembers
+        initialGroupMembers,
     ]);
     const addNewMember = async () => {
         if (addMemberUserName == null || addMemberUserName.trim() === "") {
@@ -362,8 +382,9 @@ function GroupInfoPage({
                             </Typography>
                             <TextField
                                 id="budget"
-                                defaultValue="1000.00"
+                                defaultValue={groupBudget}
                                 style={{ width: 200 }}
+								onChange={handleBudgetInput}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
