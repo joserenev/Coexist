@@ -54,9 +54,7 @@ function MessagesPage(): React.MixedElement {
     const [isDialogOpen, setDialogOpen] = useState(false);
 	
     return (
-        <div className={classes.headContainer}>
-            <MessagePanel />
-        </div>
+        <MessagePanel />
     );
 }
 
