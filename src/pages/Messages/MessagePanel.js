@@ -72,6 +72,14 @@ const useStyles = makeStyles(theme => ({
 		margin: "0px",
 		border: "0px",
 		padding: "0px"
+	},
+	messageDiv: {
+		width: "100%",
+		height: "auto",
+		backgroundColor: "blue"
+	},
+	messageHolder: {
+		display: "block"
 	}
 }));
 
@@ -85,10 +93,14 @@ const pubnub = new PubNub({
 var channels = ['awesomeChannel']; ////change to group id
 
 function MessagePanel(props): React.MixedElement {
-     const [messages, addMessage] = useState([]);
+     const [messages, addMessage] = useState([{"message":"asdsa", "sender":"person a"}]);
 	  const [message, setMessage] = useState('');
 	  const classes = useStyles();
 	   const groupID = props.match?.params?.groupID ?? "null group id";
+	   
+	   const realGroupId = window.location.href.substr(window.location.href.indexOf("/messages/") + 10);
+	   
+	   channels[0] = realGroupId;
 	   
 	   //window.alert("Group id: " + groupID);
 
@@ -113,7 +125,7 @@ function MessagePanel(props): React.MixedElement {
               client.addListener({
                 message: messageEvent => {
 					
-                  addMessage([...messages, {"sender":"undefind", "message":messageEvent.message, "timeSent":new Date().getTime()}]);
+                  addMessage([...messages, {"sender":"username", "message":messageEvent.message, "timeSent":new Date().getTime()}]);
 				  console.log(messageEvent.message);
                 },
               });
@@ -127,6 +139,7 @@ function MessagePanel(props): React.MixedElement {
               height: '60vh',
               
             }}
+			className={classes.messageHolder}
           >
             <div
               style={{
@@ -137,13 +150,17 @@ function MessagePanel(props): React.MixedElement {
             >
               {messages.map((message, messageIndex) => {
                 return (
-                  <div
-                    key={`message-${messageIndex}`}
-                    className={classes.message}
-                  >
-					<p>{message.sender}</p>
-                    {message.message}
-                  </div>
+					<div
+					className={classes.messageDiv}
+					>
+						<div
+							key={`message-${messageIndex}`}
+							className={classes.message}
+						>
+						<p>{message.sender}</p>
+							{message.message}
+						</div>
+					</div>
                 );
               })}
             </div>
