@@ -1,4 +1,4 @@
-import React from "react";
+/*import React from "react";
 import styled from "styled-components/macro";
 import getUniqueColor from "foundations/utilities/getUniqueColor";
 import { setLightness } from "polished";
@@ -57,3 +57,4 @@ const UserInitialsAvatar = ({
 };
 
 export { UserInitialsAvatar };
+*/

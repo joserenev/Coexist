@@ -1,31 +1,25 @@
-import { createSelector } from "reselect";
-import { AppState } from "main/storeTypes";
-import { View } from "./LayoutReducer";
+import React from "react";
 
-const getLayoutSlice = (state: AppState) => state.layout;
+interface PresenceIndicatorIconProps {
+  title: string;
+  active: boolean;
+}
 
-export const getView = createSelector(
-  [getLayoutSlice],
-  (app: ReturnType<typeof getLayoutSlice>) => {
-    return app.views[0];
-  }
-);
-
-export const getViews = createSelector(
-  [getLayoutSlice],
-  (app: ReturnType<typeof getLayoutSlice>) => {
-    return app.views;
-  }
-);
-
-export const getViewStates = createSelector(
-  [getViews],
-  (views: ReturnType<typeof getViews>) => {
-    return {
-      Menu: views.includes(View.Menu),
-      ConversationMembers: views.includes(View.ConversationMembers),
-      JoinConversation: views.includes(View.JoinConversation),
-      CurrentConversation: views.includes(View.CurrentConversation)
-    };
-  }
+export const PresenceIndicatorIcon = ({
+  title,
+  active
+}: PresenceIndicatorIconProps) => (
+  <svg width={18} height={18}>
+    <title>{title}</title>
+    <circle
+      cx={73}
+      cy={73}
+      r={7}
+      transform="translate(-64 -64)"
+      fill={active ? "#B8E986" : "#E9EEF4"}
+      stroke="#FFF"
+      strokeWidth={3}
+      fillRule="evenodd"
+    />
+  </svg>
 );
