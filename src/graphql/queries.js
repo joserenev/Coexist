@@ -17,6 +17,8 @@ export const getUser = `query GetUser($id: ID!) {
     createdAt
     updatedAt
     pictureURL
+    lastPageLoad
+    heartbeat
   }
 }
 `;
@@ -38,6 +40,8 @@ export const listUsers = `query ListUsers(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     nextToken
   }
@@ -59,6 +63,8 @@ export const getGroup = `query GetGroup($id: ID!) {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     type
     description
@@ -72,6 +78,8 @@ export const getGroup = `query GetGroup($id: ID!) {
     createdAt
     updatedAt
     pictureURL
+    totalBudget
+    remainingBalance
     receipts {
       items {
         id
@@ -106,6 +114,8 @@ export const listGroups = `query ListGroups(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -116,6 +126,8 @@ export const listGroups = `query ListGroups(
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -139,6 +151,8 @@ export const getReceipt = `query GetReceipt($id: ID!) {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     name
     description
@@ -158,6 +172,8 @@ export const getReceipt = `query GetReceipt($id: ID!) {
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -168,6 +184,8 @@ export const getReceipt = `query GetReceipt($id: ID!) {
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -193,6 +211,8 @@ export const listReceipts = `query ListReceipts(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       name
       description
@@ -209,6 +229,8 @@ export const listReceipts = `query ListReceipts(
         createdAt
         updatedAt
         pictureURL
+        totalBudget
+        remainingBalance
       }
       receiptImageUrl
     }

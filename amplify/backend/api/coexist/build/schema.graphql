@@ -8,6 +8,8 @@ type User {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  lastPageLoad: String
+  heartbeat: String
 }
 
 type UserGroups {
@@ -27,6 +29,8 @@ type Group {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  totalBudget: String
+  remainingBalance: String
   receipts(filter: ModelReceiptFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelReceiptConnection
 }
 
@@ -135,6 +139,8 @@ input ModelUserFilterInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   pictureURL: ModelStringInput
+  lastPageLoad: ModelStringInput
+  heartbeat: ModelStringInput
   and: [ModelUserFilterInput]
   or: [ModelUserFilterInput]
   not: ModelUserFilterInput
@@ -158,6 +164,8 @@ input CreateUserInput {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  lastPageLoad: String
+  heartbeat: String
 }
 
 input UpdateUserInput {
@@ -169,6 +177,8 @@ input UpdateUserInput {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  lastPageLoad: String
+  heartbeat: String
 }
 
 input DeleteUserInput {
@@ -198,6 +208,8 @@ input ModelUserConditionInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   pictureURL: ModelStringInput
+  lastPageLoad: ModelStringInput
+  heartbeat: ModelStringInput
   and: [ModelUserConditionInput]
   or: [ModelUserConditionInput]
   not: ModelUserConditionInput
@@ -274,6 +286,8 @@ input ModelGroupFilterInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   pictureURL: ModelStringInput
+  totalBudget: ModelStringInput
+  remainingBalance: ModelStringInput
   and: [ModelGroupFilterInput]
   or: [ModelGroupFilterInput]
   not: ModelGroupFilterInput
@@ -288,6 +302,8 @@ input CreateGroupInput {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  totalBudget: String
+  remainingBalance: String
   groupOwnerId: ID
 }
 
@@ -300,6 +316,8 @@ input UpdateGroupInput {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  totalBudget: String
+  remainingBalance: String
   groupOwnerId: ID
 }
 
@@ -315,6 +333,8 @@ input ModelGroupConditionInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   pictureURL: ModelStringInput
+  totalBudget: ModelStringInput
+  remainingBalance: ModelStringInput
   and: [ModelGroupConditionInput]
   or: [ModelGroupConditionInput]
   not: ModelGroupConditionInput

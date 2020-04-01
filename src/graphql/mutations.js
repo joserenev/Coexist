@@ -20,6 +20,8 @@ export const createUser = `mutation CreateUser(
     createdAt
     updatedAt
     pictureURL
+    lastPageLoad
+    heartbeat
   }
 }
 `;
@@ -42,6 +44,8 @@ export const updateUser = `mutation UpdateUser(
     createdAt
     updatedAt
     pictureURL
+    lastPageLoad
+    heartbeat
   }
 }
 `;
@@ -64,6 +68,8 @@ export const deleteUser = `mutation DeleteUser(
     createdAt
     updatedAt
     pictureURL
+    lastPageLoad
+    heartbeat
   }
 }
 `;
@@ -85,6 +91,8 @@ export const createUserGroups = `mutation CreateUserGroups(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     group {
       id
@@ -98,6 +106,8 @@ export const createUserGroups = `mutation CreateUserGroups(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -108,6 +118,8 @@ export const createUserGroups = `mutation CreateUserGroups(
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -133,6 +145,8 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     group {
       id
@@ -146,6 +160,8 @@ export const updateUserGroups = `mutation UpdateUserGroups(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -156,6 +172,8 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -181,6 +199,8 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     group {
       id
@@ -194,6 +214,8 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -204,6 +226,8 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -230,6 +254,8 @@ export const createGroup = `mutation CreateGroup(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     type
     description
@@ -243,6 +269,8 @@ export const createGroup = `mutation CreateGroup(
     createdAt
     updatedAt
     pictureURL
+    totalBudget
+    remainingBalance
     receipts {
       items {
         id
@@ -278,6 +306,8 @@ export const updateGroup = `mutation UpdateGroup(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     type
     description
@@ -291,6 +321,8 @@ export const updateGroup = `mutation UpdateGroup(
     createdAt
     updatedAt
     pictureURL
+    totalBudget
+    remainingBalance
     receipts {
       items {
         id
@@ -326,6 +358,8 @@ export const deleteGroup = `mutation DeleteGroup(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     type
     description
@@ -339,6 +373,8 @@ export const deleteGroup = `mutation DeleteGroup(
     createdAt
     updatedAt
     pictureURL
+    totalBudget
+    remainingBalance
     receipts {
       items {
         id
@@ -373,6 +409,8 @@ export const createReceipt = `mutation CreateReceipt(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     name
     description
@@ -392,6 +430,8 @@ export const createReceipt = `mutation CreateReceipt(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -402,6 +442,8 @@ export const createReceipt = `mutation CreateReceipt(
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -428,6 +470,8 @@ export const updateReceipt = `mutation UpdateReceipt(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     name
     description
@@ -447,6 +491,8 @@ export const updateReceipt = `mutation UpdateReceipt(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -457,6 +503,8 @@ export const updateReceipt = `mutation UpdateReceipt(
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -483,6 +531,8 @@ export const deleteReceipt = `mutation DeleteReceipt(
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     name
     description
@@ -502,6 +552,8 @@ export const deleteReceipt = `mutation DeleteReceipt(
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -512,6 +564,8 @@ export const deleteReceipt = `mutation DeleteReceipt(
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
