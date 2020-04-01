@@ -50,15 +50,20 @@ const greenTheme = createMuiTheme({ palette: {     primary: green,
       main: '#c8e6c9',
     }, } })
 
-function MessagesPage(): React.MixedElement {
+function MessagesPage(props): React.MixedElement {
     const classes = useStyles();
     const theme = useTheme();
     const [isDialogOpen, setDialogOpen] = useState(false);
 	
+	const groupID = props.match?.params?.groupID ?? "null group id";
+	   
+	//window.alert("Group id: " + groupID);
+	
+	const realGroupId = window.location.href.substr(window.location.href.indexOf("/messages/") + 10);
+	//window.alert(realGroupId);
+	
     return (
-        <div className={classes.headContainer}>
-            <MessagePanel />
-        </div>
+        <MessagePanel />
     );
 }
 

@@ -44,6 +44,8 @@ import { graphqlOperation } from "aws-amplify";
 import { getUser as getUserDetailsQuery } from "../../customGraphql/queries";
 import SideBarLoading from "../../pages/Loading/SideBarLoading";
 
+import Notifications from './Notifications';
+
 const drawerWidth = 280;
 
 const useStyles = makeStyles(theme => ({
@@ -180,6 +182,7 @@ function SideBar({
 
     return (
         <div className={classes.root}>
+			<Notifications />
             <CssBaseline />
             <ClickAwayListener onClickAway={handleDrawerClose}>
                 <AppBar

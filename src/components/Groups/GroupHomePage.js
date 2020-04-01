@@ -82,7 +82,7 @@ function GroupHomePage(props): React.MixedElement {
         history.push(`/expenses/${groupID}`);
     };
     const navigateToChat = () => {
-        history.push("/messages/${groupID}");
+        history.push(`/messages/${groupID}`);
     };
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
