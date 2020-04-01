@@ -8,6 +8,8 @@ type User @model {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  lastPageLoad: String
+  heartbeat: String
 }
 
 type UserGroups @model (queries: null){
@@ -27,6 +29,8 @@ type Group @model {
   createdAt: String
   updatedAt: String
   pictureURL: String
+  totalBudget: String
+  remainingBalance: String
   receipts: [Receipt] @connection(name: "GroupReceipts")
 }
 

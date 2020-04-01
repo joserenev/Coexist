@@ -17,6 +17,8 @@ export const onCreateUser = `subscription OnCreateUser {
     createdAt
     updatedAt
     pictureURL
+    lastPageLoad
+    heartbeat
   }
 }
 `;
@@ -36,6 +38,8 @@ export const onUpdateUser = `subscription OnUpdateUser {
     createdAt
     updatedAt
     pictureURL
+    lastPageLoad
+    heartbeat
   }
 }
 `;
@@ -55,6 +59,8 @@ export const onDeleteUser = `subscription OnDeleteUser {
     createdAt
     updatedAt
     pictureURL
+    lastPageLoad
+    heartbeat
   }
 }
 `;
@@ -73,6 +79,8 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     group {
       id
@@ -86,6 +94,8 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -96,6 +106,8 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -118,6 +130,8 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     group {
       id
@@ -131,6 +145,8 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -141,6 +157,8 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -163,6 +181,8 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     group {
       id
@@ -176,6 +196,8 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -186,6 +208,8 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -209,6 +233,8 @@ export const onCreateGroup = `subscription OnCreateGroup {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     type
     description
@@ -222,6 +248,8 @@ export const onCreateGroup = `subscription OnCreateGroup {
     createdAt
     updatedAt
     pictureURL
+    totalBudget
+    remainingBalance
     receipts {
       items {
         id
@@ -254,6 +282,8 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     type
     description
@@ -267,6 +297,8 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
     createdAt
     updatedAt
     pictureURL
+    totalBudget
+    remainingBalance
     receipts {
       items {
         id
@@ -299,6 +331,8 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     type
     description
@@ -312,6 +346,8 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
     createdAt
     updatedAt
     pictureURL
+    totalBudget
+    remainingBalance
     receipts {
       items {
         id
@@ -343,6 +379,8 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     name
     description
@@ -362,6 +400,8 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -372,6 +412,8 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -395,6 +437,8 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     name
     description
@@ -414,6 +458,8 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -424,6 +470,8 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }
@@ -447,6 +495,8 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       createdAt
       updatedAt
       pictureURL
+      lastPageLoad
+      heartbeat
     }
     name
     description
@@ -466,6 +516,8 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
         createdAt
         updatedAt
         pictureURL
+        lastPageLoad
+        heartbeat
       }
       type
       description
@@ -476,6 +528,8 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       createdAt
       updatedAt
       pictureURL
+      totalBudget
+      remainingBalance
       receipts {
         nextToken
       }

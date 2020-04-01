@@ -141,7 +141,7 @@ function MessagePanel(props): React.MixedElement {
           </PubNubConsumer>
           <div
             style={{
-              width: '100vw',
+              width: '80vw',
               height: '60vh',
               
             }}
