@@ -83,14 +83,12 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-
-
 const pubnub = new PubNub({
   publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
   subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
   uuid: "12445"
 });
-var channels = ['awesomeChannel']; ////change to group id
+var channels = ['testNotifChannel']; ////change to group id
 
 function MessagePanel(props): React.MixedElement {
      const [messages, addMessage] = useState([{"message":"asdsa", "sender":"person a"}]);
@@ -100,15 +98,21 @@ function MessagePanel(props): React.MixedElement {
 	   
 	   const realGroupId = window.location.href.substr(window.location.href.indexOf("/messages/") + 10);
 	   
-	   channels[0] = realGroupId;
+	   //channels[0] = realGroupId;
 	   
 	   //window.alert("Group id: " + groupID);
 
 	  const sendMessage = message => {
+		  var json = {"message":message};
+		  json.timeSent = new Date().getTime();
+		  json.uniqueId = Math.random();
+		  json.notificationClass = "Message";
+		  json.sender = "username";
+		  
 		pubnub.publish(
 		  {
 			channel: channels[0],
-			message,
+			message: json,
 		  },
 		  () => setMessage('')
 		);
@@ -125,8 +129,10 @@ function MessagePanel(props): React.MixedElement {
               client.addListener({
                 message: messageEvent => {
 					
-                  addMessage([...messages, {"sender":"username", "message":messageEvent.message, "timeSent":new Date().getTime()}]);
-				  console.log(messageEvent.message);
+                  addMessage([...messages, 
+					messageEvent.message
+					]);
+				  console.log("Message panel message: " + messageEvent.message.message);
                 },
               });
 

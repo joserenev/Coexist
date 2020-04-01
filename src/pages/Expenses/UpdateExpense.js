@@ -27,6 +27,16 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { uploadCloudinaryImage } from "../../api/Api";
 import { QueryStatus } from "../../components/util/QueryUtil";
 
+import PubNub from 'pubnub';
+import { PubNubProvider, PubNubConsumer } from 'pubnub-react';
+
+const pubnub = new PubNub({
+  publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+  subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+  uuid: "12445"
+});
+var channels = ['testNotifChannel']; ////change to group id
+
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
 
 const tolerance = 0.0005;
@@ -113,6 +123,25 @@ function UpdateExpense({
     const [splitMap, setSplitMap] = useState<>(
         new Map(JSON.parse(editReceipt.memberSplit))
     );
+	
+	///Notification stuff
+	const [messages, addMessage] = useState([]);
+	const [message, setMessage] = useState('');
+	const sendMessage = message => {
+		  var json = {"message":message};
+		  json.timeSent = new Date().getTime();
+		  json.uniqueId = Math.random();
+		  json.notificationClass = "Receipt Update";
+		  json.sender = "username";
+		  
+		pubnub.publish(
+		  {
+			channel: channels[0],
+			message: json,
+		  },
+		  () => setMessage('')
+		);
+	  };
 
     const handleImageChange = async event => {
         setSelectedImage(event.target.files[0]);
@@ -276,6 +305,8 @@ function UpdateExpense({
                 receiptImageUrl: imageURL
             };
         }
+		
+		sendMessage("A receipt has been updated.");
 
         await updateReceipt(receiptInfo)
             .then(res => {
