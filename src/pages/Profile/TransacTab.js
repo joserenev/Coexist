@@ -11,28 +11,22 @@ import TableRow from '@material-ui/core/TableRow';
 
 const columns = [
   { id: 'name', label: 'Receipts', minWidth: 170 },
-  { id: 'code', label: 'Amount', minWidth: 100 },
+  { id: 'code', label: 'To', minWidth: 100 },
   {
     id: 'population',
-    label: 'Population',
+    label: 'Amount',
     minWidth: 170,
     align: 'right',
     format: (value) => value.toLocaleString(),
   },
   {
     id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
+    label: 'Paid',
     minWidth: 170,
     align: 'right',
     format: (value) => value.toLocaleString(),
   },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
+  
 ];
 
 function createData(name, code, population, size) {
