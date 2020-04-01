@@ -313,7 +313,7 @@ function UpdateExpense({
             };
         }
 		
-		sendMessage("A receipt has been updated.");
+		sendMessage("updated receipt: " + name + ".");
 
         await updateReceipt(receiptInfo)
             .then(res => {

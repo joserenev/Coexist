@@ -253,7 +253,7 @@ function CreateExpense({
         }
         setMutationStatus(PENDING);
 		
-		sendMessage("A new receipt has been added.");
+		sendMessage("added a new receipt: " + name);
 
         // Stringify map to split.
         const stringifiedSplit = JSON.stringify(Array.from(splitMap.entries()));

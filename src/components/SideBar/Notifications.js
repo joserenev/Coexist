@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import ReactDOM from 'react-dom';
+import NotificationSystem from 'react-notification-system';
 // <img src={logo} alt="logo" className={classes.logotypeImage} />
 import {
     Grid,
@@ -26,19 +28,28 @@ var lastId = 0;
 
 
 function Notifications(): React.MixedElement {
-    const [messages, addMessage] = useState([{"message":"asdsa", "sender":"person a"}]);
-	  const [message, setMessage] = useState('');
+	const [messages, addMessage] = useState([{"message":"asdsa", "sender":"person a"}]);
+	const [message, setMessage] = useState('');
+
+	var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
+	var groups = JSON.parse(groupJSON);
+	for (var i = 0; i < groups.length; i++)
+	{
+	  channels.push(groups[i].group.id);
+	}
+	console.log(groupJSON);
+
+	const notificationSystem = React.createRef();
 	  
-	  var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
-	  var groups = JSON.parse(groupJSON);
-	  for (var i = 0; i < groups.length; i++)
-	  {
-		  channels.push(groups[i].group.id);
-	  }
-	  console.log(groupJSON);
+	const addNotification = function(notificationData)
+	{
+		const notification = notificationSystem.current;
+		notification.addNotification(notificationData);
+	}
 	  
     return (
         <div>
+		<NotificationSystem ref={notificationSystem} />
 		 <PubNubProvider client={pubnub}>
 		  <div className="App ${classes.noMargin}">
 			<header className="App-header ${classes.noMargin}">
@@ -66,6 +77,28 @@ function Notifications(): React.MixedElement {
 							  {
 								  ele.children[1].innerHTML = notifs[groupId];
 							  }
+							  
+							  var notif = {};
+							  for (var i = 0; i < groups.length; i++)
+							  {
+								  if (groups[i].group.id == groupId)
+								  {
+									  notif["title"] = groups[i].group.name;
+								  }
+							  }
+							  notif["message"] = messageEvent.message.sender + ": " + messageEvent.message.message;
+							  if (messageEvent.message.notificationClass == "Receipt Update")
+							  {
+								  notif["level"] = "warning";
+							  }
+							  else { notif["level"] = "info"; }
+							  if (messageEvent.message.notificationClass == "Message")
+							  {
+								  notif["autoDismiss"] = 5;
+							  }
+							  else { notif["autoDismiss"] = 0; }
+							  notif["position"] = "br";
+							  addNotification(notif);
 						  }
 						  else
 						  {
