@@ -7,7 +7,9 @@ import { Wrapper, getAnimatedWrapperVariants } from "./Menu.style";
 import { ThemeContext } from "styled-components";
 import { useMediaQuery } from "../NetworkStatus/useMediaQuery";
 import Typography from "@material-ui/core/Typography";
-import User from "../../User/User"
+import ChatUsersList from "../../ChatComp/ChatUsersList"
+
+import SimpleUserProfileView from "../../User/SimpleUserProfileView";
 
 const Menu = () => { 
   //const view = useRef<HTMLElement>(null);
@@ -21,8 +23,8 @@ const Menu = () => {
      // animate={views.Menu ? "open" : "closed"}
      // variants={getAnimatedWrapperVariants(isSmall)}
     >
-      <User />
-      <Typography>Have list of people in group here</Typography>
+      <UserInfo/>
+      <ChatUsersList/>
     </Wrapper>
   );
 };
