@@ -22,6 +22,7 @@ import ReferralPage from "../pages/Referral/ReferralPage.js";
 import ForgetPass from "../pages/ForgetPass/ForgetPass.js";
 import ExpensesPage from "../pages/Expenses/ExpensesPage.js";
 import MessagesPage from "../pages/Messages/MessagesPage.js";
+import Chat from "../pages/Chat/Chat.js";
 
 import Authentication from "../authentication/Authentication";
 
@@ -245,7 +246,7 @@ function Main(props): React.MixedElement {
                                                 setSideBarOpen={setSideBarOpen}
                                                 userID={userID}
                                             >
-                                                <MessagesPage />
+                                                <Chat/>
                                             </ComponentContainer>
                                         </>
                                     );
