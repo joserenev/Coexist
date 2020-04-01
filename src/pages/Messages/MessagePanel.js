@@ -98,7 +98,7 @@ function MessagePanel(props): React.MixedElement {
 	   
 	   const realGroupId = window.location.href.substr(window.location.href.indexOf("/messages/") + 10);
 	   
-	   //channels[0] = realGroupId;
+	   channels[0] = realGroupId;
 	   
 	   //window.alert("Group id: " + groupID);
 
