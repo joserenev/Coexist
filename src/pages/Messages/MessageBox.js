@@ -66,6 +66,7 @@ function MessageBox(): React.MixedElement {
 		setValue(event.target.value);
 	  };
 	  
+	  
 	  const sendMessage = function()
 	  {
 		  var textBox = document.getElementById("filled-multiline-flexible");

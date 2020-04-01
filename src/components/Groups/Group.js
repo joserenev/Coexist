@@ -42,6 +42,12 @@ type Props = {|
 function GroupListItem({ group }: Props) {
     const classes = useStyles();
     const { id = "", name, description } = group;
+	
+	var notifJSON = window.localStorage.getItem("CoexistGroupNotifications") || "{}";
+	var notifs = JSON.parse(notifJSON);
+	if (notifs[id] == undefined) { notifs[id] = 0; }
+	console.log("Group component id: " + id);
+	
     return (
         <ListItem
             alignItems="flex-start"
@@ -49,7 +55,7 @@ function GroupListItem({ group }: Props) {
             component={Link}
             to={`/groupHomePage/${id}`}
         >
-			<Badge badgeContent={1} color="primary" overlap="circle">
+			<Badge id={id+"-notif"} badgeContent={(notifs[id] || 0)} color="primary" overlap="circle">
 				<ListItemAvatar>
 					<Avatar
 						variant="rounded"

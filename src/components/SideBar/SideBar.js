@@ -267,6 +267,10 @@ function SideBar({
                                     groupItem2.group?.updatedAt ?? "";
                                 return updatedTime2.localeCompare(updatedTime1);
                             });
+							
+							window.localStorage.setItem("CoexistGroups", JSON.stringify(groupItems));
+							window.localStorage.setItem("CoexistUserData", JSON.stringify(userData));
+							console.log(JSON.stringify(userData));
                         // TODO: Sort Group Items by Created Date
                         return (
                             <>

@@ -100,6 +100,8 @@ function MessagePanel(props): React.MixedElement {
 	   
 	   channels[0] = realGroupId;
 	   
+	var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+	  var userData = JSON.parse(userDataJSON);   
 	   //window.alert("Group id: " + groupID);
 
 	  const sendMessage = message => {
@@ -107,7 +109,8 @@ function MessagePanel(props): React.MixedElement {
 		  json.timeSent = new Date().getTime();
 		  json.uniqueId = Math.random();
 		  json.notificationClass = "Message";
-		  json.sender = "username";
+		  json.sender = userData.username;
+		  json.groupId = realGroupId;
 		  
 		pubnub.publish(
 		  {

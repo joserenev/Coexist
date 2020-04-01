@@ -38,7 +38,7 @@ const pubnub = new PubNub({
   subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
   uuid: "12445"
 });
-var channels = ['testNotifChannel']; ////change to group id
+var channels = []; ////change to group id
 
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
 
@@ -111,6 +111,11 @@ function CreateExpense({
     const [splitMap, setSplitMap] = useState<>(new Map());
 	
 	//notification stuff
+	var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
+	var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+	  var groups = JSON.parse(groupJSON);
+	  var userData = JSON.parse(userDataJSON);
+	  channels[0] = groupID;
 	const [messages, addMessage] = useState([]);
 	const [message, setMessage] = useState('');
 	const sendMessage = message => {
@@ -118,7 +123,9 @@ function CreateExpense({
 		  json.timeSent = new Date().getTime();
 		  json.uniqueId = Math.random();
 		  json.notificationClass = "Receipt";
-		  json.sender = "username";
+		  json.sender = userData.username;
+		  json.groupId = groupID;
+		  json.currentUserId = currentUserID;
 		  
 		pubnub.publish(
 		  {
