@@ -250,9 +250,9 @@ function SideBar({
                             email = "",
                             name = "",
                             phone = "",
-                            groups = {}
+                            groups = {},
+                            pictureURL = ""
                         } = userData ?? {};
-                        const imageUrl = null;
                         const { items = [] } = groups ?? [];
                         const groupItems = items
                             .filter(groupItem => {
@@ -267,6 +267,13 @@ function SideBar({
                                     groupItem2.group?.updatedAt ?? "";
                                 return updatedTime2.localeCompare(updatedTime1);
                             });
+
+                        const userAvatar =
+                            pictureURL == null || pictureURL === "" ? (
+                                <Avatar alt={name}>{name.charAt(0)}</Avatar>
+                            ) : (
+                                <Avatar alt={name} src={pictureURL}></Avatar>
+                            );
 
                         window.localStorage.setItem(
                             "CoexistGroups",
@@ -283,22 +290,9 @@ function SideBar({
                                 <Grid container>
                                     <Grid item xs={12}>
                                         <Card className={classes.card}>
-                                            <CardMedia
-                                                className={classes.media}
-                                                image={imageUrl}
-                                                title="profile Pic"
-                                            />
                                             <CardHeader
                                                 disableTypography
-                                                avatar={
-                                                    <Avatar
-                                                        alt="Profile Pic"
-                                                        src={undefined}
-                                                        className={
-                                                            classes.avatar
-                                                        }
-                                                    />
-                                                }
+                                                avatar={userAvatar}
                                                 title={
                                                     <Typography
                                                         variant="h4"
