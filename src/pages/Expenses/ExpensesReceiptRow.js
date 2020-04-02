@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Grid, Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-import User from "../../components/User/User";
+import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
 import EditIcon from "@material-ui/icons/Edit";
 import Dialog from "@material-ui/core/Dialog";
 import ReceiptIcon from "@material-ui/icons/Receipt";
@@ -11,12 +11,27 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AcceptIcon from "@material-ui/icons/CheckCircle";
 import RejectIcon from "@material-ui/icons/Cancel";
 import UpdateExpense from "./UpdateExpense";
+import { green, yellow, red } from "@material-ui/core/colors";
+import {
+    ApprovalStatus,
+    ApprovalResponse
+} from "../../components/util/ExpenseApprovalUtil";
+import { getCurrentTimeStampString } from "../../components/util/DateUtil";
+
+import WatchLaterIcon from "@material-ui/icons/WatchLater";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+
+import { respondToReceipt } from "../../api/Api";
+
+const { PENDING, APPROVED, REJECTED } = ApprovalStatus;
+
+const { ACCEPT, REJECT } = ApprovalResponse;
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
         margin: 10
     },
-
     largeIcons: {
         height: 180,
         width: 180
@@ -26,6 +41,24 @@ const useStyles = makeStyles(theme => ({
         margin: "auto",
         width: "100vh",
         minWidth: 500
+    },
+    approvedTag: {
+        fontSize: 14,
+        backgroundColor: green[400],
+        padding: 8,
+        marginTop: 24
+    },
+    rejectedTag: {
+        fontSize: 14,
+        backgroundColor: red[400],
+        padding: 8,
+        marginTop: 24
+    },
+    pendingTag: {
+        fontSize: 14,
+        backgroundColor: yellow[400],
+        padding: 8,
+        marginTop: 24
     }
 }));
 
@@ -63,8 +96,8 @@ function ExpensesReceiptRow({
     };
 
     const [isEditDialogOpen, setEditDialogOpen] = useState(false);
-
     const {
+        id,
         name = "",
         owner = {},
         description = "No Description found",
@@ -72,8 +105,13 @@ function ExpensesReceiptRow({
         totalAmount = "0",
         createdAt = "",
         group = {},
-        receiptImageUrl = ""
-    } = receipt;
+        receiptImageUrl = "",
+        approvalStatus: rawApprovalStatus,
+        approvedDate = "",
+        approverList: rawApproverList = "[]"
+    } = receipt ?? {};
+
+    const approvalStatus = rawApprovalStatus ?? PENDING;
 
     const groupMembers = group?.users?.items ?? [];
     const memberSplitMap = new Map(JSON.parse(rawMemberSplit));
@@ -88,11 +126,109 @@ function ExpensesReceiptRow({
         setEditDialogOpen(true);
     };
 
+    // Approve/Deny Receipt
+    const approvalMap = new Map(JSON.parse(rawApproverList));
+    const receivedAllApprovals = useCallback(() => {
+        let allApprovals = true;
+        memberSplitMap.forEach((value, key) => {
+            if (Number(value) !== 0 && approvalMap.get(key) !== APPROVED) {
+                allApprovals = false;
+            }
+        });
+        return allApprovals;
+    }, [approvalMap, memberSplitMap]);
+
+    const updateApprovalStatus = useCallback(
+        async responseStatus => {
+            // already responded
+
+            if (approvalMap.get(currentUserID) !== undefined) {
+                return;
+            }
+            approvalMap.set(currentUserID, responseStatus);
+
+            let updateReceiptInfo = {
+                id,
+                approverList: JSON.stringify(Array.from(approvalMap.entries()))
+            };
+
+            if (responseStatus === REJECTED) {
+                // if receipt has been rejected.
+                updateReceiptInfo = {
+                    ...updateReceiptInfo,
+                    approvalStatus: REJECTED
+                };
+            }
+
+            if (receivedAllApprovals()) {
+                updateReceiptInfo = {
+                    ...updateReceiptInfo,
+                    approvalStatus: APPROVED,
+                    approvedDate: getCurrentTimeStampString()
+                };
+            }
+
+            await respondToReceipt(updateReceiptInfo)
+                .then(response => {
+                    window.location.reload(true);
+                    // console.log("Receipt has been r", responseStatus);
+                })
+                .catch(err => {
+                    // console.log("Receipt has been", responseStatus);
+                });
+        },
+        [approvalMap, currentUserID, id, receivedAllApprovals]
+    );
+
+    const handleAccept = () => {
+        updateApprovalStatus(APPROVED);
+    };
+    const handleReject = () => {
+        updateApprovalStatus(REJECTED);
+    };
+
+    const showAcceptRejectAction = useCallback(() => {
+        return (
+            (approvalStatus == null || approvalStatus === PENDING) &&
+            approvalMap.get(currentUserID) === undefined
+        );
+    }, [approvalMap, approvalStatus, currentUserID]);
+
+    const getUserApprovalResoponse = useCallback(
+        userID => {
+            const response = approvalMap.get(userID);
+            if (Number(memberSplitMap.get(userID)) === 0) {
+                return null;
+            }
+
+            if (response === undefined || response === PENDING) {
+                return (
+                    <WatchLaterIcon
+                        fontSize="large"
+                        style={{ color: yellow[400] }}
+                    />
+                );
+            } else if (response === APPROVED) {
+                return (
+                    <CheckCircleIcon
+                        fontSize="large"
+                        style={{ color: green[400] }}
+                    />
+                );
+            } else {
+                return (
+                    <CancelIcon fontSize="large" style={{ color: red[400] }} />
+                );
+            }
+        },
+        [approvalMap, memberSplitMap]
+    );
+
     return (
         <div className={classes.headContainer}>
             <Paper className={classes.paper}>
-                <Grid container spacing={2}>
-                    <Grid item>
+                <Grid container spacing={2} item>
+                    <Grid direction="column" item>
                         <Grid item>
                             <Typography
                                 variant="h3"
@@ -127,6 +263,35 @@ function ExpensesReceiptRow({
                             <Typography variant="body3" color="textSecondary">
                                 (Click on image to preview)
                             </Typography>
+                        </Grid>
+                        <Grid item>
+                            {approvalStatus === APPROVED && (
+                                <Typography
+                                    className={classes.approvedTag}
+                                    color="textPrimary"
+                                    align="center"
+                                >
+                                    <b>Approved</b>
+                                </Typography>
+                            )}
+                            {approvalStatus === PENDING && (
+                                <Typography
+                                    className={classes.pendingTag}
+                                    color="textPrimary"
+                                    align="center"
+                                >
+                                    <b>Pending</b>
+                                </Typography>
+                            )}
+                            {approvalStatus === REJECTED && (
+                                <Typography
+                                    className={classes.rejectedTag}
+                                    color="textPrimary"
+                                    align="center"
+                                >
+                                    <b>Rejected</b>
+                                </Typography>
+                            )}
                         </Grid>
                     </Grid>
                     <Grid item xs={8} sm container>
@@ -172,14 +337,34 @@ function ExpensesReceiptRow({
                                     {createdDate}
                                 </Typography>
                             </Grid>
-                            <Grid item>
-                                <ButtonBase>
-                                    <AcceptIcon />
-                                </ButtonBase>
-                                <ButtonBase>
-                                    <RejectIcon />
-                                </ButtonBase>
-                            </Grid>
+                            {showAcceptRejectAction() && (
+                                <Grid item>
+                                    <ButtonBase onClick={handleAccept}>
+                                        <AcceptIcon
+                                            style={{ color: green[500] }}
+                                            fontSize="large"
+                                        />
+                                    </ButtonBase>
+                                    <ButtonBase onClick={handleReject}>
+                                        <RejectIcon
+                                            fontSize="large"
+                                            color="secondary"
+                                        />
+                                    </ButtonBase>
+                                </Grid>
+                            )}
+                            {approvalMap.get(currentUserID) !== undefined && (
+                                <Grid item>
+                                    <Typography
+                                        variant="body1"
+                                        color="textSecondary"
+                                    >
+                                        {`You have ${approvalMap.get(
+                                            currentUserID
+                                        )} this receipt`}
+                                    </Typography>
+                                </Grid>
+                            )}
                         </Grid>
                         <Grid item xs={6}>
                             <Grid
@@ -194,36 +379,42 @@ function ExpensesReceiptRow({
                                         <b>DEBTERS:</b>
                                     </Typography>
                                 </Grid>
-                                {groupMembers.map((memberItem, index) => {
-                                    return (
-                                        <Grid item xs>
-                                            <Grid
-                                                xs
-                                                container
-                                                direction="row"
-                                                spacing={0}
-                                                alignItems="center"
-                                            >
-                                                <Grid item xs>
-                                                    <User
-                                                        user={memberItem.user}
-                                                        isDeleteDisabled={true}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs>
-                                                    <Typography
-                                                        variant="h5"
-                                                        color="primary"
-                                                    >
-                                                        {`$${getOwedAmount(
-                                                            memberItem.user.id
-                                                        )}`}
-                                                    </Typography>
+                                {Array.from(memberSplitMap.keys()).map(
+                                    (userID, index) => {
+                                        return (
+                                            <Grid item xs>
+                                                <Grid
+                                                    xs
+                                                    container
+                                                    direction="row"
+                                                    spacing={0}
+                                                    alignItems="center"
+                                                >
+                                                    <Grid item xs>
+                                                        <SimpleUserProfileView
+                                                            userID={userID}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        <Typography
+                                                            variant="h5"
+                                                            color="primary"
+                                                        >
+                                                            {`$${getOwedAmount(
+                                                                userID
+                                                            )}`}
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        {getUserApprovalResoponse(
+                                                            userID
+                                                        )}
+                                                    </Grid>
                                                 </Grid>
                                             </Grid>
-                                        </Grid>
-                                    );
-                                })}
+                                        );
+                                    }
+                                )}
                             </Grid>
                         </Grid>
                         {currentUserID === owner.id && (

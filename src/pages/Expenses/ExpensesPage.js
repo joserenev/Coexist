@@ -41,7 +41,11 @@ function ExpensesPage(props): React.MixedElement {
     const { currentUserID = "" } = props;
     const [isDialogOpen, setDialogOpen] = useState(false);
     return (
-        <Connect query={graphqlOperation(listReceipts, { id: groupID })}>
+        <Connect
+            query={graphqlOperation(listReceipts, {
+                limit: 10000
+            })}
+        >
             {({ data, loading, error }) => {
                 if (error) {
                     //TODO: Add a dedicated ERROR Component with a message to show.

@@ -101,6 +101,9 @@ export const listReceipts = `query ListReceipts(
       totalAmount
       createdAt
       updatedAt
+      approvalStatus
+      approvedDate
+      approverList
       group {
         id
         name

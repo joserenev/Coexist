@@ -17,6 +17,8 @@ import {
 } from "../components/util/CloudinaryUtil";
 
 import { getCurrentTimeStampString } from "../components/util/DateUtil";
+
+import { ApprovalStatus } from "../components/util/ExpenseApprovalUtil";
 const { EMAIL } = ReferralMedium;
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
@@ -84,7 +86,8 @@ export async function getUserByUserName(username) {
                 username: {
                     eq: username
                 }
-            }
+            },
+            limit: 10000
         })
     )
         .then(data => {
@@ -368,7 +371,9 @@ export async function createNewReceipt(
         totalAmount,
         receiptImageUrl,
         receiptOwnerId,
-        receiptGroupId
+        receiptGroupId,
+        approvalStatus: ApprovalStatus.PENDING,
+        approverList: "[]"
     };
     return await API.graphql(
         graphqlOperation(mutations.createReceipt, { input: receiptInfo })
@@ -384,6 +389,11 @@ export async function createNewReceipt(
 }
 
 export async function updateReceipt(receiptInfo) {
+    receiptInfo = {
+        ...receiptInfo,
+        approvalStatus: ApprovalStatus.PENDING,
+        approverList: "[]"
+    };
     return await API.graphql(
         graphqlOperation(mutations.updateReceipt, { input: receiptInfo })
     )
@@ -393,6 +403,20 @@ export async function updateReceipt(receiptInfo) {
         })
         .catch(err => {
             console.error("Error update receipt", err);
+            throw err;
+        });
+}
+
+export async function respondToReceipt(receiptInfo) {
+    return await API.graphql(
+        graphqlOperation(mutations.updateReceipt, { input: receiptInfo })
+    )
+        .then(async response => {
+            console.log("Respond to Receipt successful: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error Respond to Receipt successful:", err);
             throw err;
         });
 }
