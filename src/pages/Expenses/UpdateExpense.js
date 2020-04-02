@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 import { updateReceipt } from "../../api/Api";
-import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
+import User from "../../components/User/User";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -27,13 +27,13 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { uploadCloudinaryImage } from "../../api/Api";
 import { QueryStatus } from "../../components/util/QueryUtil";
 
-import PubNub from 'pubnub';
-import { PubNubProvider, PubNubConsumer } from 'pubnub-react';
+import PubNub from "pubnub";
+import { PubNubProvider, PubNubConsumer } from "pubnub-react";
 
 const pubnub = new PubNub({
-  publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
-  subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
-  uuid: "12445"
+    publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+    subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+    uuid: "12445"
 });
 var channels = []; ////change to group id
 
@@ -123,32 +123,32 @@ function UpdateExpense({
     const [splitMap, setSplitMap] = useState<>(
         new Map(JSON.parse(editReceipt.memberSplit))
     );
-	
-	///Notification stuff
-	var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
-	var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
-	  var groups = JSON.parse(groupJSON);
-	  var userData = JSON.parse(userDataJSON);
-	  channels[0] = groupID;
-	const [messages, addMessage] = useState([]);
-	const [message, setMessage] = useState('');
-	const sendMessage = message => {
-		  var json = {"message":message};
-		  json.timeSent = new Date().getTime();
-		  json.uniqueId = Math.random();
-		  json.notificationClass = "Receipt Update";
-		  json.sender = userData.username;
-		  json.groupId = groupID;
-		  json.currentUserId = currentUserID;
-		  
-		pubnub.publish(
-		  {
-			channel: channels[0],
-			message: json,
-		  },
-		  () => setMessage('')
-		);
-	  };
+
+    ///Notification stuff
+    var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
+    var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+    var groups = JSON.parse(groupJSON);
+    var userData = JSON.parse(userDataJSON);
+    channels[0] = groupID;
+    const [messages, addMessage] = useState([]);
+    const [message, setMessage] = useState("");
+    const sendMessage = message => {
+        var json = { message: message };
+        json.timeSent = new Date().getTime();
+        json.uniqueId = Math.random();
+        json.notificationClass = "Receipt Update";
+        json.sender = userData.username;
+        json.groupId = groupID;
+        json.currentUserId = currentUserID;
+
+        pubnub.publish(
+            {
+                channel: channels[0],
+                message: json
+            },
+            () => setMessage("")
+        );
+    };
 
     const handleImageChange = async event => {
         setSelectedImage(event.target.files[0]);
@@ -312,8 +312,8 @@ function UpdateExpense({
                 receiptImageUrl: imageURL
             };
         }
-		
-		sendMessage("updated receipt: " + name + ".");
+
+        sendMessage("updated receipt: " + name + ".");
 
         await updateReceipt(receiptInfo)
             .then(res => {
@@ -446,7 +446,10 @@ function UpdateExpense({
                             {groupMembers.map((user, index) => {
                                 return (
                                     <div key={index} className={classes.fields}>
-                                        <SimpleUserProfileView user={user} />
+                                        <User
+                                            user={user}
+                                            isDeleteDisabled={true}
+                                        />
                                         <TextField
                                             id={user.id}
                                             margin="dense"

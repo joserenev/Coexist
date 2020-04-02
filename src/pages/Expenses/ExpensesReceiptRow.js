@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
+import User from "../../components/User/User";
 import EditIcon from "@material-ui/icons/Edit";
 import Dialog from "@material-ui/core/Dialog";
 import ReceiptIcon from "@material-ui/icons/Receipt";
@@ -81,9 +81,7 @@ function ExpensesReceiptRow({
 
     const getOwedAmount = userID => {
         const userAmount = memberSplitMap.get(userID);
-        return userAmount == undefined
-            ? "0".toFixed(2)
-            : Number(userAmount).toFixed(2);
+        return userAmount == undefined ? "0.00" : Number(userAmount).toFixed(2);
     };
 
     const handleEdit = () => {
@@ -207,8 +205,9 @@ function ExpensesReceiptRow({
                                                 alignItems="center"
                                             >
                                                 <Grid item xs>
-                                                    <SimpleUserProfileView
+                                                    <User
                                                         user={memberItem.user}
+                                                        isDeleteDisabled={true}
                                                     />
                                                 </Grid>
                                                 <Grid item xs>

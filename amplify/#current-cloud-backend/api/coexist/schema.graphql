@@ -45,7 +45,7 @@ type Receipt @model {
   updatedAt: String
   group: Group @connection(name: "GroupReceipts")
   receiptImageUrl: String
-  isApproved: Boolean
+  approvalStatus: String
   approvedDate: String
-  approverList: [ID]
+  approverList: [String]
 }

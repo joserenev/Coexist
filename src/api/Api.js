@@ -15,6 +15,8 @@ import {
     CLOUDINARY_UPLOAD_PRESET,
     CLOUDINARY_UPLOAD_URL
 } from "../components/util/CloudinaryUtil";
+
+import { getCurrentTimeStampString } from "../components/util/DateUtil";
 const { EMAIL } = ReferralMedium;
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
@@ -74,6 +76,7 @@ export async function getUserById(userID) {
 
 //Retrieves a user by ID from DynamoDB
 export async function getUserByUserName(username) {
+    console.log({ username });
     console.log("Getting user by user name...");
     return await API.graphql(
         graphqlOperation(queries.listUsers, {
@@ -373,5 +376,41 @@ export async function updateReceipt(receiptInfo) {
         .catch(err => {
             console.error("Error update receipt", err);
             throw err;
+        });
+}
+
+export async function updateUserLastPageLoadTime(userID) {
+    const updateUserInput = {
+        id: userID,
+        lastPageLoad: getCurrentTimeStampString()
+    };
+    return await API.graphql(
+        graphqlOperation(mutations.updateUser, { input: updateUserInput })
+    )
+        .then(data => {
+            // console.log("User Page Load time updated successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("User Page Load time update unsuccessful", error);
+            return error;
+        });
+}
+
+export async function updateUserHeartbeatTime(userID) {
+    const updateUserInput = {
+        id: userID,
+        heartbeat: getCurrentTimeStampString()
+    };
+    return await API.graphql(
+        graphqlOperation(mutations.updateUser, { input: updateUserInput })
+    )
+        .then(data => {
+            // console.log("User Hearbeat time updated successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("User Heartbeat time update unsuccessful", error);
+            return error;
         });
 }

@@ -28,6 +28,8 @@ import Authentication from "../authentication/Authentication";
 
 import ComponentContainer from "../components/util/ComponentContainer.react";
 
+import { updateUserHeartBeatTime } from "../components/util/UserOnlineUtil";
+
 import { useEffect, useState } from "react";
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
 
@@ -96,6 +98,12 @@ function Main(props): React.MixedElement {
         return <LoadingPage />;
     }
     const userID = currentUser.attributes.sub;
+
+    // User Online time update
+    let updateUserHearbeatTimeInterval = setInterval(() => {
+        updateUserHeartBeatTime(userID);
+    }, 15000);
+
     return (
         <Connect query={graphqlOperation(getUserDetailsQuery, { id: userID })}>
             {({ data, loading, error }) => {
@@ -235,7 +243,7 @@ function Main(props): React.MixedElement {
                                     );
                                 }}
                             />
-							<Route
+                            <Route
                                 exact
                                 path="/messages/:groupID"
                                 render={props => {
@@ -246,7 +254,7 @@ function Main(props): React.MixedElement {
                                                 setSideBarOpen={setSideBarOpen}
                                                 userID={userID}
                                             >
-                                                <Chat/>
+                                                <Chat />
                                             </ComponentContainer>
                                         </>
                                     );
