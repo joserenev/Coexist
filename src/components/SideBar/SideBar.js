@@ -422,7 +422,7 @@ function SideBar({
                                         <ListItemIcon>
                                             <EditAttributes />
                                         </ListItemIcon>
-                                        <ListItemText primary="Options" />
+                                        <ListItemText primary="Refer a Friend!" />
                                     </ListItem>
                                     <ListItem
                                         button

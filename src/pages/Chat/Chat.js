@@ -19,10 +19,13 @@ const Wrapper = styled.div`
 
 
 
-const Chat = () => {
+function Chat(props): React.MixedElement {
+  
   return (
     <Wrapper>
-      <Menu />
+      <Menu
+        //need to pass in props?
+      />
       <MessagePanel />
     
     </Wrapper>

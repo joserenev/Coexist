@@ -1,47 +1,177 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { UserInitialsAvatar } from "../UserInfo/UserInitialsAvatar";
-//import { getLoggedInUserId } from "features/authentication/authenticationModel";
-//import { getUsersById } from "features/users/userModel";
-import { NetworkStatus } from "../NetworkStatus/NetworkStatus";
-import {
-  Wrapper,
-  Avatar,
-  About,
-  UserName,
-  UserTitle
-} from "../UserInfo/UserInfoUI";
+import React, { useCallback } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import Badge from "@material-ui/core/Badge";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 
-export interface UserInfoFragment{
-    name: string;
-    profileUrl: string;
-    custom: {
-      title: string;
-    };
-  }
+//images/icons
+import PersonIcon from "@material-ui/icons/Person";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 
-const UserInfo = () => {
-  const userId = "Sabrina";
-  const usersById = 1;
-  const user = usersById[userId];
+const OnlineBadge = withStyles(theme => ({
+    root: {
+        "& > *": {
+            margin: theme.spacing(1)
+        }
+    },
+    badge: {
+        backgroundColor: "#44b700",
+        color: "#44b700",
+        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+        "&::after": {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            borderRadius: "50%",
+            animation: "$ripple 1.8s infinite ease-in-out",
+            border: "1px solid currentColor",
+            content: '""'
+        }
+    },
+    "@keyframes ripple": {
+        "0%": {
+            transform: "scale(1)",
+            opacity: 1
+        },
+        "100%": {
+            transform: "scale(2.4)",
+            opacity: 0
+        }
+    }
+}))(Badge);
 
-  // We must always have a user; change this to a development time error check
-  if (user === undefined) {
-    return <div>Loading...</div>;
-  }
+const useStyles = makeStyles(theme => ({
+    root: {
+        display: "flex",
+        "& > *": {
+            margin: theme.spacing(1)
+        },
+        minWidth: 300
+    }
+}));
 
-  return (
-    <Wrapper>
-      <Avatar>
-        <NetworkStatus />
-        <UserInitialsAvatar size={56} name={user.name} userId={user.id} />
-      </Avatar>
-      <About>
-        <UserName>{user.name}</UserName>
-        <UserTitle>{user.custom.title}</UserTitle>
-      </About>
-    </Wrapper>
-  );
-};
+const IdleBadge = withStyles(theme => ({
+    root: {
+        "& > *": {
+            margin: theme.spacing(1)
+        }
+    },
+    badge: {
+        backgroundColor: "#b7b700",
+        color: "#b7b700",
+        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+        "&::after": {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            borderRadius: "50%",
+            animation: "$ripple 2.8s infinite ease-in-out",
+            border: "1px solid currentColor",
+            content: '""'
+        }
+    },
+    "@keyframes ripple": {
+        "0%": {
+            transform: "scale(1.6)",
+            opacity: 1
+        },
+        "100%": {
+            transform: "scale(2.4)",
+            opacity: 0
+        }
+    }
+}))(Badge);
+
+const OfflineBadge = withStyles(theme => ({
+    root: {
+        "& > *": {
+            margin: theme.spacing(1)
+        }
+    },
+    badge: {
+        backgroundColor: "#b74400",
+        color: "#b74400",
+        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`
+    }
+}))(Badge);
+
+type Props = {|
+    user: Object
+|};
+
+export default function UserInfo({
+    user,
+    deleteGroupMember,
+    isDeleteDisabled = false
+}: Props) {
+    const classes = useStyles();
+    let userState = "OFFLINE";
+    const { id = "", username = "", name = "" } = user ?? {};
+    const handleDelete = useCallback(() => {
+        deleteGroupMember(id);
+    }, [deleteGroupMember, id]);
+    return (
+        <div>
+            <div className={classes.root}>
+                {userState === "ONLINE" && (
+                    <OnlineBadge
+                        overlap="circle"
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right"
+                        }}
+                        title="Online"
+                        variant="dot"
+                    >
+                        <Avatar alt="Sabrina" src={<PersonIcon />} />
+                    </OnlineBadge>
+                )}
+                {userState === "IDLE" && (
+                    <IdleBadge
+                        overlap="circle"
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right"
+                        }}
+                        title="Online"
+                        variant="dot"
+                    >
+                        <Avatar alt="Remy Sharp" src={<PersonIcon />} />
+                    </IdleBadge>
+                )}
+                {userState === "OFFLINE" && (
+                    <OfflineBadge
+                        overlap="circle"
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right"
+                        }}
+                        title="Online"
+                        variant="dot"
+                    >
+                        <Avatar alt="Remy Sharp" src={<PersonIcon />} />
+                    </OfflineBadge>
+                )}
+                    
+                <div>
+                    <Typography variant="h4" color="inherit">
+                        {name}
+                    </Typography>
+                    <Typography variant="h6" color="inherit">
+                        {username}
+                    </Typography>
+                </div>
+               
+                  
+            </div>
+        </div>
+    );
+}
+
 
 export { UserInfo };

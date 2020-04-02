@@ -246,7 +246,10 @@ function Main(props): React.MixedElement {
                                                 setSideBarOpen={setSideBarOpen}
                                                 userID={userID}
                                             >
-                                                <Chat/>
+                                                <Chat
+                                                {...props}
+                                                currentUserID={userID}
+                                                />
                                             </ComponentContainer>
                                         </>
                                     );
