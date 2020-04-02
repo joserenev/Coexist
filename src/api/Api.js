@@ -158,6 +158,24 @@ export async function updateUser(userID, name, phone) {
         });
 }
 
+export async function updateUserProfilePicture(userID, pictureURL) {
+    const updateUserInput = {
+        id: userID,
+        pictureURL
+    };
+    return await API.graphql(
+        graphqlOperation(mutations.updateUser, { input: updateUserInput })
+    )
+        .then(data => {
+            console.log("User Profile Picture updated successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("User Profile Picture update unsuccessful", error);
+            return error;
+        });
+}
+
 export async function inviteNotificationApi(notifMedium, contact) {
     const apiEndpoint = notifMedium === EMAIL ? emailInviteURL : textInviteURL;
     let requestBody = {

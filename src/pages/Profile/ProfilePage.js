@@ -7,6 +7,7 @@ import { graphqlOperation } from "aws-amplify";
 import { Typography, Button } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 
 import { getUser as getUserDetailsQuery } from "../../customGraphql/queries";
 
@@ -19,6 +20,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 
 import ProfileSettingsPage from "./ProfileSettings";
 import TransacHistoryPage from "./TransacHistory";
+import { updateUserProfilePicture, uploadCloudinaryImage } from "../../api/Api";
 
 const useStyles = makeStyles(() => ({
     groupChip: {
@@ -113,22 +115,32 @@ type Props = {|
 
 function ProfilePage({ userID }: Props): React.MixedElement {
     const classes = useStyles();
-    const groups = [
-        "CS! 407! buddies!",
-        "Guyz Gang Group",
-        "High School 2016",
-        "302 NChauncey Av"
-    ];
-
     const navigateToSettings = useCallback(() => {
         setDialogOpen(true);
     });
-
     const navigateToTransacHistory = useCallback(() => {
         setTDialogOpen(true);
     });
     const [isDialogOpen, setDialogOpen] = React.useState(false);
     const [isTDialogOpen, setTDialogOpen] = React.useState(false);
+
+    // profile Picture
+    const [selectedImage, setSelectedImage] = useState<>(null);
+    const [imageURL, setImageURL] = useState<>("");
+
+    const handleImageChange = async event => {
+        setSelectedImage(event.target.files[0]);
+        await uploadCloudinaryImage(event.target.files[0])
+            .then(async newImageURL => {
+                setImageURL(newImageURL);
+                await updateUserProfilePicture(userID, newImageURL).then(
+                    data => {}
+                );
+            })
+            .catch(err => {
+                console.error("an error occured while uploading receipt image");
+            });
+    };
 
     return (
         <Connect query={graphqlOperation(getUserDetailsQuery, { id: userID })}>
@@ -147,30 +159,52 @@ function ProfilePage({ userID }: Props): React.MixedElement {
                     email = "",
                     name = "",
                     phone = "",
-                    groups = {}
+                    groups = {},
+                    pictureURL = ""
                 } = userData ?? {};
+
+                if (
+                    imageURL === "" &&
+                    pictureURL !== "" &&
+                    pictureURL != null
+                ) {
+                    setImageURL(pictureURL);
+                }
 
                 const { items = [] } = groups;
                 const groupItems = items.filter(groupItem => {
                     return groupItem != null && groupItem.group != null;
                 });
-
                 return (
                     <>
                         <div>
                             <div className={classes.headContainer}>
                                 <div className={classes.mainInfoContainer}>
                                     <div className={classes.pictureContainer}>
-                                        <PersonIcon
-                                            fontSize="large"
-                                            className={classes.avatar}
-                                        />
-                                        <Button
-                                            variant="contained"
-                                            align="center"
-                                        >
-                                            EDIT
-                                        </Button>
+                                        {imageURL === "" ? (
+                                            <PersonIcon
+                                                fontSize="large"
+                                                className={classes.avatar}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={imageURL}
+                                                alt={name}
+                                                height="180"
+                                                width="180"
+                                            />
+                                        )}
+                                        <TextField
+                                            id="image"
+                                            margin="dense"
+                                            onChange={handleImageChange}
+                                            style={{ width: 200 }}
+                                            type="file"
+                                            inputProps={{
+                                                accept:
+                                                    "image/x-png,image/gif,image/jpeg,image/jpg"
+                                            }}
+                                        ></TextField>
                                     </div>
                                     <div className={classes.nameContainer}>
                                         <Typography variant="h1" gutterBottom>
