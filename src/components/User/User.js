@@ -146,19 +146,26 @@ export default function User({
             isNaN(userTimeDiff) ||
             currentTimeDiff >= 600
         ) {
-            return OFFLINE;
+            return [OFFLINE, currentTimeDiff];
         }
         if (userTimeDiff <= 120 && currentTimeDiff <= 120) {
-            return ONLINE;
+            return [ONLINE, currentTimeDiff];
         }
         if (userTimeDiff <= 600) {
-            return IDLE;
+            return [IDLE, currentTimeDiff];
         }
-        return OFFLINE;
+        return [OFFLINE, currentTimeDiff];
     };
 
     const getUserBadge = () => {
-        const userStatus = getUserStatus();
+		const userStatusArray = getUserStatus();
+        const userStatus = userStatusArray[0];
+		var timeAmount = userStatusArray[1];
+		var timeString = "";
+		if (timeAmount > 86400) { timeString = Math.floor(timeAmount / 86400) + " days"; }
+		else if (timeAmount > 3600) { timeString = Math.floor(timeAmount / 3600) + " hours"; }
+		else if (timeAmount > 60) { timeString = Math.floor(timeAmount / 60) + " minutes"; }
+		else { timeString = timeAmount + " seconds" }
         const userAvatar =
             pictureURL == null || pictureURL === "" ? (
                 <Avatar alt={name}>{name.charAt(0)}</Avatar>
@@ -187,7 +194,7 @@ export default function User({
                         vertical: "bottom",
                         horizontal: "right"
                     }}
-                    title="Online"
+                    title={"Idle for " + timeString}
                     variant="dot"
                 >
                     {userAvatar}
@@ -201,7 +208,7 @@ export default function User({
                         vertical: "bottom",
                         horizontal: "right"
                     }}
-                    title="Online"
+                    title={"Offline for " + timeString}
                     variant="dot"
                 >
                     {userAvatar}
