@@ -9,6 +9,7 @@ import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../../pages/Loading/LoadingPage";
 import { listReceipts } from "../../customGraphql/queries";
 
+import ExpenseGroupSummary from "./ExpenseGroupSummary";
 import ExpensesReceiptRow from "./ExpensesReceiptRow";
 import CreateExpense from "./CreateExpense";
 
@@ -92,6 +93,12 @@ function ExpensesPage(props): React.MixedElement {
                                         one.
                                     </Typography>
                                 )}
+                                <br />
+                                <Typography variant="h3">
+                                    Group Summary
+                                </Typography>
+                                <ExpenseGroupSummary groupID={groupID} />
+                                <ExpenseGroupSummary groupID={groupID} />
                             </div>
                         </div>
                         <CreateExpense
