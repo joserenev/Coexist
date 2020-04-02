@@ -90,7 +90,7 @@ export const getGroup = `query GetGroup($id: ID!) {
         createdAt
         updatedAt
         receiptImageUrl
-        isApproved
+        approvalStatus
         approvedDate
         approverList
       }
@@ -194,7 +194,7 @@ export const getReceipt = `query GetReceipt($id: ID!) {
       }
     }
     receiptImageUrl
-    isApproved
+    approvalStatus
     approvedDate
     approverList
   }
@@ -239,7 +239,7 @@ export const listReceipts = `query ListReceipts(
         remainingBalance
       }
       receiptImageUrl
-      isApproved
+      approvalStatus
       approvedDate
       approverList
     }

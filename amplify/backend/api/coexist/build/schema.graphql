@@ -45,9 +45,9 @@ type Receipt {
   updatedAt: String
   group: Group
   receiptImageUrl: String
-  isApproved: Boolean
+  approvalStatus: String
   approvedDate: String
-  approverList: [ID]
+  approverList: [String]
 }
 
 enum ModelSortDirection {
@@ -357,9 +357,9 @@ input ModelReceiptFilterInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   receiptImageUrl: ModelStringInput
-  isApproved: ModelBooleanInput
+  approvalStatus: ModelStringInput
   approvedDate: ModelStringInput
-  approverList: ModelIDInput
+  approverList: ModelStringInput
   and: [ModelReceiptFilterInput]
   or: [ModelReceiptFilterInput]
   not: ModelReceiptFilterInput
@@ -374,9 +374,9 @@ input CreateReceiptInput {
   createdAt: String
   updatedAt: String
   receiptImageUrl: String
-  isApproved: Boolean
+  approvalStatus: String
   approvedDate: String
-  approverList: [ID]
+  approverList: [String]
   receiptOwnerId: ID
   receiptGroupId: ID
 }
@@ -390,9 +390,9 @@ input UpdateReceiptInput {
   createdAt: String
   updatedAt: String
   receiptImageUrl: String
-  isApproved: Boolean
+  approvalStatus: String
   approvedDate: String
-  approverList: [ID]
+  approverList: [String]
   receiptOwnerId: ID
   receiptGroupId: ID
 }
@@ -409,9 +409,9 @@ input ModelReceiptConditionInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   receiptImageUrl: ModelStringInput
-  isApproved: ModelBooleanInput
+  approvalStatus: ModelStringInput
   approvedDate: ModelStringInput
-  approverList: ModelIDInput
+  approverList: ModelStringInput
   and: [ModelReceiptConditionInput]
   or: [ModelReceiptConditionInput]
   not: ModelReceiptConditionInput

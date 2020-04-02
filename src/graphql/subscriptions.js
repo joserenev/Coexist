@@ -260,7 +260,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
         createdAt
         updatedAt
         receiptImageUrl
-        isApproved
+        approvalStatus
         approvedDate
         approverList
       }
@@ -312,7 +312,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
         createdAt
         updatedAt
         receiptImageUrl
-        isApproved
+        approvalStatus
         approvedDate
         approverList
       }
@@ -364,7 +364,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
         createdAt
         updatedAt
         receiptImageUrl
-        isApproved
+        approvalStatus
         approvedDate
         approverList
       }
@@ -428,7 +428,7 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       }
     }
     receiptImageUrl
-    isApproved
+    approvalStatus
     approvedDate
     approverList
   }
@@ -489,7 +489,7 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       }
     }
     receiptImageUrl
-    isApproved
+    approvalStatus
     approvedDate
     approverList
   }
@@ -550,7 +550,7 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       }
     }
     receiptImageUrl
-    isApproved
+    approvalStatus
     approvedDate
     approverList
   }
