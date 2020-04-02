@@ -44,7 +44,7 @@ import { graphqlOperation } from "aws-amplify";
 import { getUser as getUserDetailsQuery } from "../../customGraphql/queries";
 import SideBarLoading from "../../pages/Loading/SideBarLoading";
 
-import Notifications from './Notifications';
+import Notifications from "./Notifications";
 
 const drawerWidth = 280;
 
@@ -182,7 +182,7 @@ function SideBar({
 
     return (
         <div className={classes.root}>
-			<Notifications />
+            <Notifications />
             <CssBaseline />
             <ClickAwayListener onClickAway={handleDrawerClose}>
                 <AppBar
@@ -267,10 +267,16 @@ function SideBar({
                                     groupItem2.group?.updatedAt ?? "";
                                 return updatedTime2.localeCompare(updatedTime1);
                             });
-							
-							window.localStorage.setItem("CoexistGroups", JSON.stringify(groupItems));
-							window.localStorage.setItem("CoexistUserData", JSON.stringify(userData));
-							console.log(JSON.stringify(userData));
+
+                        window.localStorage.setItem(
+                            "CoexistGroups",
+                            JSON.stringify(groupItems)
+                        );
+                        window.localStorage.setItem(
+                            "CoexistUserData",
+                            JSON.stringify(userData)
+                        );
+                        // console.log(JSON.stringify(userData));
                         // TODO: Sort Group Items by Created Date
                         return (
                             <>

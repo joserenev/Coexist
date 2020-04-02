@@ -6,6 +6,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import SideBar from "../../components/SideBar/SideBar.js";
 
+import { updateUserPageLoadTime } from "../util/UserOnlineUtil";
+
 const useStyles = makeStyles(marginLeft => ({
     container: {
         top: 64,
@@ -31,9 +33,9 @@ function ComponentContainer({
     setSideBarOpen,
     userID
 }: Props): React.Element<"div"> {
-    // Add transitions to closing and opening.
-    const classes = useStyles(isSideBarOpen ? 280 : 0);
+    updateUserPageLoadTime(userID);
 
+    const classes = useStyles(isSideBarOpen ? 280 : 0);
     return (
         <>
             <SideBar

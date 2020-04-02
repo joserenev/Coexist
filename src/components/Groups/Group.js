@@ -7,7 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import Badge from '@material-ui/core/Badge';
+import Badge from "@material-ui/core/Badge";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -42,12 +42,14 @@ type Props = {|
 function GroupListItem({ group }: Props) {
     const classes = useStyles();
     const { id = "", name, description } = group;
-	
-	var notifJSON = window.localStorage.getItem("CoexistGroupNotifications") || "{}";
-	var notifs = JSON.parse(notifJSON);
-	if (notifs[id] == undefined) { notifs[id] = 0; }
-	console.log("Group component id: " + id);
-	
+
+    var notifJSON =
+        window.localStorage.getItem("CoexistGroupNotifications") || "{}";
+    var notifs = JSON.parse(notifJSON);
+    if (notifs[id] == undefined) {
+        notifs[id] = 0;
+    }
+
     return (
         <ListItem
             alignItems="flex-start"
@@ -55,15 +57,20 @@ function GroupListItem({ group }: Props) {
             component={Link}
             to={`/groupHomePage/${id}`}
         >
-			<Badge id={id+"-notif"} badgeContent={(notifs[id] || 0)} color="primary" overlap="circle">
-				<ListItemAvatar>
-					<Avatar
-						variant="rounded"
-						alt="Group Avatar"
-						src="/static/images/avatar/1.jpg"
-					/>
-				</ListItemAvatar>
-			</Badge>
+            <Badge
+                id={id + "-notif"}
+                badgeContent={notifs[id] || 0}
+                color="primary"
+                overlap="circle"
+            >
+                <ListItemAvatar>
+                    <Avatar
+                        variant="rounded"
+                        alt="Group Avatar"
+                        src="/static/images/avatar/1.jpg"
+                    />
+                </ListItemAvatar>
+            </Badge>
             <ListItemText
                 className={classes.groupText}
                 primary={
