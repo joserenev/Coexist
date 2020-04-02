@@ -47,5 +47,5 @@ type Receipt @model {
   receiptImageUrl: String
   isApproved: Boolean
   approvedDate: String
-  approverList: String
+  approverList: [ID]
 }
