@@ -3,6 +3,8 @@ import React from "react";
 import CardHeader from "@material-ui/core/CardHeader";
 
 import Avatar from "@material-ui/core/Avatar";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 
 function SimpleUserProfileView({ user }): React.MixedElement {
     const { username = "", name = "", pictureURL = "" } = user ?? {};
@@ -18,7 +20,12 @@ function SimpleUserProfileView({ user }): React.MixedElement {
             }
             title={name}
             subheader={username}
-        />
+            action={
+                <IconButton aria-label="delete">
+                    <DeleteOutlineOutlinedIcon fontSize="small" />
+                </IconButton>
+            }
+        ></CardHeader>
     );
 }
 

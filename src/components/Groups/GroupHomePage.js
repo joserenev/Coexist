@@ -87,6 +87,17 @@ function GroupHomePage(props): React.MixedElement {
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
     const [isDialogOpen, setDialogOpen] = useState(false);
+	
+	var notifJSON = window.localStorage.getItem("CoexistGroupNotifications") || "{}";
+	var notifs = JSON.parse(notifJSON);
+	notifs[groupID] = 0;
+	window.localStorage.setItem("CoexistGroupNotifications", JSON.stringify(notifs));
+	 var ele = document.getElementById(groupID + "-notif");
+	 if (ele != undefined) 
+	 { 
+		ele.children[1].innerHTML = "0"; 
+		ele.children[1].className = ele.children[1].className + "MuiBadge-invisible"; 
+	}
 
     const isCurrentUserInGroup = useCallback(
         groupData => {

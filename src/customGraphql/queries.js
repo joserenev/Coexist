@@ -7,6 +7,9 @@ export const getUser = `query GetUser($id: ID!) {
     phone
     createdAt
     updatedAt
+    heartbeat
+    lastPageLoad
+    pictureURL
     groups {
       items {
         id
@@ -19,6 +22,9 @@ export const getUser = `query GetUser($id: ID!) {
             username
             id
             name
+            heartbeat
+            lastPageLoad
+            pictureURL
           }
           createdAt
           updatedAt
@@ -58,6 +64,8 @@ export const getGroup = `query GetGroup($id: ID!) {
 		        updatedAt
 		        username
                 pictureURL
+                lastPageLoad
+                heartbeat
 		  }
       }
     }
@@ -84,6 +92,8 @@ export const listReceipts = `query ListReceipts(
         createdAt
         updatedAt
         pictureURL
+        heartbeat
+        lastPageLoad
       }
       name
       description
@@ -106,6 +116,8 @@ export const listReceipts = `query ListReceipts(
               name
               username
               pictureURL
+              heartbeat
+              lastPageLoad
             }
           }
         }

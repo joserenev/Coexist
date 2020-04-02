@@ -5,10 +5,16 @@ import Badge from "@material-ui/core/Badge";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 
 //images/icons
-import PersonIcon from "@material-ui/icons/Person";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
+import {
+    getTimeDifferenceInSeconds,
+    getCurrentTimeDifferenceInSeconds
+} from "../util/DateUtil";
 
+import { UserStatusConstant } from "../util/UserOnlineUtil";
+
+const { OFFLINE, ONLINE, IDLE } = UserStatusConstant;
 const OnlineBadge = withStyles(theme => ({
     root: {
         "& > *": {
@@ -49,7 +55,8 @@ const useStyles = makeStyles(theme => ({
         "& > *": {
             margin: theme.spacing(1)
         },
-        minWidth: 300
+        minWidth: 200,
+        maxWidth: 300
     }
 }));
 
@@ -110,59 +117,115 @@ export default function User({
     isDeleteDisabled = false
 }: Props) {
     const classes = useStyles();
-    let userState = "OFFLINE";
-    const { id = "", username = "", name = "" } = user ?? {};
+    const {
+        id = "",
+        username = "",
+        name = "",
+        heartbeat = "",
+        lastPageLoad = "",
+        pictureURL = ""
+    } = user ?? {};
     const handleDelete = useCallback(() => {
         deleteGroupMember(id);
     }, [deleteGroupMember, id]);
+
+    const getUserStatus = (): string => {
+        const userTimeDiff = getTimeDifferenceInSeconds(
+            heartbeat,
+            lastPageLoad
+        );
+        const currentTimeDiff = getCurrentTimeDifferenceInSeconds(lastPageLoad);
+
+        // Time difference less than 2 minutes -> ONLINE
+        // Time difference less than 10 minutes and greater than 2 minutes -> IDLE
+        // Time difference greater than 10 minutes, offline.
+        // lastPageLoad time is more than 10 minutes in the past -> OFFLINE
+
+        if (
+            isNaN(currentTimeDiff) ||
+            isNaN(userTimeDiff) ||
+            currentTimeDiff >= 600
+        ) {
+            return [OFFLINE, currentTimeDiff];
+        }
+        if (userTimeDiff <= 120 && currentTimeDiff <= 120) {
+            return [ONLINE, currentTimeDiff];
+        }
+        if (userTimeDiff <= 600) {
+            return [IDLE, currentTimeDiff];
+        }
+        return [OFFLINE, currentTimeDiff];
+    };
+
+    const getUserBadge = () => {
+		const userStatusArray = getUserStatus();
+        const userStatus = userStatusArray[0];
+		var timeAmount = userStatusArray[1];
+		var timeString = "";
+		if (timeAmount > 86400) { timeString = Math.floor(timeAmount / 86400) + " days"; }
+		else if (timeAmount > 3600) { timeString = Math.floor(timeAmount / 3600) + " hours"; }
+		else if (timeAmount > 60) { timeString = Math.floor(timeAmount / 60) + " minutes"; }
+		else { timeString = timeAmount + " seconds" }
+        const userAvatar =
+            pictureURL == null || pictureURL === "" ? (
+                <Avatar alt={name}>{name.charAt(0)}</Avatar>
+            ) : (
+                <Avatar alt={name} src={pictureURL}></Avatar>
+            );
+        if (userStatus === ONLINE) {
+            return (
+                <OnlineBadge
+                    overlap="circle"
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right"
+                    }}
+                    title="Online"
+                    variant="dot"
+                >
+                    {userAvatar}
+                </OnlineBadge>
+            );
+        } else if (userStatus === IDLE) {
+            return (
+                <IdleBadge
+                    overlap="circle"
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right"
+                    }}
+                    title={"Idle for " + timeString}
+                    variant="dot"
+                >
+                    {userAvatar}
+                </IdleBadge>
+            );
+        } else {
+            return (
+                <OfflineBadge
+                    overlap="circle"
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right"
+                    }}
+                    title={"Offline for " + timeString}
+                    variant="dot"
+                >
+                    {userAvatar}
+                </OfflineBadge>
+            );
+        }
+    };
+
     return (
         <div>
             <div className={classes.root}>
-                {userState === "ONLINE" && (
-                    <OnlineBadge
-                        overlap="circle"
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right"
-                        }}
-                        title="Online"
-                        variant="dot"
-                    >
-                        <Avatar alt="Remy Sharp" src={<PersonIcon />} />
-                    </OnlineBadge>
-                )}
-                {userState === "IDLE" && (
-                    <IdleBadge
-                        overlap="circle"
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right"
-                        }}
-                        title="Online"
-                        variant="dot"
-                    >
-                        <Avatar alt="Remy Sharp" src={<PersonIcon />} />
-                    </IdleBadge>
-                )}
-                {userState === "OFFLINE" && (
-                    <OfflineBadge
-                        overlap="circle"
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right"
-                        }}
-                        title="Online"
-                        variant="dot"
-                    >
-                        <Avatar alt="Remy Sharp" src={<PersonIcon />} />
-                    </OfflineBadge>
-                )}
-                    
+                {getUserBadge()}
                 <div>
-                    <Typography variant="h4" color="inherit">
+                    <Typography variant="subtitle1" color="inherit">
                         {name}
                     </Typography>
-                    <Typography variant="h6" color="inherit">
+                    <Typography variant="subtitle2" color="inherit">
                         {username}
                     </Typography>
                 </div>

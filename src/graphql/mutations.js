@@ -281,6 +281,9 @@ export const createGroup = `mutation CreateGroup(
         createdAt
         updatedAt
         receiptImageUrl
+        approvalStatus
+        approvedDate
+        approverList
       }
       nextToken
     }
@@ -333,6 +336,9 @@ export const updateGroup = `mutation UpdateGroup(
         createdAt
         updatedAt
         receiptImageUrl
+        approvalStatus
+        approvedDate
+        approverList
       }
       nextToken
     }
@@ -385,6 +391,9 @@ export const deleteGroup = `mutation DeleteGroup(
         createdAt
         updatedAt
         receiptImageUrl
+        approvalStatus
+        approvedDate
+        approverList
       }
       nextToken
     }
@@ -449,6 +458,9 @@ export const createReceipt = `mutation CreateReceipt(
       }
     }
     receiptImageUrl
+    approvalStatus
+    approvedDate
+    approverList
   }
 }
 `;
@@ -510,6 +522,9 @@ export const updateReceipt = `mutation UpdateReceipt(
       }
     }
     receiptImageUrl
+    approvalStatus
+    approvedDate
+    approverList
   }
 }
 `;
@@ -571,6 +586,9 @@ export const deleteReceipt = `mutation DeleteReceipt(
       }
     }
     receiptImageUrl
+    approvalStatus
+    approvedDate
+    approverList
   }
 }
 `;

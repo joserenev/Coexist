@@ -22,7 +22,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-coexist-dev-144528-deployment/amplify-cfn-templates/auth/coexist20e68ab7-cloudformation-template.yml",
 				"logicalId": "authcoexist20e68ab7"
 			},
-			"lastPushTimeStamp": "2020-04-01T03:07:34.489Z",
+			"lastPushTimeStamp": "2020-04-02T00:40:46.369Z",
 			"output": {
 				"AppClientSecret": "1useiep602rdd7e4rnj7a4f2s54jt2ruan4pioad0pttpa4ma53u",
 				"UserPoolId": "us-east-1_XMHgPBUpr",
@@ -56,8 +56,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-coexist-dev-144528-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apicoexist"
 			},
-			"lastPushTimeStamp": "2020-04-01T03:07:35.993Z",
-			"lastPushDirHash": "YGjtnN4xnrjR4du9e1yniqGNjhc="
+			"lastPushTimeStamp": "2020-04-02T00:40:47.996Z",
+			"lastPushDirHash": "qX8Vlc0RONJ/jXDmG2051s1wbiY="
 		}
 	}
 }
