@@ -260,6 +260,9 @@ export const onCreateGroup = `subscription OnCreateGroup {
         createdAt
         updatedAt
         receiptImageUrl
+        isApproved
+        approvedDate
+        approverList
       }
       nextToken
     }
@@ -309,6 +312,9 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
         createdAt
         updatedAt
         receiptImageUrl
+        isApproved
+        approvedDate
+        approverList
       }
       nextToken
     }
@@ -358,6 +364,9 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
         createdAt
         updatedAt
         receiptImageUrl
+        isApproved
+        approvedDate
+        approverList
       }
       nextToken
     }
@@ -419,6 +428,9 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       }
     }
     receiptImageUrl
+    isApproved
+    approvedDate
+    approverList
   }
 }
 `;
@@ -477,6 +489,9 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       }
     }
     receiptImageUrl
+    isApproved
+    approvedDate
+    approverList
   }
 }
 `;
@@ -535,6 +550,9 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       }
     }
     receiptImageUrl
+    isApproved
+    approvedDate
+    approverList
   }
 }
 `;
