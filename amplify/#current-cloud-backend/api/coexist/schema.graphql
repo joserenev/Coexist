@@ -32,6 +32,7 @@ type Group @model {
   totalBudget: String
   remainingBalance: String
   receipts: [Receipt] @connection(name: "GroupReceipts")
+  groupCalculations: [ExpensesCalculation] @connection(name: "GroupCalculations")
 }
 
 type Receipt @model {
@@ -48,4 +49,12 @@ type Receipt @model {
   approvalStatus: String
   approvedDate: String
   approverList: [String]
+}
+
+type ExpensesCalculation @model {
+  id: ID!
+  cycleEndDate: String
+  totalExpenditure: String
+  expenseDivision: String
+  group: Group @connection(name: "GroupCalculations")
 }
