@@ -7,9 +7,13 @@ import { Menu } from "../../components/ChatComp/Menu/Menu";
 import styled from "styled-components/macro";
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import MessagePanel from "../Messages/MessagePanel"
+import MessagePanel from "../Messages/MessagePanel";
 
-import { sendMessage, listenerForMessages, deleteMessage } from "../../api/ChatApi";
+import {
+    sendMessage,
+    listenerForMessages,
+    deleteMessage
+} from "../../api/ChatApi";
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,20 +21,14 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-
-
-
-function Chat(props): React.MixedElement {
-  
-  return (
-    <Wrapper>
-      <Menu
-        //need to pass in props?
-      />
-      <MessagePanel />
-
-    </Wrapper>
-  );
+const Chat = props => {
+    const { currentUserID = "" } = props;
+    return (
+        <Wrapper>
+            <Menu />
+            <MessagePanel currentUserID={currentUserID} {...props} />
+        </Wrapper>
+    );
 };
 
 export default Chat;
