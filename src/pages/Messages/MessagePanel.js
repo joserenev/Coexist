@@ -286,7 +286,8 @@ function MessagePanel(props): React.MixedElement {
                     </PubNubConsumer>
                     <div
                         style={{
-                            width: "80vw",
+                            marginLeft: 10,
+                            marginTop: 10,
                             height: "100%"
                         }}
                         className={classes.messageHolder}
