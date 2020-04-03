@@ -26,8 +26,6 @@ import RejectIcon from "@material-ui/icons/Cancel";
 // import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
-import Message from "./Message";
-
 import PubNub from "pubnub";
 import { PubNubProvider, PubNubConsumer } from "pubnub-react";
 
@@ -133,6 +131,7 @@ function MessagePanel(props): React.MixedElement {
             var sender = snapshot.val().sender;
             var senderId = snapshot.val().senderId;
             var message = snapshot.val().message;
+			var timeSent = snapshot.val().timeSent;
             var messageID = snapshot.key;
 
             for (var i = 0; i < messages.length; i++) {
@@ -145,6 +144,13 @@ function MessagePanel(props): React.MixedElement {
             messageObject.senderId = senderId;
             messageObject.message = message;
             messageObject.id = snapshot.key;
+			messageObject.timeSent = snapshot.val().timeSent;
+			
+			messages.sort(function(a, b)
+			{
+				return parseInt(a.timeSent) < parseInt(b.timeSent);
+			});
+			
             addMessage([...messages, 
 					messageObject
 					]);
@@ -167,7 +173,8 @@ function MessagePanel(props): React.MixedElement {
         let tempMessageObject = {
             sender: userData.username,
             senderId: userData.id,
-            message: message
+            message: message,
+			timeSent: new Date().getTime()
         };
 
         ////Firebase code here/////

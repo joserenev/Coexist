@@ -24,7 +24,6 @@ import AddIcon from "@material-ui/icons/Add";
 import { green } from "@material-ui/core/colors";
 
 import MessagePanel from "./MessagePanel";
-import MessageBox from "./MessageBox";
 
 // import axios from 'axios';
 
