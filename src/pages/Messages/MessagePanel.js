@@ -113,7 +113,7 @@ function MessagePanel(props): React.MixedElement {
     );
     var groupMessageJSON = window.localStorage.getItem("GroupMessages") || "{}";
     var groupMessages = JSON.parse(groupMessageJSON);
-    const [messages, addMessage] = useState([]); //useState(groupMessages[realGroupId] || []);
+    var [messages, addMessage] = useState([]); //useState(groupMessages[realGroupId] || []);
     const [message, setMessage] = useState("");
     const classes = useStyles();
     const groupID = props.match?.params?.groupID ?? "null group id";
@@ -146,14 +146,71 @@ function MessagePanel(props): React.MixedElement {
             messageObject.id = snapshot.key;
 			messageObject.timeSent = snapshot.val().timeSent;
 			
-			messages.sort(function(a, b)
-			{
-				return parseInt(a.timeSent) < parseInt(b.timeSent);
-			});
+			var valueStrings = [
+				"sender", "senderId", "message", "id", "timeSent"
+			];
 			
+			
+			
+			
+			for (var i = 0; i < messages.length - 1; i++)
+			{
+				for (var a = i + 1; a < messages.length; a++)
+				{
+					if (parseInt(messages[a].timeSent) < parseInt(messages[i].timeSent))
+					{
+						var tempObj = {};
+						
+						for (var o = 0; o < valueStrings.length; o++)
+						{
+							tempObj[valueStrings[o]] = messages[a][valueStrings[o]];
+							messages[a][valueStrings[o]] = messages[i][valueStrings[o]];
+							messages[i][valueStrings[o]] = tempObj[valueStrings[o]];
+						}
+					}
+					if (parseInt(messages[a].timeSent) > parseInt(messageObject.timeSent))
+					{
+						var tempObj = {};
+						for (var o = 0; o < valueStrings.length; o++)
+						{
+							tempObj[valueStrings[o]] = messages[a][valueStrings[o]];
+							messages[a][valueStrings[o]] = messageObject[valueStrings[o]];
+							messageObject[valueStrings[o]] = tempObj[valueStrings[o]];
+						}
+					}
+				}
+			}			
+			
+			//if (messages.length < 1) { console.log("Messages is blank with first value " + message); }
+			for (var i = 0; i < messages.length; i++)
+			{
+				if (snapshot.key == messages[i].id) { console.log("Message: " + messages[i].message + " duplicated!"); return; }
+			}
+			
+			
+			
+			console.log("Firebase received message: " + messageObject.message + ", length: " + messages.length);
             addMessage([...messages, 
 					messageObject
 					]);
+					
+			for (var i = 0; i < messages.length - 1; i++)
+			{
+				for (var a = i + 1; a < messages.length; a++)
+				{
+					if (parseInt(messages[a].timeSent) < parseInt(messages[i].timeSent))
+					{
+						var tempObj = {};
+						
+						for (var o = 0; o < valueStrings.length; o++)
+						{
+							tempObj[valueStrings[o]] = messages[a][valueStrings[o]];
+							messages[a][valueStrings[o]] = messages[i][valueStrings[o]];
+							messages[i][valueStrings[o]] = tempObj[valueStrings[o]];
+						}
+					}
+				}
+			}
             //this.setState({"messages": messages});
             // console.log("FIREBASE " + sender + ": " + message);
             // console.log("FIREBASE message id is: " + messageID);
@@ -174,6 +231,7 @@ function MessagePanel(props): React.MixedElement {
             sender: userData.username,
             senderId: userData.id,
             message: message,
+			key: Math.random() + "",
 			timeSent: new Date().getTime()
         };
 
@@ -243,10 +301,10 @@ function MessagePanel(props): React.MixedElement {
                                 }}
                             >
                                 {messages.map((message, messageIndex) => {
-                                    console.log(message.senderId);
+                                    /*console.log(message.senderId);
                                     console.log(message.sender);
                                     console.log("OKAY");
-                                    console.log(currentUserID);
+                                    console.log(currentUserID);*/
                                     if (message.senderId === currentUserID) {
                                         return (
                                             <Grid
