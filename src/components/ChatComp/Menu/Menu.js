@@ -16,6 +16,7 @@ import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import { getGroup } from "../../../customGraphql/queries";
 import LoadingPage from "../../../pages/Loading/LoadingPage";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
@@ -68,9 +69,13 @@ function Menu(props): React.MixedElement {
                                             className={classes.fields}
                                         >
                                             <User
-                                                user={user}
-                                                isDeleteDisabled={true}
+                                            button
+                                            component={Link}
+                                            to="/profile"
+                                            user={user}
+                                            isDeleteDisabled={true}
                                             />
+                                            <Divider/>
                                         </div>
                                     );
                                 })}
