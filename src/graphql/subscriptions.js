@@ -111,6 +111,9 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
   }
 }
@@ -162,6 +165,9 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
   }
 }
@@ -211,6 +217,9 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       totalBudget
       remainingBalance
       receipts {
+        nextToken
+      }
+      groupCalculations {
         nextToken
       }
     }
@@ -266,6 +275,15 @@ export const onCreateGroup = `subscription OnCreateGroup {
       }
       nextToken
     }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -318,6 +336,15 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       }
       nextToken
     }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -367,6 +394,15 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
         approvalStatus
         approvedDate
         approverList
+      }
+      nextToken
+    }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
       }
       nextToken
     }
@@ -424,6 +460,9 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       totalBudget
       remainingBalance
       receipts {
+        nextToken
+      }
+      groupCalculations {
         nextToken
       }
     }
@@ -487,6 +526,9 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
     receiptImageUrl
     approvalStatus
@@ -548,11 +590,140 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
     receiptImageUrl
     approvalStatus
     approvedDate
     approverList
+  }
+}
+`;
+export const onCreateExpensesCalculation = `subscription OnCreateExpensesCalculation {
+  onCreateExpensesCalculation {
+    id
+    cycleEndDate
+    totalExpenditure
+    expenseDivision
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const onUpdateExpensesCalculation = `subscription OnUpdateExpensesCalculation {
+  onUpdateExpensesCalculation {
+    id
+    cycleEndDate
+    totalExpenditure
+    expenseDivision
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const onDeleteExpensesCalculation = `subscription OnDeleteExpensesCalculation {
+  onDeleteExpensesCalculation {
+    id
+    cycleEndDate
+    totalExpenditure
+    expenseDivision
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+    }
   }
 }
 `;

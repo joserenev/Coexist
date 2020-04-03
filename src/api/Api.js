@@ -17,6 +17,8 @@ import {
 } from "../components/util/CloudinaryUtil";
 
 import { getCurrentTimeStampString } from "../components/util/DateUtil";
+
+import { ApprovalStatus } from "../components/util/ExpenseApprovalUtil";
 const { EMAIL } = ReferralMedium;
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
@@ -84,7 +86,8 @@ export async function getUserByUserName(username) {
                 username: {
                     eq: username
                 }
-            }
+            },
+            limit: 10000
         })
     )
         .then(data => {
@@ -154,6 +157,24 @@ export async function updateUser(userID, name, phone) {
         })
         .catch(error => {
             console.error("Get user from DynamoDB unsuccessful", error);
+            return error;
+        });
+}
+
+export async function updateUserProfilePicture(userID, pictureURL) {
+    const updateUserInput = {
+        id: userID,
+        pictureURL
+    };
+    return await API.graphql(
+        graphqlOperation(mutations.updateUser, { input: updateUserInput })
+    )
+        .then(data => {
+            console.log("User Profile Picture updated successfully", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("User Profile Picture update unsuccessful", error);
             return error;
         });
 }
@@ -350,7 +371,9 @@ export async function createNewReceipt(
         totalAmount,
         receiptImageUrl,
         receiptOwnerId,
-        receiptGroupId
+        receiptGroupId,
+        approvalStatus: ApprovalStatus.PENDING,
+        approverList: "[]"
     };
     return await API.graphql(
         graphqlOperation(mutations.createReceipt, { input: receiptInfo })
@@ -366,6 +389,11 @@ export async function createNewReceipt(
 }
 
 export async function updateReceipt(receiptInfo) {
+    receiptInfo = {
+        ...receiptInfo,
+        approvalStatus: ApprovalStatus.PENDING,
+        approverList: "[]"
+    };
     return await API.graphql(
         graphqlOperation(mutations.updateReceipt, { input: receiptInfo })
     )
@@ -375,6 +403,20 @@ export async function updateReceipt(receiptInfo) {
         })
         .catch(err => {
             console.error("Error update receipt", err);
+            throw err;
+        });
+}
+
+export async function respondToReceipt(receiptInfo) {
+    return await API.graphql(
+        graphqlOperation(mutations.updateReceipt, { input: receiptInfo })
+    )
+        .then(async response => {
+            console.log("Respond to Receipt successful: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error Respond to Receipt successful:", err);
             throw err;
         });
 }

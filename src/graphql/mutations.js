@@ -123,6 +123,9 @@ export const createUserGroups = `mutation CreateUserGroups(
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
   }
 }
@@ -177,6 +180,9 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
   }
 }
@@ -229,6 +235,9 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       totalBudget
       remainingBalance
       receipts {
+        nextToken
+      }
+      groupCalculations {
         nextToken
       }
     }
@@ -287,6 +296,15 @@ export const createGroup = `mutation CreateGroup(
       }
       nextToken
     }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -342,6 +360,15 @@ export const updateGroup = `mutation UpdateGroup(
       }
       nextToken
     }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -394,6 +421,15 @@ export const deleteGroup = `mutation DeleteGroup(
         approvalStatus
         approvedDate
         approverList
+      }
+      nextToken
+    }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
       }
       nextToken
     }
@@ -454,6 +490,9 @@ export const createReceipt = `mutation CreateReceipt(
       totalBudget
       remainingBalance
       receipts {
+        nextToken
+      }
+      groupCalculations {
         nextToken
       }
     }
@@ -520,6 +559,9 @@ export const updateReceipt = `mutation UpdateReceipt(
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
     receiptImageUrl
     approvalStatus
@@ -584,11 +626,149 @@ export const deleteReceipt = `mutation DeleteReceipt(
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
     receiptImageUrl
     approvalStatus
     approvedDate
     approverList
+  }
+}
+`;
+export const createExpensesCalculation = `mutation CreateExpensesCalculation(
+  $input: CreateExpensesCalculationInput!
+  $condition: ModelExpensesCalculationConditionInput
+) {
+  createExpensesCalculation(input: $input, condition: $condition) {
+    id
+    cycleEndDate
+    totalExpenditure
+    expenseDivision
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const updateExpensesCalculation = `mutation UpdateExpensesCalculation(
+  $input: UpdateExpensesCalculationInput!
+  $condition: ModelExpensesCalculationConditionInput
+) {
+  updateExpensesCalculation(input: $input, condition: $condition) {
+    id
+    cycleEndDate
+    totalExpenditure
+    expenseDivision
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const deleteExpensesCalculation = `mutation DeleteExpensesCalculation(
+  $input: DeleteExpensesCalculationInput!
+  $condition: ModelExpensesCalculationConditionInput
+) {
+  deleteExpensesCalculation(input: $input, condition: $condition) {
+    id
+    cycleEndDate
+    totalExpenditure
+    expenseDivision
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+    }
   }
 }
 `;

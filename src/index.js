@@ -17,9 +17,17 @@ import * as serviceWorker from './serviceWorker';
 
 import Amplify from 'aws-amplify'
 import config from './aws-exports'
+
+import firebase from 'firebase';
+import firebaseConfig from './firebase-config';
+
+//Initialize AWS
 Amplify.configure(config)
 
-ReactDOM.render(   
+//Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+ReactDOM.render(
     <ThemeProvider theme={Themes.default}>
      <CssBaseline />
         <App />

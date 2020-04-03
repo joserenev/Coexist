@@ -102,17 +102,18 @@ const pubnub = new PubNub({
 var channels = ['testNotifChannel']; ////change to group id
 
 function MessagePanel(props): React.MixedElement {
-     const [messages, addMessage] = useState([{"message":"asdsa", "sender":"person a"}]);
-	  const [message, setMessage] = useState('');
-	  const classes = useStyles();
-	   const groupID = props.match?.params?.groupID ?? "null group id";
-	   
-	   const realGroupId = window.location.href.substr(window.location.href.indexOf("/messages/") + 10);
-	   
-	   channels[0] = realGroupId;
-	   
+	const realGroupId = window.location.href.substr(window.location.href.indexOf("/messages/") + 10);
+	var groupMessageJSON = window.localStorage.getItem("GroupMessages") || "{}";
+	var groupMessages = JSON.parse(groupMessageJSON);
+	const [messages, addMessage] = useState(groupMessages[realGroupId] || []);
+	const [message, setMessage] = useState('');
+	const classes = useStyles();
+	const groupID = props.match?.params?.groupID ?? "null group id";
+
+	channels[0] = realGroupId;
+
 	var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
-	  var userData = JSON.parse(userDataJSON);   
+	var userData = JSON.parse(userDataJSON);   
 	   //window.alert("Group id: " + groupID);
 
 	  const sendMessage = message => {

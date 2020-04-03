@@ -9,10 +9,11 @@ import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MessagePanel from "../Messages/MessagePanel"
 
+import { sendMessage, listenerForMessages, deleteMessage } from "../../api/ChatApi";
 
 const Wrapper = styled.div`
   display: flex;
-  color: 
+  color:
   height: 100%;
 `;
 
@@ -27,7 +28,7 @@ function Chat(props): React.MixedElement {
         //need to pass in props?
       />
       <MessagePanel />
-    
+
     </Wrapper>
   );
 };

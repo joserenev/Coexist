@@ -353,14 +353,11 @@ function CreateExpense({
                                 margin="dense"
                                 onChange={handleImageChange}
                                 style={{ width: 200 }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            $
-                                        </InputAdornment>
-                                    )
-                                }}
                                 type="file"
+                                inputProps={{
+                                    accept:
+                                        "image/x-png,image/gif,image/jpeg,image/jpg"
+                                }}
                             ></TextField>
                         </div>
                         {!isNullOrEmpty(imageURL) && (

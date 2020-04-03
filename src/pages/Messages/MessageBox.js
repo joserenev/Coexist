@@ -29,6 +29,8 @@ import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import Message from "./Message";
 // import TextField from '@material-ui/core/TextField';
 
+import { sendMessage, listenerForMessages, deleteMessage } from "../../api/ChatApi";
+
 const useStyles = makeStyles(theme => ({
 	root: {
     '& .MuiTextField-root': {
@@ -53,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 	input: {
 		width: "85%",
 		height: "100%",
-		float: "left"		
+		float: "left"
 	}
 }));
 
@@ -61,12 +63,12 @@ function MessageBox(): React.MixedElement {
     const classes = useStyles();
     const theme = useTheme();
 	const [value, setValue] = React.useState('Controlled');
-	
+
 	const handleChange = event => {
 		setValue(event.target.value);
 	  };
-	  
-	  
+
+
 	  const sendMessage = function()
 	  {
 		  var textBox = document.getElementById("filled-multiline-flexible");
@@ -75,11 +77,11 @@ function MessageBox(): React.MixedElement {
 		  {
 			  var str = textBox.value.substr(i * 256, (i + 1) * 256);
 			  //send string
-			  
+
 		  }
 		  textBox.value = "";
 	  }
-	  
+
 	  const textInput = function()
 	  {
 		  var maxLength = 256;
@@ -101,7 +103,7 @@ function MessageBox(): React.MixedElement {
 			  textBox.value = newStr;
 		  }
 	  }
-	  
+
     return (
         <div className={classes.box}>
             <Button className={classes.buttonClass} id="sendMessageButton" onClick={sendMessage}>

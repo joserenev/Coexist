@@ -96,6 +96,15 @@ export const getGroup = `query GetGroup($id: ID!) {
       }
       nextToken
     }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -132,6 +141,9 @@ export const listGroups = `query ListGroups(
       totalBudget
       remainingBalance
       receipts {
+        nextToken
+      }
+      groupCalculations {
         nextToken
       }
     }
@@ -192,6 +204,9 @@ export const getReceipt = `query GetReceipt($id: ID!) {
       receipts {
         nextToken
       }
+      groupCalculations {
+        nextToken
+      }
     }
     receiptImageUrl
     approvalStatus
@@ -242,6 +257,80 @@ export const listReceipts = `query ListReceipts(
       approvalStatus
       approvedDate
       approverList
+    }
+    nextToken
+  }
+}
+`;
+export const getExpensesCalculation = `query GetExpensesCalculation($id: ID!) {
+  getExpensesCalculation(id: $id) {
+    id
+    cycleEndDate
+    totalExpenditure
+    expenseDivision
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const listExpensesCalculations = `query ListExpensesCalculations(
+  $filter: ModelExpensesCalculationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listExpensesCalculations(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      cycleEndDate
+      totalExpenditure
+      expenseDivision
+      group {
+        id
+        name
+        type
+        description
+        lastReceiptCalculationTime
+        createdAt
+        updatedAt
+        pictureURL
+        totalBudget
+        remainingBalance
+      }
     }
     nextToken
   }

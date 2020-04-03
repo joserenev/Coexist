@@ -10,7 +10,7 @@ export const getUser = `query GetUser($id: ID!) {
     heartbeat
     lastPageLoad
     pictureURL
-    groups {
+    groups (limit: 10000)  {
       items {
         id
         group {
@@ -52,7 +52,7 @@ export const getGroup = `query GetGroup($id: ID!) {
     }
     type
     description
-    users {
+    users (limit: 10000) {
       items {
           id
 		  user {
@@ -101,6 +101,9 @@ export const listReceipts = `query ListReceipts(
       totalAmount
       createdAt
       updatedAt
+      approvalStatus
+      approvedDate
+      approverList
       group {
         id
         name
@@ -109,7 +112,7 @@ export const listReceipts = `query ListReceipts(
         createdAt
         updatedAt
         pictureURL
-        users {
+        users (limit: 10000) {
           items {
             user {
               id
@@ -127,3 +130,30 @@ export const listReceipts = `query ListReceipts(
   }
 }
 `;
+
+export const getUserTransactionInfo = `query GetUserTransactionInfo($id: ID!) {
+  getUser(id: $id) {
+    id
+    groups (limit: 10000)  {
+      items {
+        group {
+          id
+          name
+          receipts (limit: 10000) {
+            items {
+              id
+              createdAt
+              name
+              totalAmount
+              memberSplit
+              approvalStatus
+              owner {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;

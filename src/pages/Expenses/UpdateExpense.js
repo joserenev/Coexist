@@ -401,12 +401,9 @@ function UpdateExpense({
                                 margin="dense"
                                 onChange={handleImageChange}
                                 style={{ width: 200 }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            $
-                                        </InputAdornment>
-                                    )
+                                inputProps={{
+                                    accept:
+                                        "image/x-png,image/gif,image/jpeg,image/jpg"
                                 }}
                                 type="file"
                             ></TextField>

@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { Link } from "react-router-dom";
 
-import { getUser as getUserDetailsQuery } from "../../graphql/queries";
+import { getUserTransactionInfo } from "../../customGraphql/queries";
 import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../Loading/LoadingPage";
@@ -22,7 +22,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+<<<<<<< HEAD
 import TransacTab from "./TransacTab"
+=======
+import ChatUsersList from "../../components/ChatComp/ChatUsersList";
+import TransacTab from "./TransacTab";
+>>>>>>> d84f5510bde16e3d743f77b050dc0fea3e4cbe63
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -65,34 +70,53 @@ function TransacHistory({
     };
 
     return (
-        <div>
-            <Dialog
-                fullWidth="md"
-                open={isTDialogOpen}
-                TransitionComponent={Transition}
-                onClose={handleClose}
-            >
-                <DialogTitle>
-                    <b>Transaction History</b>
-                </DialogTitle>
-                <DialogContent>
-                    <Typography variant="h6">
-                        Your Total Expenses this Cycle:
-                        </Typography>
-                        <TransacTab/>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        onClick={handleClose}
-                        color="primary"
-                        variant="outlined"
-                    >
-                        CLOSE
-                    </Button>
-                   
-                </DialogActions>
-            </Dialog>
-        </div>
+        <Connect
+            query={graphqlOperation(getUserTransactionInfo, {
+                id
+            })}
+        >
+            {({ data, loading, error }) => {
+                if (error) {
+                    //TODO: Add a dedicated ERROR Component with a message to show.
+                    return <h3>Error</h3>;
+                }
+
+                if (loading) {
+                    return <LoadingPage />;
+                }
+
+                return (
+                    <div>
+                        <Dialog
+                            fullWidth={true}
+                            maxWidth="lg"
+                            open={isTDialogOpen}
+                            TransitionComponent={Transition}
+                            onClose={handleClose}
+                        >
+                            <DialogTitle>
+                                <b>Transaction History</b>
+                            </DialogTitle>
+                            <DialogContent>
+                                <Typography variant="h6">
+                                    Your Total Expenses:
+                                </Typography>
+                                <TransacTab data={data} />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    onClick={handleClose}
+                                    color="primary"
+                                    variant="outlined"
+                                >
+                                    CLOSE
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </div>
+                );
+            }}
+        </Connect>
     );
 }
 
