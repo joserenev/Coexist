@@ -14,6 +14,7 @@ import {
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import {Wrapper} from "./MessagePanelUI";
 
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import Paper from "@material-ui/core/Paper";
@@ -38,6 +39,15 @@ const useStyles = makeStyles(theme => ({
       width: 200,
     },
   },
+  panelcontainer: {
+	height: "100%",
+	backgroundColor: "#ecf0f1",
+        align: "center",
+        justifyContent: "center",
+        padding: "20",
+        display: "flex",
+        flexDirection: "column",
+  },
 	box: {
 		width: "75vw",
 		background: "#B2D8A3",
@@ -60,6 +70,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	message: {
 		maxWidth: "70%",
+		height: "100%",
 		display: 'inline-block',
 		float: 'left',
 		backgroundColor: '#eee',
@@ -75,11 +86,11 @@ const useStyles = makeStyles(theme => ({
 	},
 	messageDiv: {
 		width: "100%",
-		height: "auto",
-		backgroundColor: "blue"
+		backgroundColor: "#eee"
 	},
 	messageHolder: {
 		display: "block"
+		
 	}
 }));
 
@@ -124,9 +135,11 @@ function MessagePanel(props): React.MixedElement {
 	  
 	  
     return (
+	
     <PubNubProvider client={pubnub}>
-      <div className="App ${classes.noMargin}">
-        <header className="App-header ${classes.noMargin}">
+		
+      <div className="panelcontainer">
+        <header className="header">
           <PubNubConsumer>
             {client => {
               client.addListener({
@@ -139,13 +152,15 @@ function MessagePanel(props): React.MixedElement {
                 },
               });
 
-              client.subscribe({ channels });
+              client.subscribe({ 
+				  channels,
+				messageLimit: 50,}); //add load more option
             }}
           </PubNubConsumer>
           <div
             style={{
               width: '80vw',
-              height: '60vh',
+              height: '100%',
               
             }}
 			className={classes.messageHolder}
@@ -213,6 +228,7 @@ function MessagePanel(props): React.MixedElement {
         </header>
       </div>
     </PubNubProvider>
+	
   );
 }
 
