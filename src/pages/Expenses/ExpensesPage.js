@@ -62,9 +62,13 @@ function ExpensesPage(props): React.MixedElement {
                 }
 
                 const allReceipts = data?.listReceipts?.items ?? [];
-                const filteredReceipts = allReceipts.filter(receipt => {
-                    return receipt.group?.id === groupID;
-                });
+                const filteredReceipts = allReceipts
+                    .filter(receipt => {
+                        return receipt.group?.id === groupID;
+                    })
+                    .sort((a, b) => {
+                        return b.updatedAt.localeCompare(a.updatedAt);
+                    });
                 return (
                     <>
                         <div className={classes.headContainer}>
