@@ -7,7 +7,8 @@ import {
     emailInviteURL,
     textInviteURL,
     emailNewGroupURL,
-    textNewGroupURL
+    textNewGroupURL,
+    emailNotifURL
 } from "../components/util/NotifConstants";
 import superagent from "superagent";
 
@@ -22,7 +23,7 @@ import { ApprovalStatus } from "../components/util/ExpenseApprovalUtil";
 const { EMAIL } = ReferralMedium;
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
-    console.log("Getting user...");
+    // console.log("Getting user...");
     let info = null;
 
     //Check cognito if there is an authenticated user and if so get data
@@ -54,14 +55,14 @@ export async function getUser() {
     //         user: info["data"]["getUser"]
     //     }))
     // }
-    console.log("Finished getting user.");
+    // console.log("Finished getting user.");
     console.log(info);
     return info;
 }
 
 //Retrieves a user by ID from DynamoDB
 export async function getUserById(userID) {
-    console.log("Getting user...");
+    // console.log("Getting user...");
     let info = null;
     await API.graphql(graphqlOperation(queries.getUser, { id: userID }))
         .then(data => {
@@ -72,7 +73,7 @@ export async function getUserById(userID) {
             return data;
         });
 
-    console.log("Finished getting user.", info);
+    // console.log("Finished getting user.", info);
     return info;
 }
 
@@ -362,7 +363,9 @@ export async function createNewReceipt(
     totalAmount: String = "0",
     receiptImageUrl: String = "",
     receiptOwnerId: String,
-    receiptGroupId: String
+    receiptGroupId: String,
+    userIDList = [],
+    groupName = ""
 ) {
     const receiptInfo = {
         name,
@@ -375,16 +378,31 @@ export async function createNewReceipt(
         approvalStatus: ApprovalStatus.PENDING,
         approverList: "[]"
     };
-    return await API.graphql(
-        graphqlOperation(mutations.createReceipt, { input: receiptInfo })
-    )
-        .then(async response => {
-            console.log("Receipt creation response: ", response);
-            return response;
+    const promises = [
+        await API.graphql(
+            graphqlOperation(mutations.createReceipt, { input: receiptInfo })
+        )
+            .then(async response => {
+                // console.log("Receipt creation response: ", response);
+                return response;
+            })
+            .catch(err => {
+                // console.error("Error creating receipt", err);
+                throw err;
+            })
+    ];
+    promises.push(
+        newReceiptCreatedUserIDListNotif(userIDList, groupName, name)
+    );
+
+    return await Promise.all(promises)
+        .then(data => {
+            // console.log("Receipt creation success", { data });
+            return data;
         })
-        .catch(err => {
-            console.error("Error creating receipt", err);
-            throw err;
+        .catch(error => {
+            console.error("Receipt creation failed", error);
+            throw error;
         });
 }
 
@@ -398,7 +416,7 @@ export async function updateReceipt(receiptInfo) {
         graphqlOperation(mutations.updateReceipt, { input: receiptInfo })
     )
         .then(async response => {
-            console.log("Receipt update response: ", response);
+            // console.log("Receipt update response: ", response);
             return response;
         })
         .catch(err => {
@@ -412,7 +430,7 @@ export async function respondToReceipt(receiptInfo) {
         graphqlOperation(mutations.updateReceipt, { input: receiptInfo })
     )
         .then(async response => {
-            console.log("Respond to Receipt successful: ", response);
+            // console.log("Respond to Receipt successful: ", response);
             return response;
         })
         .catch(err => {
@@ -454,5 +472,95 @@ export async function updateUserHeartbeatTime(userID) {
         .catch(error => {
             console.error("User Heartbeat time update unsuccessful", error);
             return error;
+        });
+}
+
+export async function getUserByUserID(userID) {
+    console.log("Getting user by user ID...");
+    return await API.graphql(graphqlOperation(queries.getUser, { id: userID }))
+        .then(data => {
+            return data;
+        })
+        .catch(err => {
+            console.error("Get user from DynamoDB unsuccessful", err);
+            throw err;
+        });
+}
+
+export async function sendEmailNotifViaUserID(
+    userID,
+    emailBody,
+    emailHeader,
+    subject
+) {
+    return await getUserByUserID(userID)
+        .then(async data => {
+            const emailAddress = data?.data?.getUser?.email ?? "";
+            let requestBody = {
+                email_address: emailAddress,
+                email_header: emailHeader,
+                email_body: emailBody,
+                subject: subject
+            };
+            return await fetch(emailNotifURL, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response => {
+                    // console.log({ response });
+                    return response;
+                })
+                .catch(err => {
+                    console.log({ err });
+                    throw err;
+                });
+        })
+        .catch(err => {
+            console.error("Get user from DynamoDB unsuccessful", err);
+            throw err;
+        });
+}
+
+export async function newReceiptCreatedEmailNotif(userID, emailBody) {
+    return await sendEmailNotifViaUserID(
+        userID,
+        emailBody,
+        "A new receipt has been posted",
+        "New Receipt posted"
+    )
+        .then(response => {
+            // console.log({ response });
+            return response;
+        })
+        .catch(err => {
+            console.log({ err });
+            throw err;
+        });
+}
+
+export async function newReceiptCreatedUserIDListNotif(
+    userIDList,
+    groupName,
+    receiptName
+) {
+    const promises = userIDList.map(userID => {
+        return newReceiptCreatedEmailNotif(
+            userID,
+            `A new receipt: ${receiptName} has been posted to group: ${groupName}`
+        );
+    });
+
+    return await Promise.all(promises)
+        .then(data => {
+            // console.log("All create receipt emails sent out", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("All create receipt emails failed", error);
+            throw error;
         });
 }

@@ -109,6 +109,7 @@ function CreateExpense({
     const [isEqualSplit, setIsEqualSplit] = useState(true);
     const [groupMembers, setGroupMembers] = useState([]);
     const [splitMap, setSplitMap] = useState<>(new Map());
+    let groupName = "";
 
     //notification stuff
     var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
@@ -120,7 +121,7 @@ function CreateExpense({
     const [message, setMessage] = useState("");
     const sendMessage = message => {
         var json = {};
-		json.message = userData.username + " " + message;
+        json.message = userData.username + " " + message;
         json.timeSent = new Date().getTime();
         json.uniqueId = Math.random();
         json.notificationClass = "Receipt";
@@ -257,7 +258,6 @@ function CreateExpense({
         // Stringify map to split.
         const stringifiedSplit = JSON.stringify(Array.from(splitMap.entries()));
         // to reverse -> map = new Map(JSON.parse(jsonText));
-
         await createNewReceipt(
             name,
             description,
@@ -265,7 +265,9 @@ function CreateExpense({
             amount,
             imageURL,
             currentUserID,
-            groupID
+            groupID,
+            Array.from(splitMap.keys()),
+            groupName
         )
             .then(res => {
                 setMutationStatus(SUCCESS);
@@ -398,7 +400,7 @@ function CreateExpense({
                                         })
                                     );
                                 }
-
+                                groupName = data?.getGroup?.name ?? "";
                                 return (
                                     <>
                                         <Typography variant="h5">
