@@ -45,7 +45,7 @@ import { PubNubProvider, PubNubConsumer } from "pubnub-react";
 const pubnub = new PubNub({
     publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
     subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
-    uuid: "12445",
+    uuid: "12445"
 });
 
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
@@ -100,7 +100,9 @@ function GroupInfoPage({
     });
     const [groupMembers, setGroupMembers] = useState(initialGroupMembers);
     const [addMemberUserName, setAddMemberUserName] = useState("");
-	const groupBudget = groupData?.budget ?? 1000.01;
+    const [groupBudget, setGroupBudget] = useState(
+        groupData?.totalBudget ?? "0"
+    );
 
     // Page render components
     const [errorMessage, setErrorMessage] = useState("");
@@ -109,26 +111,30 @@ function GroupInfoPage({
 
     // Stores the UserGroupID
     const [deletedGroupMembers, setDeletedGroupMembers] = useState([]);
-	
-	
-	const [messages, addMessage] = useState([]); //useState(groupMessages[realGroupId] || []);
-	const [message, setMessage] = useState('');
-	const sendMessagePub = messageObj => {
-		var json = {};
-		json.message = messageObj.message;
-		json.timeSent = new Date().getTime();
-		json.uniqueId = Math.random();
-		json.sender = "Group";
-		json.notificationClass = messageObj.notificationClass;
-		json.groupName = groupName;
-		json.groupId = groupID;
 
-		pubnub.publish(
-		{
-			channel: messageObj.channel,
-			message: json,
-		}, () => setMessage(''));
-	  };
+    const [messages, addMessage] = useState([]); //useState(groupMessages[realGroupId] || []);
+    const [message, setMessage] = useState("");
+    const sendMessagePub = useCallback(
+        messageObj => {
+            var json = {};
+            json.message = messageObj.message;
+            json.timeSent = new Date().getTime();
+            json.uniqueId = Math.random();
+            json.sender = "Group";
+            json.notificationClass = messageObj.notificationClass;
+            json.groupName = groupName;
+            json.groupId = groupID;
+
+            pubnub.publish(
+                {
+                    channel: messageObj.channel,
+                    message: json
+                },
+                () => setMessage("")
+            );
+        },
+        [groupID, groupName]
+    );
 
     const handleClose = useCallback(() => {
         setGroupName(groupData?.name ?? "");
@@ -137,6 +143,7 @@ function GroupInfoPage({
         setAddMemberUserName("");
         setDeletedGroupMembers([]);
         setDialogOpen(false);
+        setGroupBudget(groupData?.totalBudget ?? "0");
     }, [groupData, initialGroupMembers, setDialogOpen]);
 
     const deleteGroupMember = useCallback(
@@ -144,13 +151,13 @@ function GroupInfoPage({
             const deleteGroupItemElement = items.find(groupItem => {
                 return groupItem.user.id === deleteUserID;
             });
-			
-			var messageObj = {};
-			messageObj.message = "You have been removed from the group";
-			messageObj.channel = deleteUserID;
-			messageObj.sender = "Group";
-			messageObj.notificationClass = "GroupRemove";
-			sendMessagePub(messageObj);
+
+            var messageObj = {};
+            messageObj.message = "You have been removed from the group";
+            messageObj.channel = deleteUserID;
+            messageObj.sender = "Group";
+            messageObj.notificationClass = "GroupRemove";
+            sendMessagePub(messageObj);
 
             if (deleteGroupItemElement != null) {
                 setDeletedGroupMembers([
@@ -163,26 +170,8 @@ function GroupInfoPage({
                 groupMembers.filter(member => member.id !== deleteUserID)
             );
         },
-        [deletedGroupMembers, groupMembers, items]
+        [deletedGroupMembers, groupMembers, items, sendMessagePub]
     );
-	
-	const handleBudgetInput = function()
-	{
-		var budget = document.getElementById("budget");
-		if (budget.value.indexOf(".") > -1 && budget.value.indexOf(".") < budget.value.length - 2)
-		{
-			budget.value = budget.value.substr(0, budget.value.indexOf(".") + 3)
-		}
-		while (parseFloat(budget.value) == undefined)
-		{
-			budget.value = budget.value.substring(0, budget.value.length - 1);
-			if (budget.value.length == 0) { break; }
-		}
-		while (parseFloat(budget.value) > 100000)
-		{
-			budget.value = parseFloat(budget.value) / 10;
-		}
-	}
 
     const addGroupMember = useCallback(
         newMember => {
@@ -194,25 +183,24 @@ function GroupInfoPage({
                 setErrorOpen(true);
                 return;
             }
-			var messageObj = {};
-			messageObj.message = "You have been added to the group";
-			messageObj.channel = newMember.id;
-			messageObj.sender = "Group";
-			messageObj.notificationClass = "GroupAdd";
-			sendMessagePub(messageObj);
-			
-			
+            var messageObj = {};
+            messageObj.message = "You have been added to the group";
+            messageObj.channel = newMember.id;
+            messageObj.sender = "Group";
+            messageObj.notificationClass = "GroupAdd";
+            sendMessagePub(messageObj);
+
             setGroupMembers([...groupMembers, newMember]);
             setAddMemberUserName("");
         },
-        [groupMembers]
+        [groupMembers, sendMessagePub]
     );
 
     const hasAnythingChanged = useCallback(() => {
         if (
             groupName === groupData?.name &&
             groupDescription === groupData?.description &&
-			groupBudget === groupData?.budget &&
+            groupBudget === groupData?.totalBudget &&
             areArraysEqual(groupMembers, initialGroupMembers) &&
             deletedGroupMembers.length === 0
         ) {
@@ -220,12 +208,13 @@ function GroupInfoPage({
         }
         return true;
     }, [
-        deletedGroupMembers,
+        deletedGroupMembers.length,
+        groupBudget,
         groupData,
         groupDescription,
         groupMembers,
         groupName,
-        initialGroupMembers,
+        initialGroupMembers
     ]);
     const addNewMember = async () => {
         if (addMemberUserName == null || addMemberUserName.trim() === "") {
@@ -263,11 +252,13 @@ function GroupInfoPage({
         const promises = [];
         if (
             groupName !== groupData?.name ||
-            groupDescription !== groupData?.description
+            groupDescription !== groupData?.description ||
+            groupBudget !== groupData?.totalBudget
         ) {
             const updateGroupInput = {
                 name: groupName,
-                description: groupDescription
+                description: groupDescription,
+                totalBudget: groupBudget
             };
             promises.push(updateGroup(groupID, updateGroupInput));
         }
@@ -428,7 +419,9 @@ function GroupInfoPage({
                                 id="budget"
                                 defaultValue={groupBudget}
                                 style={{ width: 200 }}
-								onChange={handleBudgetInput}
+                                onChange={event =>
+                                    setGroupBudget(event.target.value)
+                                }
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
@@ -436,6 +429,7 @@ function GroupInfoPage({
                                         </InputAdornment>
                                     )
                                 }}
+                                type="number"
                             />
                         </div>
                         <div>

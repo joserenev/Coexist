@@ -218,6 +218,7 @@ function MessagePanel(props): React.MixedElement {
     //window.alert("Group id: " + groupID);
 
     const sendMessagePub = message => {
+		message = message.substr(0, 256);
 		var json = {};
 		json.message = userData.username + ": " + message;
 		json.timeSent = new Date().getTime();
@@ -240,7 +241,17 @@ function MessagePanel(props): React.MixedElement {
             .database()
             .ref("Group/" + realGroupId)
             .push()
-            .set(tempMessageObject);
+            .set(tempMessageObject, function(error)
+			{
+				if (error)
+				{
+					var resp = window.confirm("There was an error sending the message: '" + message + "'. Retry sending?");
+					if (resp)
+					{
+						sendMessagePub(message);
+					}
+				}
+			});
 		
 		pubnub.publish(
 		  {
@@ -325,8 +336,8 @@ function MessagePanel(props): React.MixedElement {
                                                                 classes.messageSelf
                                                             }
                                                         >
-                                                            <Typography>
-                                                                {message.sender}
+                                                            <Typography><b>
+                                                                {message.sender}</b>
                                                             </Typography>
                                                             <Typography>
                                                                 {
@@ -358,8 +369,8 @@ function MessagePanel(props): React.MixedElement {
                                                             classes.messages
                                                         }
                                                     >
-                                                        <Typography>
-                                                            {message.sender}
+                                                        <Typography><b>
+                                                            {message.sender}</b>
                                                         </Typography>
                                                         <Typography>
                                                             {message.message}

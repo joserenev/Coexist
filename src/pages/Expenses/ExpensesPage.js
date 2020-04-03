@@ -8,6 +8,7 @@ import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../../pages/Loading/LoadingPage";
 import { listReceipts } from "../../customGraphql/queries";
+import { listExpensesCalculations } from "../../graphql/queries";
 
 import ExpenseGroupSummary from "./ExpenseGroupSummary";
 import ExpensesReceiptRow from "./ExpensesReceiptRow";
@@ -33,6 +34,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing.unit * 3,
         marginLeft: "745px",
         padding: "15px"
+    },
+    expenseSummaryRow: {
+        margin: 12
     }
 }));
 
@@ -58,9 +62,13 @@ function ExpensesPage(props): React.MixedElement {
                 }
 
                 const allReceipts = data?.listReceipts?.items ?? [];
-                const filteredReceipts = allReceipts.filter(receipt => {
-                    return receipt.group?.id === groupID;
-                });
+                const filteredReceipts = allReceipts
+                    .filter(receipt => {
+                        return receipt.group?.id === groupID;
+                    })
+                    .sort((a, b) => {
+                        return b.updatedAt.localeCompare(a.updatedAt);
+                    });
                 return (
                     <>
                         <div className={classes.headContainer}>
@@ -97,8 +105,78 @@ function ExpensesPage(props): React.MixedElement {
                                 <Typography variant="h3">
                                     Group Summary
                                 </Typography>
-                                <ExpenseGroupSummary groupID={groupID} />
-                                <ExpenseGroupSummary groupID={groupID} />
+                                <Connect
+                                    query={graphqlOperation(
+                                        listExpensesCalculations,
+                                        {
+                                            limit: 10000
+                                        }
+                                    )}
+                                >
+                                    {({ data, loading, error }) => {
+                                        if (error) {
+                                            //TODO: Add a dedicated ERROR Component with a message to show.
+                                            return <h3>Error</h3>;
+                                        }
+
+                                        if (loading) {
+                                            return <LoadingPage />;
+                                        }
+                                        const {
+                                            items
+                                        } = data?.listExpensesCalculations;
+                                        const groupExpenseHistoryItems = items
+                                            .filter(item => {
+                                                return (
+                                                    item?.group?.id === groupID
+                                                );
+                                            })
+                                            .sort((a, b) => {
+                                                return b.cycleEndDate.localeCompare(
+                                                    a.cycleEndDate
+                                                );
+                                            });
+
+                                        if (
+                                            groupExpenseHistoryItems.length ===
+                                            0
+                                        ) {
+                                            return (
+                                                <div
+                                                    className={
+                                                        classes.expenseSummaryRow
+                                                    }
+                                                >
+                                                    <Typography variant="h5">
+                                                        No history to show.
+                                                        Group summary is updated
+                                                        bi-weekly.
+                                                    </Typography>
+                                                </div>
+                                            );
+                                        }
+
+                                        return groupExpenseHistoryItems.map(
+                                            (expenseItem, index) => {
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={
+                                                            classes.expenseSummaryRow
+                                                        }
+                                                    >
+                                                        <ExpenseGroupSummary
+                                                            expenseItem={
+                                                                expenseItem
+                                                            }
+                                                            groupID={groupID}
+                                                        />
+                                                    </div>
+                                                );
+                                            }
+                                        );
+                                    }}
+                                </Connect>
                             </div>
                         </div>
                         <CreateExpense

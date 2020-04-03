@@ -51,6 +51,7 @@ export const getGroup = `query GetGroup($id: ID!) {
       updatedAt
     }
     type
+    totalBudget
     description
     users (limit: 10000) {
       items {

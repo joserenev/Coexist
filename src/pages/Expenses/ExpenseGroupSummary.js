@@ -1,25 +1,28 @@
-import React, { useState } from "react";
-import { Grid, Typography } from "@material-ui/core";
+import React from "react";
+import { Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-import User from "../../components/User/User";
-import LoadingPage from "../../pages/Loading/LoadingPage";
-
-import { Connect } from "aws-amplify-react";
-import { graphqlOperation } from "aws-amplify";
-import { getGroup } from "../../customGraphql/queries";
+import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
-        padding: 10,
+        padding: 12,
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        backgroundColor: "#EDF7E1",
+        margin: 4,
+        alignItems: "center",
+        border: "1px solid black"
+    },
+    expenseSummaryContainer: {
         display: "flex",
         flexDirection: "row",
         flex: 1,
-        backgroundColor: "#EDF7E1",
         justifyContent: "space-between",
-        margin: 4,
-        alignItems: "center",
-        border: "1px solid black" // it is not work.
+        margin: 12,
+        marginBottom: 24,
+        alignItems: "center"
     },
     fields: {
         display: "flex",
@@ -30,69 +33,65 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function ExpenseGroupSummary({ groupID }): React.MixedElement {
+function ExpenseGroupSummary({ groupID, expenseItem }): React.MixedElement {
     const classes = useStyles();
-    const [groupMembers, setGroupMembers] = useState([]);
+    const {
+        cycleEndDate,
+        totalExpenditure,
+        expenseDivision: rawExpenseDivision
+    } = expenseItem;
 
-    // const memberSplitMap = new Map(JSON.parse(rawMemberSplit));
+    const expenseDivision = JSON.parse(rawExpenseDivision);
+    const formattedEndDate = new Date(cycleEndDate).toDateString();
+
+    const getFormattedAmount = userID => {
+        const amount = expenseDivision[userID];
+        return Math.abs(amount).toFixed(2);
+    };
 
     return (
-        <Connect query={graphqlOperation(getGroup, { id: groupID })}>
-            {({ data, loading, error }) => {
-                if (error) {
-                    //TODO: Add a dedicated ERROR Component with a message to show.
-                    return <h3>Error</h3>;
-                }
-
-                if (loading) {
-                    return <LoadingPage />;
-                }
-
-                const items = data?.getGroup?.users?.items ?? [];
-
-                if (groupMembers.length === 0) {
-                    setGroupMembers(
-                        items.map(groupItem => {
-                            return groupItem.user;
-                        })
-                    );
-                }
-
-                return (
-                    <>
-                        <br />
-
-                        <div>
-                            <Typography variant="h5">
-                                Mar 15 - Mar 30
-                            </Typography>
-                            <div className={classes.headContainer}>
-                                {groupMembers.map((user, index) => {
-                                    return (
-                                        <div
-                                            key={index}
-                                            className={classes.fields}
+        <>
+            <div>
+                <Typography variant="h5">
+                    Cycle End Date: {formattedEndDate}
+                </Typography>
+                <div className={classes.headContainer}>
+                    <div className={classes.expenseSummaryContainer}>
+                        {Object.keys(expenseDivision).map((userID, index) => {
+                            return (
+                                <div key={index} className={classes.fields}>
+                                    <SimpleUserProfileView
+                                        userID={userID}
+                                        isDeleteDisabled={true}
+                                    />
+                                    {expenseDivision[userID] < 0 ? (
+                                        <Typography
+                                            variant="h5"
+                                            color="secondary"
                                         >
-                                            <User
-                                                user={user}
-                                                isDeleteDisabled={true}
-                                            />
-                                            <Typography>
-                                                <i>Total spent:</i> $1000
-                                            </Typography>
-                                            <br />
-                                            <Typography>
-                                                <i>Paid members:</i> $800
-                                            </Typography>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </>
-                );
-            }}
-        </Connect>
+                                            Charged: $
+                                            {getFormattedAmount(userID)}
+                                        </Typography>
+                                    ) : (
+                                        <Typography
+                                            variant="h5"
+                                            color="primary"
+                                        >
+                                            Received: $
+                                            {getFormattedAmount(userID)}
+                                        </Typography>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <Typography variant="h3">
+                        Total Group Expenditure: $
+                        {Number(totalExpenditure).toFixed(2)}
+                    </Typography>
+                </div>
+            </div>
+        </>
     );
 }
 
