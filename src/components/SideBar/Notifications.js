@@ -25,6 +25,7 @@ function Notifications(): React.MixedElement {
     var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
     var groups = JSON.parse(groupJSON);
     var userData = JSON.parse(userDataJSON);
+	channels.push(userData.id);
     for (var i = 0; i < groups.length; i++) {
         channels.push(groups[i].group.id);
     }
@@ -34,6 +35,7 @@ function Notifications(): React.MixedElement {
 
     const addNotification = function (notificationData) {
         const notification = notificationSystem.current;
+		if (notification == null || notification == undefined) { return; }
         notification.addNotification(notificationData);
     };
 
@@ -67,6 +69,13 @@ function Notifications(): React.MixedElement {
                                                 console.log("Sender is not the same guy");
                                             } else {
                                                 //window.alert("Received " + messageEvent.message.notificationClass + " notification: " + messageEvent.message.message);
+												var notifLevels = {
+													"Receipt Update":"warning",
+													"Message":"info",
+													"Receipt":"info",
+													"NewGroup":"success",
+													"RemovedGroup":"error"
+												}
                                                 var notifJSON = window.localStorage.getItem("CoexistGroupNotifications") || "{}";
                                                 var notifs = JSON.parse(notifJSON);
                                                 var groupId = messageEvent.message.groupId;
@@ -89,12 +98,15 @@ function Notifications(): React.MixedElement {
                                                         notif["title"] = "Group: " + groups[i].group.name;
                                                     }
                                                 }
-                                                notif["message"] = messageEvent.message.sender + ": " + messageEvent.message.message;
-                                                if (messageEvent.message.notificationClass == "Receipt Update") {
-                                                    notif["level"] = "warning";
-                                                } else {
-                                                    notif["level"] = "info";
-                                                }
+                                                notif["message"] = messageEvent.message.message;
+												if (notifLevels[messageEvent.message.notificationClass] != undefined)
+												{
+													notif["level"] = notifLevels[messageEvent.message.notificationClass];
+												} 
+												else 
+												{
+													notif["level"] = "info";
+												}
                                                 if (messageEvent.message.notificationClass == "Message") {
                                                     notif["autoDismiss"] = 5;
                                                 } else {

@@ -14,7 +14,7 @@ import {
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import {Wrapper} from "./MessagePanelUI";
+//import {Wrapper} from "./MessagePanelUI";
 
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import Paper from "@material-ui/core/Paper";
@@ -30,6 +30,9 @@ import Message from "./Message";
 
 import PubNub from 'pubnub';
 import { PubNubProvider, PubNubConsumer } from 'pubnub-react';
+
+import firebase from 'firebase';
+import { sendMessage, listenerForMessages, deleteMessage } from "../../api/ChatApi";
 
 
 const useStyles = makeStyles(theme => ({
@@ -105,7 +108,7 @@ function MessagePanel(props): React.MixedElement {
 	const realGroupId = window.location.href.substr(window.location.href.indexOf("/messages/") + 10);
 	var groupMessageJSON = window.localStorage.getItem("GroupMessages") || "{}";
 	var groupMessages = JSON.parse(groupMessageJSON);
-	const [messages, addMessage] = useState(groupMessages[realGroupId] || []);
+	const [messages, addMessage] = useState([]); //useState(groupMessages[realGroupId] || []);
 	const [message, setMessage] = useState('');
 	const classes = useStyles();
 	const groupID = props.match?.params?.groupID ?? "null group id";
@@ -113,24 +116,56 @@ function MessagePanel(props): React.MixedElement {
 	channels[0] = realGroupId;
 
 	var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
-	var userData = JSON.parse(userDataJSON);   
+	var userData = JSON.parse(userDataJSON);
+	
+	
+	/////This is where messages are initially loaded from the database, and where new ones are sent?/////
+	firebase.database().ref("Group/" + realGroupId).on("child_added", function(snapshot) {
+		var sender = snapshot.val().sender;
+		var message = snapshot.val().message;
+		var messageID = snapshot.key;
+		
+		for (var i = 0; i < messages.length; i++)
+		{
+			if (messages[i].id == messageID) { return; }
+		}
+		let messageObject = {}
+		messageObject.sender = sender;
+		messageObject.message = message;
+		messageObject.id = snapshot.key;
+		messages.push(messageObject);
+		//this.setState({"messages": messages});
+		console.log("FIREBASE " + sender + ": " + message);
+		console.log("FIREBASE message id is: " + messageID);
+	});
 	   //window.alert("Group id: " + groupID);
-
-	  const sendMessage = message => {
+		
+		
+	  const sendMessagePub = message => {
 		  var json = {"message":message};
 		  json.timeSent = new Date().getTime();
 		  json.uniqueId = Math.random();
 		  json.notificationClass = "Message";
 		  json.sender = userData.username;
+		  json.senderId = userData.id;
 		  json.groupId = realGroupId;
 		  
-		pubnub.publish(
+		  let tempMessageObject = {
+			"sender": userData.id,
+			"message": message
+		  };
+		  
+		  ////Firebase code here/////
+		  firebase.database().ref('Group/' + realGroupId).push().set(tempMessageObject);
+		  
+		  
+		/*pubnub.publish(
 		  {
 			channel: channels[0],
 			message: json,
 		  },
 		  () => setMessage('')
-		);
+		);*/
 		document.getElementById("filled-multiline-flexible").value = "";
 	  };
 	  
@@ -218,7 +253,7 @@ function MessagePanel(props): React.MixedElement {
 			id="sendMessageButton"
 			onClick={e => {
                   e.preventDefault();
-                  sendMessage(message);
+                  sendMessagePub(message);
                 }}
 			>
 			Send

@@ -133,7 +133,8 @@ function UpdateExpense({
     const [messages, addMessage] = useState([]);
     const [message, setMessage] = useState("");
     const sendMessage = message => {
-        var json = { message: message };
+        var json = {};
+		json.message = userData.username + " " + message;
         json.timeSent = new Date().getTime();
         json.uniqueId = Math.random();
         json.notificationClass = "Receipt Update";

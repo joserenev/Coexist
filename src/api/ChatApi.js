@@ -9,7 +9,7 @@ export async function sendMessage(groupID, sender, msg){
 
 //This function listens for new messages from the db in realtime
 export async function listenerForMessages(groupID){
-  firebase.database().ref("Group/").on("child_added", function(snapshot) {
+  firebase.database().ref("Group/" + groupID).on("child_added", function(snapshot) {
     //snapshot.val().sender;
     //snapshot.val().message;
     //snapshot.key();

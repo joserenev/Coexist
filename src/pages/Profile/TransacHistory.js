@@ -22,12 +22,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-<<<<<<< HEAD
+//<<<<<<< HEAD
 import TransacTab from "./TransacTab"
-=======
-import ChatUsersList from "../../components/ChatComp/ChatUsersList";
-import TransacTab from "./TransacTab";
->>>>>>> d84f5510bde16e3d743f77b050dc0fea3e4cbe63
+//=======
+// import ChatUsersList from "../../components/ChatComp/ChatUsersList";
+//>>>>>>> d84f5510bde16e3d743f77b050dc0fea3e4cbe63
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
