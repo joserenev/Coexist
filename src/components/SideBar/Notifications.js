@@ -52,29 +52,16 @@ function Notifications(): React.MixedElement {
                                         console.log("Notification message: " + messageEvent.message.message);
                                         if (messageEvent.message.uniqueId != lastId) {
                                             lastId = messageEvent.message.uniqueId;
-											if (messageEvent.message.notificationClass == "Message")
-											{
-												var groupMessageJSON = window.localStorage.getItem("GroupMessages") || "{}";
-												var groupMessages = JSON.parse(groupMessageJSON);
-												
-												if (groupMessages[messageEvent.message.groupId] == undefined)
-												{
-													groupMessages[messageEvent.message.groupId] = [];
-												}
-												groupMessages[messageEvent.message.groupId].push(messageEvent.message);
-												window.localStorage.setItem("GroupMessages", JSON.stringify(groupMessages));
-												console.log(JSON.stringify(groupMessages));
-											}
-                                            if ((messageEvent.message.sender == userData.username && messageEvent.message.notificationClass == "Message") || window.location.href.indexOf(messageEvent.message.groupId) > -1) {
-                                                console.log("Sender is not the same guy");
-                                            } else {
-                                                //window.alert("Received " + messageEvent.message.notificationClass + " notification: " + messageEvent.message.message);
+											if (messageEvent.message.sender != userData.username) {
 												var notifLevels = {
 													"Receipt Update":"warning",
 													"Message":"info",
 													"Receipt":"info",
-													"NewGroup":"success",
-													"RemovedGroup":"error"
+													"GroupAdd":"success",
+													"GroupRemove":"error"
+												}
+												var notifDismiss = {
+													"Message":5
 												}
                                                 var notifJSON = window.localStorage.getItem("CoexistGroupNotifications") || "{}";
                                                 var notifs = JSON.parse(notifJSON);
@@ -86,35 +73,24 @@ function Notifications(): React.MixedElement {
                                                 window.localStorage.setItem("CoexistGroupNotifications", JSON.stringify(notifs));
                                                 console.log(notifJSON);
                                                 var ele = document.getElementById(messageEvent.message.groupId + "-notif");
-                                                if (ele == undefined) {
-                                                    console.log("Could not find element notification.");
-                                                } else {
+                                                if (ele != undefined) {
                                                     ele.children[1].innerHTML = notifs[groupId];
                                                 }
 
                                                 var notif = {};
+												notif["title"] = messageEvent.message.groupName;
                                                 for (var i = 0; i < groups.length; i++) {
                                                     if (groups[i].group.id == groupId) {
                                                         notif["title"] = "Group: " + groups[i].group.name;
                                                     }
                                                 }
                                                 notif["message"] = messageEvent.message.message;
-												if (notifLevels[messageEvent.message.notificationClass] != undefined)
-												{
-													notif["level"] = notifLevels[messageEvent.message.notificationClass];
-												} 
-												else 
-												{
-													notif["level"] = "info";
-												}
-                                                if (messageEvent.message.notificationClass == "Message") {
-                                                    notif["autoDismiss"] = 5;
-                                                } else {
-                                                    notif["autoDismiss"] = 0;
-                                                }
+												notif["level"] = notifLevels[messageEvent.message.notificationClass] || "info";
+                                                notif["autoDismiss"] = notifDismiss[messageEvent.message.notificationClass] || 0;
                                                 notif["position"] = "br";
                                                 addNotification(notif);
                                             }
+											
                                         }
                                     },
                                 });

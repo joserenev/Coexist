@@ -39,6 +39,15 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import { QueryStatus } from "../../components/util/QueryUtil";
 
+import PubNub from "pubnub";
+import { PubNubProvider, PubNubConsumer } from "pubnub-react";
+
+const pubnub = new PubNub({
+    publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+    subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+    uuid: "12445",
+});
+
 const { IDLE, PENDING, SUCCESS, ERROR } = QueryStatus;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -100,6 +109,26 @@ function GroupInfoPage({
 
     // Stores the UserGroupID
     const [deletedGroupMembers, setDeletedGroupMembers] = useState([]);
+	
+	
+	const [messages, addMessage] = useState([]); //useState(groupMessages[realGroupId] || []);
+	const [message, setMessage] = useState('');
+	const sendMessagePub = messageObj => {
+		var json = {};
+		json.message = messageObj.message;
+		json.timeSent = new Date().getTime();
+		json.uniqueId = Math.random();
+		json.sender = "Group";
+		json.notificationClass = messageObj.notificationClass;
+		json.groupName = groupName;
+		json.groupId = groupID;
+
+		pubnub.publish(
+		{
+			channel: messageObj.channel,
+			message: json,
+		}, () => setMessage(''));
+	  };
 
     const handleClose = useCallback(() => {
         setGroupName(groupData?.name ?? "");
@@ -115,6 +144,13 @@ function GroupInfoPage({
             const deleteGroupItemElement = items.find(groupItem => {
                 return groupItem.user.id === deleteUserID;
             });
+			
+			var messageObj = {};
+			messageObj.message = "You have been removed from the group";
+			messageObj.channel = deleteUserID;
+			messageObj.sender = "Group";
+			messageObj.notificationClass = "GroupRemove";
+			sendMessagePub(messageObj);
 
             if (deleteGroupItemElement != null) {
                 setDeletedGroupMembers([
@@ -158,6 +194,14 @@ function GroupInfoPage({
                 setErrorOpen(true);
                 return;
             }
+			var messageObj = {};
+			messageObj.message = "You have been added to the group";
+			messageObj.channel = newMember.id;
+			messageObj.sender = "Group";
+			messageObj.notificationClass = "GroupAdd";
+			sendMessagePub(messageObj);
+			
+			
             setGroupMembers([...groupMembers, newMember]);
             setAddMemberUserName("");
         },

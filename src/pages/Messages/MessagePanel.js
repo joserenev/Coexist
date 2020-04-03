@@ -145,7 +145,9 @@ function MessagePanel(props): React.MixedElement {
             messageObject.senderId = senderId;
             messageObject.message = message;
             messageObject.id = snapshot.key;
-            messages.push(messageObject);
+            addMessage([...messages, 
+					messageObject
+					]);
             //this.setState({"messages": messages});
             // console.log("FIREBASE " + sender + ": " + message);
             // console.log("FIREBASE message id is: " + messageID);
@@ -153,13 +155,14 @@ function MessagePanel(props): React.MixedElement {
     //window.alert("Group id: " + groupID);
 
     const sendMessagePub = message => {
-        var json = { message: message };
-        json.timeSent = new Date().getTime();
-        json.uniqueId = Math.random();
-        json.notificationClass = "Message";
-        json.sender = userData.username;
-        json.senderId = userData.id;
-        json.groupId = realGroupId;
+		var json = {};
+		json.message = userData.username + ": " + message;
+		json.timeSent = new Date().getTime();
+		json.uniqueId = Math.random();
+		json.notificationClass = "Message";
+		json.sender = userData.username;
+		json.senderId = userData.id;
+		json.groupId = realGroupId;
 
         let tempMessageObject = {
             sender: userData.username,
@@ -173,7 +176,14 @@ function MessagePanel(props): React.MixedElement {
             .ref("Group/" + realGroupId)
             .push()
             .set(tempMessageObject);
-
+		
+		pubnub.publish(
+		  {
+			channel: channels[0],
+			message: json,
+		  },
+		  () => setMessage('')
+		);
         /*pubnub.publish(
 		  {
 			channel: channels[0],
@@ -192,10 +202,10 @@ function MessagePanel(props): React.MixedElement {
                         {client => {
                             client.addListener({
                                 message: messageEvent => {
-                                    addMessage([
+                                    /*addMessage([
                                         ...messages,
                                         messageEvent.message
-                                    ]);
+                                    ]);*/
                                     console.log(
                                         "Message panel message: " +
                                             messageEvent.message.message
