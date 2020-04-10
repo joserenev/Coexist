@@ -84,20 +84,28 @@ function GroupHomePage(props): React.MixedElement {
     const navigateToChat = () => {
         history.push(`/messages/${groupID}`);
     };
+    const navigateToCalendar = () => {
+        history.push(`/calendar/${groupID}`);
+    };
+
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
     const [isDialogOpen, setDialogOpen] = useState(false);
-	
-	var notifJSON = window.localStorage.getItem("CoexistGroupNotifications") || "{}";
-	var notifs = JSON.parse(notifJSON);
-	notifs[groupID] = 0;
-	window.localStorage.setItem("CoexistGroupNotifications", JSON.stringify(notifs));
-	 var ele = document.getElementById(groupID + "-notif");
-	 if (ele != undefined) 
-	 { 
-		ele.children[1].innerHTML = "0"; 
-		ele.children[1].className = ele.children[1].className + "MuiBadge-invisible"; 
-	}
+
+    var notifJSON =
+        window.localStorage.getItem("CoexistGroupNotifications") || "{}";
+    var notifs = JSON.parse(notifJSON);
+    notifs[groupID] = 0;
+    window.localStorage.setItem(
+        "CoexistGroupNotifications",
+        JSON.stringify(notifs)
+    );
+    var ele = document.getElementById(groupID + "-notif");
+    if (ele != undefined) {
+        ele.children[1].innerHTML = "0";
+        ele.children[1].className =
+            ele.children[1].className + "MuiBadge-invisible";
+    }
 
     const isCurrentUserInGroup = useCallback(
         groupData => {
@@ -109,8 +117,6 @@ function GroupHomePage(props): React.MixedElement {
         [currentUserID]
     );
 
-	
-	
     return (
         <Connect query={graphqlOperation(getGroup, { id: groupID })}>
             {({ data, loading, error }) => {
@@ -169,7 +175,10 @@ function GroupHomePage(props): React.MixedElement {
                                     className={classes.largeIcons}
                                 />
                             </div>
-                            <div className={classes.buttonContainer}>
+                            <div
+                                className={classes.buttonContainer}
+                                onClick={navigateToCalendar}
+                            >
                                 <CalendarIcon
                                     fontSize="large"
                                     className={classes.largeIcons}
