@@ -14,6 +14,19 @@ export const getUser = `query GetUser($id: ID!) {
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
     createdAt
     updatedAt
     pictureURL
@@ -37,6 +50,9 @@ export const listUsers = `query ListUsers(
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -58,6 +74,9 @@ export const getGroup = `query GetGroup($id: ID!) {
       name
       phone
       groups {
+        nextToken
+      }
+      tasks {
         nextToken
       }
       createdAt
@@ -105,6 +124,34 @@ export const getGroup = `query GetGroup($id: ID!) {
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -146,6 +193,12 @@ export const listGroups = `query ListGroups(
       groupCalculations {
         nextToken
       }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
     }
     nextToken
   }
@@ -161,6 +214,9 @@ export const getReceipt = `query GetReceipt($id: ID!) {
       name
       phone
       groups {
+        nextToken
+      }
+      tasks {
         nextToken
       }
       createdAt
@@ -205,6 +261,12 @@ export const getReceipt = `query GetReceipt($id: ID!) {
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -300,6 +362,12 @@ export const getExpensesCalculation = `query GetExpensesCalculation($id: ID!) {
       groupCalculations {
         nextToken
       }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
     }
   }
 }
@@ -331,6 +399,268 @@ export const listExpensesCalculations = `query ListExpensesCalculations(
         totalBudget
         remainingBalance
       }
+    }
+    nextToken
+  }
+}
+`;
+export const getTask = `query GetTask($id: ID!) {
+  getTask(id: $id) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    assignedTo {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    createdAt
+    updatedAt
+    dueDate
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    isImportant
+  }
+}
+`;
+export const listTasks = `query ListTasks(
+  $filter: ModelTaskFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTasks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      name
+      description
+      assignedTo {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      createdAt
+      updatedAt
+      dueDate
+      group {
+        id
+        name
+        type
+        description
+        lastReceiptCalculationTime
+        createdAt
+        updatedAt
+        pictureURL
+        totalBudget
+        remainingBalance
+      }
+      status
+      isImportant
+    }
+    nextToken
+  }
+}
+`;
+export const getCalendarEvent = `query GetCalendarEvent($id: ID!) {
+  getCalendarEvent(id: $id) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    location
+    createdAt
+    updatedAt
+    startTimestamp
+    endTimestamp
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    memberResponses
+  }
+}
+`;
+export const listCalendarEvents = `query ListCalendarEvents(
+  $filter: ModelCalendarEventFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCalendarEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      name
+      description
+      location
+      createdAt
+      updatedAt
+      startTimestamp
+      endTimestamp
+      group {
+        id
+        name
+        type
+        description
+        lastReceiptCalculationTime
+        createdAt
+        updatedAt
+        pictureURL
+        totalBudget
+        remainingBalance
+      }
+      status
+      memberResponses
     }
     nextToken
   }

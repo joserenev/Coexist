@@ -5,6 +5,7 @@ type User @model {
   name: String
   phone: String
   groups: [UserGroups] @connection(name: "UserGroups")
+  tasks: [Task] @connection(name: "TaskAssignedTo")
   createdAt: String
   updatedAt: String
   pictureURL: String
@@ -33,6 +34,8 @@ type Group @model {
   remainingBalance: String
   receipts: [Receipt] @connection(name: "GroupReceipts")
   groupCalculations: [ExpensesCalculation] @connection(name: "GroupCalculations")
+  tasks: [Task] @connection(name: "GroupTasks")
+  events: [CalendarEvent] @connection(name: "GroupEvents")
 }
 
 type Receipt @model {
@@ -57,4 +60,33 @@ type ExpensesCalculation @model {
   totalExpenditure: String
   expenseDivision: String
   group: Group @connection(name: "GroupCalculations")
+}
+
+type Task @model {
+  id: ID!
+  owner: User @connection
+  name: String
+  description: String
+  assignedTo: User @connection(name: "TaskAssignedTo")
+  createdAt: String
+  updatedAt: String
+  dueDate: String
+  group: Group @connection(name: "GroupTasks")
+  status: String
+  isImportant: Boolean
+}
+
+type CalendarEvent @model {
+  id: ID!
+  owner: User @connection
+  name: String
+  description: String
+  location: String
+  createdAt: String
+  updatedAt: String
+  startTimestamp: String
+  endTimestamp: String
+  group: Group @connection(name: "GroupEvents")
+  status: String
+  memberResponses: String
 }

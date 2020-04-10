@@ -14,6 +14,19 @@ export const onCreateUser = `subscription OnCreateUser {
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
     createdAt
     updatedAt
     pictureURL
@@ -32,6 +45,19 @@ export const onUpdateUser = `subscription OnUpdateUser {
     groups {
       items {
         id
+      }
+      nextToken
+    }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
       }
       nextToken
     }
@@ -56,6 +82,19 @@ export const onDeleteUser = `subscription OnDeleteUser {
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
     createdAt
     updatedAt
     pictureURL
@@ -76,6 +115,9 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -112,6 +154,12 @@ export const onCreateUserGroups = `subscription OnCreateUserGroups {
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -130,6 +178,9 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -166,6 +217,12 @@ export const onUpdateUserGroups = `subscription OnUpdateUserGroups {
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -184,6 +241,9 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -220,6 +280,12 @@ export const onDeleteUserGroups = `subscription OnDeleteUserGroups {
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -239,6 +305,9 @@ export const onCreateGroup = `subscription OnCreateGroup {
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -281,6 +350,34 @@ export const onCreateGroup = `subscription OnCreateGroup {
         cycleEndDate
         totalExpenditure
         expenseDivision
+      }
+      nextToken
+    }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
       }
       nextToken
     }
@@ -300,65 +397,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
       groups {
         nextToken
       }
-      createdAt
-      updatedAt
-      pictureURL
-      lastPageLoad
-      heartbeat
-    }
-    type
-    description
-    users {
-      items {
-        id
-      }
-      nextToken
-    }
-    lastReceiptCalculationTime
-    createdAt
-    updatedAt
-    pictureURL
-    totalBudget
-    remainingBalance
-    receipts {
-      items {
-        id
-        name
-        description
-        memberSplit
-        totalAmount
-        createdAt
-        updatedAt
-        receiptImageUrl
-        approvalStatus
-        approvedDate
-        approverList
-      }
-      nextToken
-    }
-    groupCalculations {
-      items {
-        id
-        cycleEndDate
-        totalExpenditure
-        expenseDivision
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const onDeleteGroup = `subscription OnDeleteGroup {
-  onDeleteGroup {
-    id
-    name
-    owner {
-      id
-      username
-      email
-      name
-      phone
-      groups {
+      tasks {
         nextToken
       }
       createdAt
@@ -406,6 +445,126 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onDeleteGroup = `subscription OnDeleteGroup {
+  onDeleteGroup {
+    id
+    name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    type
+    description
+    users {
+      items {
+        id
+      }
+      nextToken
+    }
+    lastReceiptCalculationTime
+    createdAt
+    updatedAt
+    pictureURL
+    totalBudget
+    remainingBalance
+    receipts {
+      items {
+        id
+        name
+        description
+        memberSplit
+        totalAmount
+        createdAt
+        updatedAt
+        receiptImageUrl
+        approvalStatus
+        approvedDate
+        approverList
+      }
+      nextToken
+    }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
+      }
+      nextToken
+    }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -419,6 +578,9 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
       name
       phone
       groups {
+        nextToken
+      }
+      tasks {
         nextToken
       }
       createdAt
@@ -463,6 +625,12 @@ export const onCreateReceipt = `subscription OnCreateReceipt {
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -485,6 +653,9 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -527,6 +698,12 @@ export const onUpdateReceipt = `subscription OnUpdateReceipt {
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -549,6 +726,9 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -591,6 +771,12 @@ export const onDeleteReceipt = `subscription OnDeleteReceipt {
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -639,6 +825,12 @@ export const onCreateExpensesCalculation = `subscription OnCreateExpensesCalcula
       groupCalculations {
         nextToken
       }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
     }
   }
 }
@@ -679,6 +871,12 @@ export const onUpdateExpensesCalculation = `subscription OnUpdateExpensesCalcula
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -723,7 +921,493 @@ export const onDeleteExpensesCalculation = `subscription OnDeleteExpensesCalcula
       groupCalculations {
         nextToken
       }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
     }
+  }
+}
+`;
+export const onCreateTask = `subscription OnCreateTask {
+  onCreateTask {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    assignedTo {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    createdAt
+    updatedAt
+    dueDate
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    isImportant
+  }
+}
+`;
+export const onUpdateTask = `subscription OnUpdateTask {
+  onUpdateTask {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    assignedTo {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    createdAt
+    updatedAt
+    dueDate
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    isImportant
+  }
+}
+`;
+export const onDeleteTask = `subscription OnDeleteTask {
+  onDeleteTask {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    assignedTo {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    createdAt
+    updatedAt
+    dueDate
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    isImportant
+  }
+}
+`;
+export const onCreateCalendarEvent = `subscription OnCreateCalendarEvent {
+  onCreateCalendarEvent {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    location
+    createdAt
+    updatedAt
+    startTimestamp
+    endTimestamp
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    memberResponses
+  }
+}
+`;
+export const onUpdateCalendarEvent = `subscription OnUpdateCalendarEvent {
+  onUpdateCalendarEvent {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    location
+    createdAt
+    updatedAt
+    startTimestamp
+    endTimestamp
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    memberResponses
+  }
+}
+`;
+export const onDeleteCalendarEvent = `subscription OnDeleteCalendarEvent {
+  onDeleteCalendarEvent {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    location
+    createdAt
+    updatedAt
+    startTimestamp
+    endTimestamp
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    memberResponses
   }
 }
 `;

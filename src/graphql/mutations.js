@@ -17,6 +17,19 @@ export const createUser = `mutation CreateUser(
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
     createdAt
     updatedAt
     pictureURL
@@ -38,6 +51,19 @@ export const updateUser = `mutation UpdateUser(
     groups {
       items {
         id
+      }
+      nextToken
+    }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
       }
       nextToken
     }
@@ -65,6 +91,19 @@ export const deleteUser = `mutation DeleteUser(
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
     createdAt
     updatedAt
     pictureURL
@@ -88,6 +127,9 @@ export const createUserGroups = `mutation CreateUserGroups(
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -124,6 +166,12 @@ export const createUserGroups = `mutation CreateUserGroups(
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -145,6 +193,9 @@ export const updateUserGroups = `mutation UpdateUserGroups(
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -181,6 +232,12 @@ export const updateUserGroups = `mutation UpdateUserGroups(
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -202,6 +259,9 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -238,6 +298,12 @@ export const deleteUserGroups = `mutation DeleteUserGroups(
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -260,6 +326,9 @@ export const createGroup = `mutation CreateGroup(
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -302,6 +371,34 @@ export const createGroup = `mutation CreateGroup(
         cycleEndDate
         totalExpenditure
         expenseDivision
+      }
+      nextToken
+    }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
       }
       nextToken
     }
@@ -324,68 +421,7 @@ export const updateGroup = `mutation UpdateGroup(
       groups {
         nextToken
       }
-      createdAt
-      updatedAt
-      pictureURL
-      lastPageLoad
-      heartbeat
-    }
-    type
-    description
-    users {
-      items {
-        id
-      }
-      nextToken
-    }
-    lastReceiptCalculationTime
-    createdAt
-    updatedAt
-    pictureURL
-    totalBudget
-    remainingBalance
-    receipts {
-      items {
-        id
-        name
-        description
-        memberSplit
-        totalAmount
-        createdAt
-        updatedAt
-        receiptImageUrl
-        approvalStatus
-        approvedDate
-        approverList
-      }
-      nextToken
-    }
-    groupCalculations {
-      items {
-        id
-        cycleEndDate
-        totalExpenditure
-        expenseDivision
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const deleteGroup = `mutation DeleteGroup(
-  $input: DeleteGroupInput!
-  $condition: ModelGroupConditionInput
-) {
-  deleteGroup(input: $input, condition: $condition) {
-    id
-    name
-    owner {
-      id
-      username
-      email
-      name
-      phone
-      groups {
+      tasks {
         nextToken
       }
       createdAt
@@ -433,6 +469,129 @@ export const deleteGroup = `mutation DeleteGroup(
       }
       nextToken
     }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const deleteGroup = `mutation DeleteGroup(
+  $input: DeleteGroupInput!
+  $condition: ModelGroupConditionInput
+) {
+  deleteGroup(input: $input, condition: $condition) {
+    id
+    name
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    type
+    description
+    users {
+      items {
+        id
+      }
+      nextToken
+    }
+    lastReceiptCalculationTime
+    createdAt
+    updatedAt
+    pictureURL
+    totalBudget
+    remainingBalance
+    receipts {
+      items {
+        id
+        name
+        description
+        memberSplit
+        totalAmount
+        createdAt
+        updatedAt
+        receiptImageUrl
+        approvalStatus
+        approvedDate
+        approverList
+      }
+      nextToken
+    }
+    groupCalculations {
+      items {
+        id
+        cycleEndDate
+        totalExpenditure
+        expenseDivision
+      }
+      nextToken
+    }
+    tasks {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        dueDate
+        status
+        isImportant
+      }
+      nextToken
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
+      }
+      nextToken
+    }
   }
 }
 `;
@@ -449,6 +608,9 @@ export const createReceipt = `mutation CreateReceipt(
       name
       phone
       groups {
+        nextToken
+      }
+      tasks {
         nextToken
       }
       createdAt
@@ -493,6 +655,12 @@ export const createReceipt = `mutation CreateReceipt(
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -518,6 +686,9 @@ export const updateReceipt = `mutation UpdateReceipt(
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -560,6 +731,12 @@ export const updateReceipt = `mutation UpdateReceipt(
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -585,6 +762,9 @@ export const deleteReceipt = `mutation DeleteReceipt(
       groups {
         nextToken
       }
+      tasks {
+        nextToken
+      }
       createdAt
       updatedAt
       pictureURL
@@ -627,6 +807,12 @@ export const deleteReceipt = `mutation DeleteReceipt(
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -678,6 +864,12 @@ export const createExpensesCalculation = `mutation CreateExpensesCalculation(
       groupCalculations {
         nextToken
       }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
     }
   }
 }
@@ -721,6 +913,12 @@ export const updateExpensesCalculation = `mutation UpdateExpensesCalculation(
         nextToken
       }
       groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
         nextToken
       }
     }
@@ -768,7 +966,511 @@ export const deleteExpensesCalculation = `mutation DeleteExpensesCalculation(
       groupCalculations {
         nextToken
       }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
     }
+  }
+}
+`;
+export const createTask = `mutation CreateTask(
+  $input: CreateTaskInput!
+  $condition: ModelTaskConditionInput
+) {
+  createTask(input: $input, condition: $condition) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    assignedTo {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    createdAt
+    updatedAt
+    dueDate
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    isImportant
+  }
+}
+`;
+export const updateTask = `mutation UpdateTask(
+  $input: UpdateTaskInput!
+  $condition: ModelTaskConditionInput
+) {
+  updateTask(input: $input, condition: $condition) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    assignedTo {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    createdAt
+    updatedAt
+    dueDate
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    isImportant
+  }
+}
+`;
+export const deleteTask = `mutation DeleteTask(
+  $input: DeleteTaskInput!
+  $condition: ModelTaskConditionInput
+) {
+  deleteTask(input: $input, condition: $condition) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    assignedTo {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    createdAt
+    updatedAt
+    dueDate
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    isImportant
+  }
+}
+`;
+export const createCalendarEvent = `mutation CreateCalendarEvent(
+  $input: CreateCalendarEventInput!
+  $condition: ModelCalendarEventConditionInput
+) {
+  createCalendarEvent(input: $input, condition: $condition) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    location
+    createdAt
+    updatedAt
+    startTimestamp
+    endTimestamp
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    memberResponses
+  }
+}
+`;
+export const updateCalendarEvent = `mutation UpdateCalendarEvent(
+  $input: UpdateCalendarEventInput!
+  $condition: ModelCalendarEventConditionInput
+) {
+  updateCalendarEvent(input: $input, condition: $condition) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    location
+    createdAt
+    updatedAt
+    startTimestamp
+    endTimestamp
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    memberResponses
+  }
+}
+`;
+export const deleteCalendarEvent = `mutation DeleteCalendarEvent(
+  $input: DeleteCalendarEventInput!
+  $condition: ModelCalendarEventConditionInput
+) {
+  deleteCalendarEvent(input: $input, condition: $condition) {
+    id
+    owner {
+      id
+      username
+      email
+      name
+      phone
+      groups {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      createdAt
+      updatedAt
+      pictureURL
+      lastPageLoad
+      heartbeat
+    }
+    name
+    description
+    location
+    createdAt
+    updatedAt
+    startTimestamp
+    endTimestamp
+    group {
+      id
+      name
+      owner {
+        id
+        username
+        email
+        name
+        phone
+        createdAt
+        updatedAt
+        pictureURL
+        lastPageLoad
+        heartbeat
+      }
+      type
+      description
+      users {
+        nextToken
+      }
+      lastReceiptCalculationTime
+      createdAt
+      updatedAt
+      pictureURL
+      totalBudget
+      remainingBalance
+      receipts {
+        nextToken
+      }
+      groupCalculations {
+        nextToken
+      }
+      tasks {
+        nextToken
+      }
+      events {
+        nextToken
+      }
+    }
+    status
+    memberResponses
   }
 }
 `;

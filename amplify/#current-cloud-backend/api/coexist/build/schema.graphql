@@ -5,6 +5,7 @@ type User {
   name: String
   phone: String
   groups(filter: ModelUserGroupsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserGroupsConnection
+  tasks(filter: ModelTaskFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelTaskConnection
   createdAt: String
   updatedAt: String
   pictureURL: String
@@ -33,6 +34,8 @@ type Group {
   remainingBalance: String
   receipts(filter: ModelReceiptFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelReceiptConnection
   groupCalculations(filter: ModelExpensesCalculationFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelExpensesCalculationConnection
+  tasks(filter: ModelTaskFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelTaskConnection
+  events(filter: ModelCalendarEventFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelCalendarEventConnection
 }
 
 type Receipt {
@@ -57,6 +60,35 @@ type ExpensesCalculation {
   totalExpenditure: String
   expenseDivision: String
   group: Group
+}
+
+type Task {
+  id: ID!
+  owner: User
+  name: String
+  description: String
+  assignedTo: User
+  createdAt: String
+  updatedAt: String
+  dueDate: String
+  group: Group
+  status: String
+  isImportant: Boolean
+}
+
+type CalendarEvent {
+  id: ID!
+  owner: User
+  name: String
+  description: String
+  location: String
+  createdAt: String
+  updatedAt: String
+  startTimestamp: String
+  endTimestamp: String
+  group: Group
+  status: String
+  memberResponses: String
 }
 
 enum ModelSortDirection {
@@ -167,6 +199,10 @@ type Query {
   listReceipts(filter: ModelReceiptFilterInput, limit: Int, nextToken: String): ModelReceiptConnection
   getExpensesCalculation(id: ID!): ExpensesCalculation
   listExpensesCalculations(filter: ModelExpensesCalculationFilterInput, limit: Int, nextToken: String): ModelExpensesCalculationConnection
+  getTask(id: ID!): Task
+  listTasks(filter: ModelTaskFilterInput, limit: Int, nextToken: String): ModelTaskConnection
+  getCalendarEvent(id: ID!): CalendarEvent
+  listCalendarEvents(filter: ModelCalendarEventFilterInput, limit: Int, nextToken: String): ModelCalendarEventConnection
 }
 
 input CreateUserInput {
@@ -215,6 +251,12 @@ type Mutation {
   createExpensesCalculation(input: CreateExpensesCalculationInput!, condition: ModelExpensesCalculationConditionInput): ExpensesCalculation
   updateExpensesCalculation(input: UpdateExpensesCalculationInput!, condition: ModelExpensesCalculationConditionInput): ExpensesCalculation
   deleteExpensesCalculation(input: DeleteExpensesCalculationInput!, condition: ModelExpensesCalculationConditionInput): ExpensesCalculation
+  createTask(input: CreateTaskInput!, condition: ModelTaskConditionInput): Task
+  updateTask(input: UpdateTaskInput!, condition: ModelTaskConditionInput): Task
+  deleteTask(input: DeleteTaskInput!, condition: ModelTaskConditionInput): Task
+  createCalendarEvent(input: CreateCalendarEventInput!, condition: ModelCalendarEventConditionInput): CalendarEvent
+  updateCalendarEvent(input: UpdateCalendarEventInput!, condition: ModelCalendarEventConditionInput): CalendarEvent
+  deleteCalendarEvent(input: DeleteCalendarEventInput!, condition: ModelCalendarEventConditionInput): CalendarEvent
 }
 
 input ModelUserConditionInput {
@@ -261,6 +303,12 @@ type Subscription {
   onCreateExpensesCalculation: ExpensesCalculation @aws_subscribe(mutations: ["createExpensesCalculation"])
   onUpdateExpensesCalculation: ExpensesCalculation @aws_subscribe(mutations: ["updateExpensesCalculation"])
   onDeleteExpensesCalculation: ExpensesCalculation @aws_subscribe(mutations: ["deleteExpensesCalculation"])
+  onCreateTask: Task @aws_subscribe(mutations: ["createTask"])
+  onUpdateTask: Task @aws_subscribe(mutations: ["updateTask"])
+  onDeleteTask: Task @aws_subscribe(mutations: ["deleteTask"])
+  onCreateCalendarEvent: CalendarEvent @aws_subscribe(mutations: ["createCalendarEvent"])
+  onUpdateCalendarEvent: CalendarEvent @aws_subscribe(mutations: ["updateCalendarEvent"])
+  onDeleteCalendarEvent: CalendarEvent @aws_subscribe(mutations: ["deleteCalendarEvent"])
 }
 
 input ModelUserGroupsFilterInput {
@@ -476,6 +524,140 @@ input ModelExpensesCalculationConditionInput {
   and: [ModelExpensesCalculationConditionInput]
   or: [ModelExpensesCalculationConditionInput]
   not: ModelExpensesCalculationConditionInput
+}
+
+type ModelTaskConnection {
+  items: [Task]
+  nextToken: String
+}
+
+input ModelTaskFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  dueDate: ModelStringInput
+  status: ModelStringInput
+  isImportant: ModelBooleanInput
+  and: [ModelTaskFilterInput]
+  or: [ModelTaskFilterInput]
+  not: ModelTaskFilterInput
+}
+
+input CreateTaskInput {
+  id: ID
+  name: String
+  description: String
+  createdAt: String
+  updatedAt: String
+  dueDate: String
+  status: String
+  isImportant: Boolean
+  taskOwnerId: ID
+  taskAssignedToId: ID
+  taskGroupId: ID
+}
+
+input UpdateTaskInput {
+  id: ID!
+  name: String
+  description: String
+  createdAt: String
+  updatedAt: String
+  dueDate: String
+  status: String
+  isImportant: Boolean
+  taskOwnerId: ID
+  taskAssignedToId: ID
+  taskGroupId: ID
+}
+
+input DeleteTaskInput {
+  id: ID
+}
+
+input ModelTaskConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  dueDate: ModelStringInput
+  status: ModelStringInput
+  isImportant: ModelBooleanInput
+  and: [ModelTaskConditionInput]
+  or: [ModelTaskConditionInput]
+  not: ModelTaskConditionInput
+}
+
+type ModelCalendarEventConnection {
+  items: [CalendarEvent]
+  nextToken: String
+}
+
+input ModelCalendarEventFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  location: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  startTimestamp: ModelStringInput
+  endTimestamp: ModelStringInput
+  status: ModelStringInput
+  memberResponses: ModelStringInput
+  and: [ModelCalendarEventFilterInput]
+  or: [ModelCalendarEventFilterInput]
+  not: ModelCalendarEventFilterInput
+}
+
+input CreateCalendarEventInput {
+  id: ID
+  name: String
+  description: String
+  location: String
+  createdAt: String
+  updatedAt: String
+  startTimestamp: String
+  endTimestamp: String
+  status: String
+  memberResponses: String
+  calendarEventOwnerId: ID
+  calendarEventGroupId: ID
+}
+
+input UpdateCalendarEventInput {
+  id: ID!
+  name: String
+  description: String
+  location: String
+  createdAt: String
+  updatedAt: String
+  startTimestamp: String
+  endTimestamp: String
+  status: String
+  memberResponses: String
+  calendarEventOwnerId: ID
+  calendarEventGroupId: ID
+}
+
+input DeleteCalendarEventInput {
+  id: ID
+}
+
+input ModelCalendarEventConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  location: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  startTimestamp: ModelStringInput
+  endTimestamp: ModelStringInput
+  status: ModelStringInput
+  memberResponses: ModelStringInput
+  and: [ModelCalendarEventConditionInput]
+  or: [ModelCalendarEventConditionInput]
+  not: ModelCalendarEventConditionInput
 }
 
 type ModelUserGroupsConnection {
