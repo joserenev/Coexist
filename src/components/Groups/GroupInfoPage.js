@@ -5,13 +5,7 @@ import React, { useState, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import { Link } from "react-router-dom";
-
-import { getUser as getUserDetailsQuery } from "../../graphql/queries";
-import { Connect } from "aws-amplify-react";
-import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../../pages/Loading/LoadingPage";
-import { updateUser } from "../../api/Api";
 import User from "../User/User";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -40,7 +34,6 @@ import AddIcon from "@material-ui/icons/Add";
 import { QueryStatus } from "../../components/util/QueryUtil";
 
 import PubNub from "pubnub";
-import { PubNubProvider, PubNubConsumer } from "pubnub-react";
 
 const pubnub = new PubNub({
     publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",

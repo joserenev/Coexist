@@ -1,11 +1,7 @@
 // @flow
 
-import type { GroupTypeEnum } from "../util/GroupConstants";
-import type { MutationStatusEnum } from "../util/GroupConstants";
-import type QueryStatusEnum from "../../components/util/QueryUtil";
-
-import React, { useState } from "react";
-import { Typography, Button, TextField } from "@material-ui/core";
+import React, { useState, useCallback } from "react";
+import { Button, TextField } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -38,13 +34,19 @@ const localizer = momentLocalizer(moment);
 
 function CalendarPage(props): React.MixedElement {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const [eventOpen, setEventOpen] = React.useState(false);
-    const [eventTitle, setEventTitle] = React.useState("");
-    const [eventDescription, setEventDescription] = React.useState("");
+    const [open, setOpen] = useState(false);
+
+    const [eventOpen, setEventOpen] = useState(false);
+    const [eventTitle, setEventTitle] = useState("");
+    const [eventDescription, setEventDescription] = useState("");
+
+    const [newEventTitle, setNewEventTitle] = useState("");
+    const [newEventDescription, setNewEventDescription] = useState("");
+    const [newEventStart, setNewEventStart] = useState("");
+    const [newEventEnd, setNewEventEnd] = useState("");
 
     const groupID = props.match?.params?.groupID ?? "";
-    const dummyEvents = [
+    const [dummyEvents, setDummyEvents] = useState([
         {
             allDay: false,
             end: new Date("April 09, 2020 13:15:00"),
@@ -61,7 +63,11 @@ function CalendarPage(props): React.MixedElement {
                 "This is an all day event created by the people of the group",
             title: "All Day Event"
         }
-    ];
+    ]);
+
+    const addToDummyEvents = newEvent => {
+        setDummyEvents([...dummyEvents, newEvent]);
+    };
     const MyCalendar = props => (
         <div className={classes.calendarContainer}>
             <Calendar
@@ -84,13 +90,26 @@ function CalendarPage(props): React.MixedElement {
         setOpen(false);
         setEventOpen(false);
     };
-    const handleClickOpen = () => {
+    const handleClickOpen = ({ start, end }) => {
+        setNewEventStart(start);
+        setNewEventEnd(end);
         setOpen(true);
     };
     const handleEventOpen = (title, description) => {
         setEventTitle(title);
         setEventDescription(description);
         setEventOpen(true);
+    };
+    const handleSubmit = () => {
+        //Add new event title, description, and start, end
+        addToDummyEvents({
+            allDay: false,
+            end: newEventEnd,
+            start: newEventStart,
+            description: newEventDescription,
+            title: newEventTitle
+        });
+        handleClickClose();
     };
 
     return (
@@ -114,25 +133,35 @@ function CalendarPage(props): React.MixedElement {
                             Please enter the following details to create an
                             event.
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Event Name"
-                            fullWidth
-                        />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Event Description"
-                            fullWidth
-                        />
+                        <DialogContentText>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Event Name"
+                                fullWidth
+                                onChange={event =>
+                                    setNewEventTitle(event.target.value)
+                                }
+                            />
+                        </DialogContentText>
+                        <DialogContentText>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="Event Description"
+                                fullWidth
+                                onChange={event =>
+                                    setNewEventDescription(event.target.value)
+                                }
+                            />
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClickClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={handleClickClose} color="primary">
+                        <Button onClick={handleSubmit} color="primary">
                             Create Event
                         </Button>
                     </DialogActions>

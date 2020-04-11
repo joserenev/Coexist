@@ -1,40 +1,16 @@
 import React, { useState } from "react";
 // <img src={logo} alt="logo" className={classes.logotypeImage} />
-import {
-    Grid,
-    CircularProgress,
-    Typography,
-    Button,
-    Tabs,
-    Tab,
-    TextField,
-    Fade
-} from "@material-ui/core";
+import { Grid, Typography, Button, TextField } from "@material-ui/core";
 
-import { withRouter } from "react-router-dom";
-import { withStyles } from "@material-ui/styles";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 //import {Wrapper} from "./MessagePanelUI";
 
-import ReceiptIcon from "@material-ui/icons/Receipt";
 import Paper from "@material-ui/core/Paper";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import AcceptIcon from "@material-ui/icons/CheckCircle";
-import RejectIcon from "@material-ui/icons/Cancel";
-
-// import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
-// import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import PubNub from "pubnub";
 import { PubNubProvider, PubNubConsumer } from "pubnub-react";
 
 import firebase from "firebase";
-import {
-    sendMessage,
-    listenerForMessages,
-    deleteMessage
-} from "../../api/ChatApi";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -112,11 +88,9 @@ function MessagePanel(props): React.MixedElement {
         window.location.href.indexOf("/messages/") + 10
     );
     var groupMessageJSON = window.localStorage.getItem("GroupMessages") || "{}";
-    var groupMessages = JSON.parse(groupMessageJSON);
     var [messages, addMessage] = useState([]); //useState(groupMessages[realGroupId] || []);
     const [message, setMessage] = useState("");
     const classes = useStyles();
-    const groupID = props.match?.params?.groupID ?? "null group id";
     const { currentUserID = "" } = props;
     channels[0] = realGroupId;
 
@@ -131,11 +105,11 @@ function MessagePanel(props): React.MixedElement {
             var sender = snapshot.val().sender;
             var senderId = snapshot.val().senderId;
             var message = snapshot.val().message;
-			var timeSent = snapshot.val().timeSent;
+            var timeSent = snapshot.val().timeSent;
             var messageID = snapshot.key;
 
             for (var i = 0; i < messages.length; i++) {
-                if (messages[i].id == messageID) {
+                if (messages[i].id === messageID) {
                     return;
                 }
             }
@@ -144,73 +118,87 @@ function MessagePanel(props): React.MixedElement {
             messageObject.senderId = senderId;
             messageObject.message = message;
             messageObject.id = snapshot.key;
-			messageObject.timeSent = snapshot.val().timeSent;
-			
-			var valueStrings = [
-				"sender", "senderId", "message", "id", "timeSent"
-			];
-			
-			
-			
-			
-			for (var i = 0; i < messages.length - 1; i++)
-			{
-				for (var a = i + 1; a < messages.length; a++)
-				{
-					if (parseInt(messages[a].timeSent) < parseInt(messages[i].timeSent))
-					{
-						var tempObj = {};
-						
-						for (var o = 0; o < valueStrings.length; o++)
-						{
-							tempObj[valueStrings[o]] = messages[a][valueStrings[o]];
-							messages[a][valueStrings[o]] = messages[i][valueStrings[o]];
-							messages[i][valueStrings[o]] = tempObj[valueStrings[o]];
-						}
-					}
-					if (parseInt(messages[a].timeSent) > parseInt(messageObject.timeSent))
-					{
-						var tempObj = {};
-						for (var o = 0; o < valueStrings.length; o++)
-						{
-							tempObj[valueStrings[o]] = messages[a][valueStrings[o]];
-							messages[a][valueStrings[o]] = messageObject[valueStrings[o]];
-							messageObject[valueStrings[o]] = tempObj[valueStrings[o]];
-						}
-					}
-				}
-			}			
-			
-			//if (messages.length < 1) { console.log("Messages is blank with first value " + message); }
-			for (var i = 0; i < messages.length; i++)
-			{
-				if (snapshot.key == messages[i].id) { console.log("Message: " + messages[i].message + " duplicated!"); return; }
-			}
-			
-			
-			
-			console.log("Firebase received message: " + messageObject.message + ", length: " + messages.length);
-            addMessage([...messages, 
-					messageObject
-					]);
-					
-			for (var i = 0; i < messages.length - 1; i++)
-			{
-				for (var a = i + 1; a < messages.length; a++)
-				{
-					if (parseInt(messages[a].timeSent) < parseInt(messages[i].timeSent))
-					{
-						var tempObj = {};
-						
-						for (var o = 0; o < valueStrings.length; o++)
-						{
-							tempObj[valueStrings[o]] = messages[a][valueStrings[o]];
-							messages[a][valueStrings[o]] = messages[i][valueStrings[o]];
-							messages[i][valueStrings[o]] = tempObj[valueStrings[o]];
-						}
-					}
-				}
-			}
+            messageObject.timeSent = snapshot.val().timeSent;
+
+            var valueStrings = [
+                "sender",
+                "senderId",
+                "message",
+                "id",
+                "timeSent"
+            ];
+
+            for (var i = 0; i < messages.length - 1; i++) {
+                for (var a = i + 1; a < messages.length; a++) {
+                    if (
+                        parseInt(messages[a].timeSent) <
+                        parseInt(messages[i].timeSent)
+                    ) {
+                        var tempObj = {};
+
+                        for (var o = 0; o < valueStrings.length; o++) {
+                            tempObj[valueStrings[o]] =
+                                messages[a][valueStrings[o]];
+                            messages[a][valueStrings[o]] =
+                                messages[i][valueStrings[o]];
+                            messages[i][valueStrings[o]] =
+                                tempObj[valueStrings[o]];
+                        }
+                    }
+                    if (
+                        parseInt(messages[a].timeSent) >
+                        parseInt(messageObject.timeSent)
+                    ) {
+                        var tempObj = {};
+                        for (var o = 0; o < valueStrings.length; o++) {
+                            tempObj[valueStrings[o]] =
+                                messages[a][valueStrings[o]];
+                            messages[a][valueStrings[o]] =
+                                messageObject[valueStrings[o]];
+                            messageObject[valueStrings[o]] =
+                                tempObj[valueStrings[o]];
+                        }
+                    }
+                }
+            }
+
+            //if (messages.length < 1) { console.log("Messages is blank with first value " + message); }
+            for (var i = 0; i < messages.length; i++) {
+                if (snapshot.key === messages[i].id) {
+                    console.log(
+                        "Message: " + messages[i].message + " duplicated!"
+                    );
+                    return;
+                }
+            }
+
+            console.log(
+                "Firebase received message: " +
+                    messageObject.message +
+                    ", length: " +
+                    messages.length
+            );
+            addMessage([...messages, messageObject]);
+
+            for (var i = 0; i < messages.length - 1; i++) {
+                for (var a = i + 1; a < messages.length; a++) {
+                    if (
+                        parseInt(messages[a].timeSent) <
+                        parseInt(messages[i].timeSent)
+                    ) {
+                        var tempObj = {};
+
+                        for (var o = 0; o < valueStrings.length; o++) {
+                            tempObj[valueStrings[o]] =
+                                messages[a][valueStrings[o]];
+                            messages[a][valueStrings[o]] =
+                                messages[i][valueStrings[o]];
+                            messages[i][valueStrings[o]] =
+                                tempObj[valueStrings[o]];
+                        }
+                    }
+                }
+            }
             //this.setState({"messages": messages});
             // console.log("FIREBASE " + sender + ": " + message);
             // console.log("FIREBASE message id is: " + messageID);
@@ -218,22 +206,22 @@ function MessagePanel(props): React.MixedElement {
     //window.alert("Group id: " + groupID);
 
     const sendMessagePub = message => {
-		message = message.substr(0, 256);
-		var json = {};
-		json.message = userData.username + ": " + message;
-		json.timeSent = new Date().getTime();
-		json.uniqueId = Math.random();
-		json.notificationClass = "Message";
-		json.sender = userData.username;
-		json.senderId = userData.id;
-		json.groupId = realGroupId;
+        message = message.substr(0, 256);
+        var json = {};
+        json.message = userData.username + ": " + message;
+        json.timeSent = new Date().getTime();
+        json.uniqueId = Math.random();
+        json.notificationClass = "Message";
+        json.sender = userData.username;
+        json.senderId = userData.id;
+        json.groupId = realGroupId;
 
         let tempMessageObject = {
             sender: userData.username,
             senderId: userData.id,
             message: message,
-			key: Math.random() + "",
-			timeSent: new Date().getTime()
+            key: Math.random() + "",
+            timeSent: new Date().getTime()
         };
 
         ////Firebase code here/////
@@ -241,25 +229,26 @@ function MessagePanel(props): React.MixedElement {
             .database()
             .ref("Group/" + realGroupId)
             .push()
-            .set(tempMessageObject, function(error)
-			{
-				if (error)
-				{
-					var resp = window.confirm("There was an error sending the message: '" + message + "'. Retry sending?");
-					if (resp)
-					{
-						sendMessagePub(message);
-					}
-				}
-			});
-		
-		pubnub.publish(
-		  {
-			channel: channels[0],
-			message: json,
-		  },
-		  () => setMessage('')
-		);
+            .set(tempMessageObject, function(error) {
+                if (error) {
+                    var resp = window.confirm(
+                        "There was an error sending the message: '" +
+                            message +
+                            "'. Retry sending?"
+                    );
+                    if (resp) {
+                        sendMessagePub(message);
+                    }
+                }
+            });
+
+        pubnub.publish(
+            {
+                channel: channels[0],
+                message: json
+            },
+            () => setMessage("")
+        );
         /*pubnub.publish(
 		  {
 			channel: channels[0],
@@ -336,8 +325,12 @@ function MessagePanel(props): React.MixedElement {
                                                                 classes.messageSelf
                                                             }
                                                         >
-                                                            <Typography><b>
-                                                                {message.sender}</b>
+                                                            <Typography>
+                                                                <b>
+                                                                    {
+                                                                        message.sender
+                                                                    }
+                                                                </b>
                                                             </Typography>
                                                             <Typography>
                                                                 {
@@ -369,8 +362,10 @@ function MessagePanel(props): React.MixedElement {
                                                             classes.messages
                                                         }
                                                     >
-                                                        <Typography><b>
-                                                            {message.sender}</b>
+                                                        <Typography>
+                                                            <b>
+                                                                {message.sender}
+                                                            </b>
                                                         </Typography>
                                                         <Typography>
                                                             {message.message}
