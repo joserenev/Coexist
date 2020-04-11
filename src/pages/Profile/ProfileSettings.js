@@ -5,12 +5,6 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import { Link } from "react-router-dom";
-
-import { getUser as getUserDetailsQuery } from "../../graphql/queries";
-import { Connect } from "aws-amplify-react";
-import { graphqlOperation } from "aws-amplify";
-import LoadingPage from "../Loading/LoadingPage";
 import { updateUser } from "../../api/Api";
 
 import Snackbar from "@material-ui/core/Snackbar";

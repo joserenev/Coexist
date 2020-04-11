@@ -5,15 +5,9 @@ import { Menu } from "../../components/ChatComp/Menu/Menu";
 //import { ConversationMembers } from "features/conversationMembers/ConversationMembers/ConversationMembers";
 //import { JoinConversationDialog } from "features/joinedConversations/JoinConversationDialog/JoinConversationDialog";
 import styled from "styled-components/macro";
-import { Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import MessagePanel from "../Messages/MessagePanel";
 
-import {
-    sendMessage,
-    listenerForMessages,
-    deleteMessage
-} from "../../api/ChatApi";
+import { deleteMessage } from "../../api/ChatApi";
 
 const Wrapper = styled.div`
   display: flex;
