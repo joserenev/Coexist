@@ -17,10 +17,18 @@ function getTimeDifferenceInSeconds(date_1, date_2) {
     return (timeStamp_1.getTime() - timeStamp_2.getTime()) / 1000;
 }
 
+function convertToDateTimeLocalString(date) {
+    if (date === null || date === undefined) {
+        return null;
+    }
+    return date.toISOString().substring(0, 16);
+}
+
 export {
     getCurrentTimeStampString,
     getTimeDifferenceInSeconds,
-    getCurrentTimeDifferenceInSeconds
+    getCurrentTimeDifferenceInSeconds,
+    convertToDateTimeLocalString
 };
 
 export {

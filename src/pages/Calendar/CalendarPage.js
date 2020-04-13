@@ -1,16 +1,16 @@
 // @flow
 
-import React, { useState, useCallback } from "react";
-import { Button, TextField } from "@material-ui/core";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import React, { useState } from "react";
+import { Button } from "@material-ui/core";
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import CreateCalendarEventDialog from "./CreateCalendarEventDialog";
 
-import events from "./events";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import style from "react-big-calendar/lib/css/react-big-calendar.css";
 import ExampleControlSlot from "./ExampleControlSlot";
@@ -21,12 +21,18 @@ const useStyles = makeStyles(() => ({
     container: {
         backgroundColor: "#ecf0f1",
         padding: 40,
-        margin: 20
+        margin: 20,
+        textAlign: "center"
     },
 
     calendarContainer: {
         // backgroundColor: "#000000",
+        marginBottom: 40,
         minHeight: "400px"
+    },
+    createEventButton: {
+        width: 200,
+        display: "inline-block"
     }
 }));
 
@@ -34,18 +40,29 @@ const localizer = momentLocalizer(moment);
 
 function CalendarPage(props): React.MixedElement {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
 
-    const [eventOpen, setEventOpen] = useState(false);
+    const { currentUserID = "" } = props;
+    const groupID = props.match?.params?.groupID ?? "";
+
+    // Create New Event States
+    const [createEventDialogOpen, setCreateEventDialogOpen] = useState(false);
+    const [pickedEventStart, setPickedEventStart] = useState(null);
+    const [pickedEventEnd, setPickedEventEnd] = useState(null);
+    const handleCreateNewEventFromCalendar = ({ start, end }) => {
+        setPickedEventStart(start);
+        setPickedEventEnd(end);
+        setCreateEventDialogOpen(true);
+    };
+    const handleCreateNewEventFromButton = () => {
+        setPickedEventStart(null);
+        setPickedEventEnd(null);
+        setCreateEventDialogOpen(true);
+    };
+
+    // View Existing Event Detail States
+    const [eventDetailDialogOpen, setEventDialogOpen] = useState(false);
     const [eventTitle, setEventTitle] = useState("");
     const [eventDescription, setEventDescription] = useState("");
-
-    const [newEventTitle, setNewEventTitle] = useState("");
-    const [newEventDescription, setNewEventDescription] = useState("");
-    const [newEventStart, setNewEventStart] = useState("");
-    const [newEventEnd, setNewEventEnd] = useState("");
-
-    const groupID = props.match?.params?.groupID ?? "";
     const [dummyEvents, setDummyEvents] = useState([
         {
             allDay: false,
@@ -64,52 +81,13 @@ function CalendarPage(props): React.MixedElement {
             title: "All Day Event"
         }
     ]);
-
-    const addToDummyEvents = newEvent => {
-        setDummyEvents([...dummyEvents, newEvent]);
+    const handleEventDetailClose = () => {
+        setEventDialogOpen(false);
     };
-    const MyCalendar = props => (
-        <div className={classes.calendarContainer}>
-            <Calendar
-                selectable
-                localizer={localizer}
-                events={dummyEvents}
-                startAccessor="start"
-                endAccessor="end"
-                onSelectEvent={event =>
-                    handleEventOpen(event.title, event.description)
-                }
-                onSelectSlot={handleClickOpen}
-                style={{ height: 500 }}
-            />
-        </div>
-    );
-
-    const { currentUserID = "" } = props;
-    const handleClickClose = () => {
-        setOpen(false);
-        setEventOpen(false);
-    };
-    const handleClickOpen = ({ start, end }) => {
-        setNewEventStart(start);
-        setNewEventEnd(end);
-        setOpen(true);
-    };
-    const handleEventOpen = (title, description) => {
+    const handleEventDetailOpen = (title, description) => {
         setEventTitle(title);
         setEventDescription(description);
-        setEventOpen(true);
-    };
-    const handleSubmit = () => {
-        //Add new event title, description, and start, end
-        addToDummyEvents({
-            allDay: false,
-            end: newEventEnd,
-            start: newEventStart,
-            description: newEventDescription,
-            title: newEventTitle
-        });
-        handleClickClose();
+        setEventDialogOpen(true);
     };
 
     return (
@@ -119,56 +97,36 @@ function CalendarPage(props): React.MixedElement {
                     Click an event to see more info, or drag the mouse over the
                     calendar to select a date/time range.
                 </ExampleControlSlot.Entry>
-                <MyCalendar />
-                <Dialog
-                    open={open}
-                    onClose={handleClickClose}
-                    aria-labelledby="form-dialog-title"
+                <div className={classes.calendarContainer}>
+                    <Calendar
+                        selectable
+                        localizer={localizer}
+                        events={dummyEvents}
+                        startAccessor="start"
+                        endAccessor="end"
+                        onSelectEvent={event =>
+                            handleEventDetailOpen(
+                                event.title,
+                                event.description
+                            )
+                        }
+                        onSelectSlot={event => {
+                            handleCreateNewEventFromCalendar(event);
+                        }}
+                        style={{ height: 500 }}
+                    />
+                </div>
+                <Button
+                    className={classes.createEventButton}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCreateNewEventFromButton}
                 >
-                    <DialogTitle id="form-dialog-title">
-                        Create new event
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter the following details to create an
-                            event.
-                        </DialogContentText>
-                        <DialogContentText>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Event Name"
-                                fullWidth
-                                onChange={event =>
-                                    setNewEventTitle(event.target.value)
-                                }
-                            />
-                        </DialogContentText>
-                        <DialogContentText>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                label="Event Description"
-                                fullWidth
-                                onChange={event =>
-                                    setNewEventDescription(event.target.value)
-                                }
-                            />
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClickClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={handleSubmit} color="primary">
-                            Create Event
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    Create New Event
+                </Button>
                 <Dialog
-                    open={eventOpen}
-                    onClose={handleClickClose}
+                    open={eventDetailDialogOpen}
+                    onClose={handleEventDetailClose}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
@@ -180,11 +138,26 @@ function CalendarPage(props): React.MixedElement {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClickClose} color="primary">
+                        <Button
+                            onClick={handleEventDetailClose}
+                            color="primary"
+                        >
                             Ok
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <CreateCalendarEventDialog
+                    open={createEventDialogOpen}
+                    setOpen={setCreateEventDialogOpen}
+                    pickedEventStart={
+                        pickedEventStart === "" ? null : pickedEventStart
+                    }
+                    pickedEventEnd={
+                        pickedEventEnd === "" ? null : pickedEventEnd
+                    }
+                    currentUserID={currentUserID}
+                    groupID={groupID}
+                />
             </div>
         </div>
     );

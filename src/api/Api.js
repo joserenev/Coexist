@@ -564,3 +564,40 @@ export async function newReceiptCreatedUserIDListNotif(
             throw error;
         });
 }
+
+export async function createNewCalendarEvent(inputInfo) {
+    const eventInfo = {
+        ...inputInfo,
+        memberResponses: "{}"
+    };
+
+    console.log({
+        input: eventInfo
+    });
+    const promises = [
+        await API.graphql(
+            graphqlOperation(mutations.createCalendarEvent, {
+                input: eventInfo
+            })
+        )
+            .then(async response => {
+                // console.log("Event creation response: ", response);
+                return response;
+            })
+            .catch(err => {
+                console.error("Error creating Event", err);
+                throw err;
+            })
+    ];
+
+    //add calls for notification to be sent
+    return await Promise.all(promises)
+        .then(data => {
+            // console.log("Event creation success", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Event creation failed", error);
+            throw error;
+        });
+}
