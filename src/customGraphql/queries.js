@@ -158,3 +158,41 @@ export const getUserTransactionInfo = `query GetUserTransactionInfo($id: ID!) {
     }
   }
 }`;
+
+export const getGroupExpenses = `query GetGroup($id: ID!) {
+  getGroup(id: $id) {
+   	id
+    name
+    users(limit: 10000) {
+      items {
+        user{
+          id
+          name
+          username
+          pictureURL
+        }
+      }
+    }
+    events {
+      items {
+        id
+        name
+        description
+        location
+        createdAt
+        updatedAt
+        startTimestamp
+        endTimestamp
+        status
+        memberResponses
+        location
+        owner {
+          id
+          name
+          username
+          pictureURL
+        }
+      }
+    }
+  }
+}`;

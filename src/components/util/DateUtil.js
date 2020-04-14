@@ -21,7 +21,23 @@ function convertToDateTimeLocalString(date) {
     if (date === null || date === undefined) {
         return null;
     }
-    return date.toISOString().substring(0, 16);
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const mins = date.getMinutes();
+
+    return (
+        `${year}-` +
+        (month < 10 ? "0" : "") +
+        `${month}-` +
+        (day < 10 ? "0" : "") +
+        `${day}T` +
+        (hours < 10 ? "0" : "") +
+        `${hours}:` +
+        (mins < 10 ? "0" : "") +
+        `${mins}`
+    );
 }
 
 export {

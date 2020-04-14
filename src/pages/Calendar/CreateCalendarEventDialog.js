@@ -39,6 +39,10 @@ function CreateCalendarEventDialog({
     // UI State Variables
     const [errorMessage, setErrorMessage] = useState("");
     const [isErrorOpen, setErrorOpen] = useState(false);
+    const handleSnackBarClose = () => {
+        setErrorOpen(false);
+        setErrorMessage("");
+    };
 
     useEffect(() => {
         if (!open) {
@@ -235,7 +239,7 @@ function CreateCalendarEventDialog({
                             size="small"
                             aria-label="close"
                             color="inherit"
-                            onClick={handleClose}
+                            onClick={handleSnackBarClose}
                         >
                             <CloseIcon fontSize="small" />
                         </IconButton>

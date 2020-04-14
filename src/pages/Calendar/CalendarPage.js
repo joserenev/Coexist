@@ -1,14 +1,10 @@
 // @flow
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Button } from "@material-ui/core";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import CreateCalendarEventDialog from "./CreateCalendarEventDialog";
+import CalendarEventInfoDialog from "./CalendarEventInfoDialog";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -26,7 +22,6 @@ const useStyles = makeStyles(() => ({
     },
 
     calendarContainer: {
-        // backgroundColor: "#000000",
         marginBottom: 40,
         minHeight: "400px"
     },
@@ -36,13 +31,35 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
+function getEventListFromRawItemList(items) {
+    return items
+        .filter(item => {
+            return item !== null && item !== undefined;
+        })
+        .map(item => {
+            return {
+                id: item.id,
+                end: new Date(item.endTimestamp),
+                start: new Date(item.startTimestamp),
+                description: item.description,
+                title: item.name,
+                status: item.status,
+                memberResponses: item.memberResponses,
+                location: item.location,
+                owner: item.owner
+            };
+        });
+}
+
 const localizer = momentLocalizer(moment);
 
-function CalendarPage(props): React.MixedElement {
+function CalendarPage({
+    currentUserID,
+    groupID,
+    rawItemList,
+    groupMembers
+}): React.MixedElement {
     const classes = useStyles();
-
-    const { currentUserID = "" } = props;
-    const groupID = props.match?.params?.groupID ?? "";
 
     // Create New Event States
     const [createEventDialogOpen, setCreateEventDialogOpen] = useState(false);
@@ -60,34 +77,15 @@ function CalendarPage(props): React.MixedElement {
     };
 
     // View Existing Event Detail States
-    const [eventDetailDialogOpen, setEventDialogOpen] = useState(false);
-    const [eventTitle, setEventTitle] = useState("");
-    const [eventDescription, setEventDescription] = useState("");
-    const [dummyEvents, setDummyEvents] = useState([
-        {
-            allDay: false,
-            end: new Date("April 09, 2020 13:15:00"),
-            start: new Date("April 09, 2020 11:15:00"),
-            description:
-                "This is a Miami retreat that will take place for a couple of days.",
-            title: "Miami retreat"
-        },
-        {
-            allDay: true,
-            end: new Date("April 04, 2020 11:15:00"),
-            start: new Date("April 04, 2020 11:15:00"),
-            description:
-                "This is an all day event created by the people of the group",
-            title: "All Day Event"
-        }
-    ]);
-    const handleEventDetailClose = () => {
-        setEventDialogOpen(false);
-    };
-    const handleEventDetailOpen = (title, description) => {
-        setEventTitle(title);
-        setEventDescription(description);
-        setEventDialogOpen(true);
+    const [eventDetailDialogOpen, setEventDetailDialogOpen] = useState(false);
+    const eventList = useCallback(
+        () => getEventListFromRawItemList(rawItemList),
+        [rawItemList]
+    );
+    const [currentSelectedEvent, setCurrentSelectedEvent] = useState(null);
+    const handleSelectEvent = event => {
+        setCurrentSelectedEvent(event);
+        setEventDetailDialogOpen(true);
     };
 
     return (
@@ -101,15 +99,10 @@ function CalendarPage(props): React.MixedElement {
                     <Calendar
                         selectable
                         localizer={localizer}
-                        events={dummyEvents}
+                        events={eventList()}
                         startAccessor="start"
                         endAccessor="end"
-                        onSelectEvent={event =>
-                            handleEventDetailOpen(
-                                event.title,
-                                event.description
-                            )
-                        }
+                        onSelectEvent={handleSelectEvent}
                         onSelectSlot={event => {
                             handleCreateNewEventFromCalendar(event);
                         }}
@@ -124,40 +117,30 @@ function CalendarPage(props): React.MixedElement {
                 >
                     Create New Event
                 </Button>
-                <Dialog
-                    open={eventDetailDialogOpen}
-                    onClose={handleEventDetailClose}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">
-                        {eventTitle}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {eventDescription}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            onClick={handleEventDetailClose}
-                            color="primary"
-                        >
-                            Ok
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                <CreateCalendarEventDialog
-                    open={createEventDialogOpen}
-                    setOpen={setCreateEventDialogOpen}
-                    pickedEventStart={
-                        pickedEventStart === "" ? null : pickedEventStart
-                    }
-                    pickedEventEnd={
-                        pickedEventEnd === "" ? null : pickedEventEnd
-                    }
-                    currentUserID={currentUserID}
-                    groupID={groupID}
-                />
+                {eventDetailDialogOpen && (
+                    <CalendarEventInfoDialog
+                        isDialogOpen={eventDetailDialogOpen}
+                        setIsDialogOpen={setEventDetailDialogOpen}
+                        event={currentSelectedEvent}
+                        currentUserID={currentUserID}
+                        groupID={groupID}
+                        groupMembers={groupMembers}
+                    />
+                )}
+                {createEventDialogOpen && (
+                    <CreateCalendarEventDialog
+                        open={createEventDialogOpen}
+                        setOpen={setCreateEventDialogOpen}
+                        pickedEventStart={
+                            pickedEventStart === "" ? null : pickedEventStart
+                        }
+                        pickedEventEnd={
+                            pickedEventEnd === "" ? null : pickedEventEnd
+                        }
+                        currentUserID={currentUserID}
+                        groupID={groupID}
+                    />
+                )}
             </div>
         </div>
     );

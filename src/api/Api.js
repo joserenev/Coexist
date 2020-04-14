@@ -568,12 +568,8 @@ export async function newReceiptCreatedUserIDListNotif(
 export async function createNewCalendarEvent(inputInfo) {
     const eventInfo = {
         ...inputInfo,
-        memberResponses: "{}"
+        memberResponses: "[]"
     };
-
-    console.log({
-        input: eventInfo
-    });
     const promises = [
         await API.graphql(
             graphqlOperation(mutations.createCalendarEvent, {
@@ -599,5 +595,65 @@ export async function createNewCalendarEvent(inputInfo) {
         .catch(error => {
             console.error("Event creation failed", error);
             throw error;
+        });
+}
+
+export async function updateCalendarEvent(inputInfo) {
+    const eventInfo = {
+        ...inputInfo,
+        memberResponses: "[]"
+    };
+    return await API.graphql(
+        graphqlOperation(mutations.updateCalendarEvent, {
+            input: eventInfo
+        })
+    )
+        .then(async response => {
+            // console.log("Event update response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error updating Event", err);
+            throw err;
+        });
+}
+
+export async function registerCalendarEventResponse(
+    calendarEventID,
+    userID,
+    userResponseEnum
+) {
+    return await API.graphql(
+        graphqlOperation(queries.getCalendarEvent, {
+            id: calendarEventID
+        })
+    )
+        .then(async response => {
+            const rawMemberResponses =
+                response?.data?.getCalendarEvent?.memberResponses ?? "[]";
+            const memberResponses = new Map(JSON.parse(rawMemberResponses));
+            memberResponses.set(userID, userResponseEnum);
+            return await API.graphql(
+                graphqlOperation(mutations.updateCalendarEvent, {
+                    input: {
+                        id: calendarEventID,
+                        memberResponses: JSON.stringify(
+                            Array.from(memberResponses.entries())
+                        )
+                    }
+                })
+            )
+                .then(async response => {
+                    // console.log("Responding to event successgful ", response);
+                    return response;
+                })
+                .catch(err => {
+                    console.error("Error responding to Event", err);
+                    throw err;
+                });
+        })
+        .catch(err => {
+            console.error("Error fetching Event", err);
+            throw err;
         });
 }

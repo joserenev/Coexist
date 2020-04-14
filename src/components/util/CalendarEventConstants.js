@@ -4,4 +4,10 @@ const CalendarEventStatusEnum = {
     NOTIF_SENT: "NOTIF_SENT"
 };
 
-export { CalendarEventStatusEnum };
+const CalendarEventResponseEnum = {
+    ATTENDING: "ATTENDING",
+    NOT_ATTENDING: "NOT_ATTENDING",
+    MAYBE: "MAYBE"
+};
+
+export { CalendarEventStatusEnum, CalendarEventResponseEnum };
