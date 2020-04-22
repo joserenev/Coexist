@@ -159,7 +159,7 @@ export const getUserTransactionInfo = `query GetUserTransactionInfo($id: ID!) {
   }
 }`;
 
-export const getGroupExpenses = `query GetGroup($id: ID!) {
+export const getGroupCalendarEvents = `query GetGroup($id: ID!) {
   getGroup(id: $id) {
    	id
     name

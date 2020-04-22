@@ -3,7 +3,7 @@ import CalendarPage from "./CalendarPage.js";
 import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import LoadingPage from "../../pages/Loading/LoadingPage";
-import { getGroupExpenses } from "../../customGraphql/queries";
+import { getGroupCalendarEvents } from "../../customGraphql/queries";
 
 function CalendarContainer(props): React.MixedElement {
     const groupID = props.match?.params?.groupID ?? "";
@@ -11,7 +11,7 @@ function CalendarContainer(props): React.MixedElement {
 
     return (
         <Connect
-            query={graphqlOperation(getGroupExpenses, {
+            query={graphqlOperation(getGroupCalendarEvents, {
                 id: groupID
             })}
         >

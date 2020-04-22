@@ -87,6 +87,9 @@ function GroupHomePage(props): React.MixedElement {
     const navigateToCalendar = () => {
         history.push(`/calendar/${groupID}`);
     };
+    const navigateToTasks = () => {
+        history.push(`/tasks/${groupID}`);
+    };
 
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
@@ -162,6 +165,7 @@ function GroupHomePage(props): React.MixedElement {
                                 <TasksIcon
                                     fontSize="large"
                                     className={classes.largeIcons}
+                                    onClick={navigateToTasks}
                                 />
                             </div>
                         </div>

@@ -22,6 +22,7 @@ import ReferralPage from "../pages/Referral/ReferralPage.js";
 import ForgetPass from "../pages/ForgetPass/ForgetPass.js";
 import ExpensesPage from "../pages/Expenses/ExpensesPage.js";
 import CalendarContainer from "../pages/Calendar/CalendarContainer.js";
+import TasksContainer from "../pages/Tasks/TasksContainer.js";
 import MessagesPage from "../pages/Messages/MessagesPage.js";
 import Chat from "../pages/Chat/Chat.js";
 
@@ -276,6 +277,26 @@ function Main(props): React.MixedElement {
                                                 userID={userID}
                                             >
                                                 <CalendarContainer
+                                                    currentUserID={userID}
+                                                    {...props}
+                                                />
+                                            </ComponentContainer>
+                                        </>
+                                    );
+                                }}
+                            />
+                            <Route
+                                exact
+                                path="/tasks/:groupID"
+                                render={props => {
+                                    return (
+                                        <>
+                                            <ComponentContainer
+                                                isSideBarOpen={isSideBarOpen}
+                                                setSideBarOpen={setSideBarOpen}
+                                                userID={userID}
+                                            >
+                                                <TasksContainer
                                                     currentUserID={userID}
                                                     {...props}
                                                 />
