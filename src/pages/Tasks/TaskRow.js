@@ -12,8 +12,20 @@ import UncheckedImportantIcon from "@material-ui/icons/StarBorder";
 import CheckedImportantIcon from "@material-ui/icons/Star";
 import { yellow } from "@material-ui/core/colors";
 import Select from "@material-ui/core/Select";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Alert from "@material-ui/lab/Alert";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { TaskStatusEnum } from "../../components/util/TasksConstants";
+import {
+    updateTaskCompletion,
+    updateTaskImportance,
+    updateTaskAssignedUser
+} from "../../api/Api";
+
+const { INCOMPLETE, COMPLETE } = TaskStatusEnum;
 
 const useStyles = makeStyles(theme => ({
     rowContainer: {
@@ -30,124 +42,241 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function TaskRow({ groupMembers }) {
+function TaskRow({ groupMembers, task }) {
     const classes = useStyles();
 
-    const [isCompleted, setIsCompleted] = useState(false);
-    const [isImportant, setIsImportant] = useState(false);
-    const [assignedUser, setSelectedUser] = useState(null);
+    // Page Handling
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isErrorOpen, setErrorOpen] = useState(false);
 
-    const handleAssignedUserChange = useCallback(event => {
-        setSelectedUser(event.target.value);
-    }, []);
+    // State variables
+    const {
+        id = "",
+        name = "",
+        description = "",
+        isImportant = false,
+        dueDate = "",
+        status = INCOMPLETE,
+        assignedTo = {}
+    } = task;
+    const [isCompleted, setIsCompleted] = useState(status === COMPLETE);
+    const [isTaskImportant, setIsTaskImportant] = useState(
+        isImportant ?? false
+    );
+    const getAssignedGroupMember = () => {
+        if (assignedTo === null) {
+            return null;
+        }
+        return groupMembers.find(groupMember => {
+            return groupMember.id === assignedTo.id;
+        });
+    };
+    const [assignedUser, setSelectedUser] = useState(getAssignedGroupMember());
 
-    console.log({ groupMembers });
+    // Event handlers
+    const handleAssignedUserChange = useCallback(
+        async event => {
+            setSelectedUser(event.target.value);
+            if (
+                assignedTo !== null &&
+                event.target.value.id === assignedTo.id
+            ) {
+                return;
+            }
+            await updateTaskAssignedUser(id, event.target.value.id)
+                .then(res => {
+                    setErrorOpen(false);
+                    setErrorMessage("");
+                    window.location.reload(true);
+                })
+                .catch(err => {
+                    setErrorOpen(true);
+                    setErrorMessage(
+                        "Error occured while udpating assigned user. Please try again."
+                    );
+                });
+        },
+        [assignedTo, id]
+    );
+
+    const handleSetIsTaskImportant = useCallback(
+        async event => {
+            setIsTaskImportant(event.target.checked);
+            await updateTaskImportance(id, event.target.checked)
+                .then(res => {
+                    setErrorOpen(false);
+                    setErrorMessage("");
+                    window.location.reload(true);
+                })
+                .catch(err => {
+                    setErrorOpen(true);
+                    setErrorMessage(
+                        "Error occured while setting task importance. Please try again."
+                    );
+                });
+        },
+        [id]
+    );
+
+    const handleSetIsTaskCompleted = useCallback(
+        async event => {
+            setIsCompleted(event.target.checked);
+            await updateTaskCompletion(id, event.target.checked)
+                .then(res => {
+                    setErrorOpen(false);
+                    setErrorMessage("");
+                    window.location.reload(false);
+                })
+                .catch(err => {
+                    setErrorOpen(true);
+                    setErrorMessage(
+                        "Error occured while setting task importance. Please try again."
+                    );
+                });
+        },
+        [id]
+    );
 
     return (
-        <Paper className={classes.rowContainer}>
-            <Grid
-                container
-                direction="row"
-                justify="flex-start"
-                alignItems="center"
+        <>
+            <Paper className={classes.rowContainer}>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center"
+                >
+                    <Grid item xs={1} sm={1}>
+                        <Checkbox
+                            checked={isCompleted}
+                            checkedIcon={
+                                <CheckedIcon
+                                    color="primary"
+                                    style={{ fontSize: 28 }}
+                                />
+                            }
+                            icon={
+                                <UncheckedIcon
+                                    color="disabled"
+                                    style={{ fontSize: 28 }}
+                                />
+                            }
+                            onChange={handleSetIsTaskCompleted}
+                        />
+                    </Grid>
+                    <Grid item xs={2} sm={2}>
+                        <Typography>{name}</Typography>
+                    </Grid>
+                    <Grid item xs={3} sm={3}>
+                        <Typography>{description}</Typography>
+                    </Grid>
+                    <Grid item xs={3} sm={3}>
+                        <Select
+                            value={assignedUser}
+                            displayEmpty
+                            onChange={handleAssignedUserChange}
+                        >
+                            <MenuItem value={null} disabled>
+                                Not Assigned
+                            </MenuItem>
+                            {groupMembers.map(user => {
+                                const { name = "", pictureURL = "" } =
+                                    user ?? {};
+                                return (
+                                    <MenuItem key={user.id} value={user}>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justify="flex-start"
+                                            alignItems="center"
+                                        >
+                                            <Grid item xs={4} sm={4}>
+                                                {pictureURL == null ||
+                                                pictureURL === "" ? (
+                                                    <Avatar alt={name}>
+                                                        {name.charAt(0)}
+                                                    </Avatar>
+                                                ) : (
+                                                    <Avatar
+                                                        alt={name}
+                                                        src={pictureURL}
+                                                    ></Avatar>
+                                                )}
+                                            </Grid>
+                                            <Grid item xs={8} sm={8}>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    color="inherit"
+                                                >
+                                                    {user?.name ?? ""}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </Grid>
+                    <Grid item xs={2} sm={2}>
+                        <Typography>
+                            {dueDate !== null &&
+                                new Date(dueDate).toLocaleString()}
+                            {(dueDate === null || dueDate === "") &&
+                                "No due date specified"}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={1} sm={1}>
+                        <Checkbox
+                            checked={isTaskImportant}
+                            checkedIcon={
+                                <CheckedImportantIcon
+                                    style={{ fontSize: 28, color: yellow[500] }}
+                                />
+                            }
+                            icon={
+                                <UncheckedImportantIcon
+                                    color="disabled"
+                                    style={{ fontSize: 28 }}
+                                />
+                            }
+                            onChange={handleSetIsTaskImportant}
+                        />
+                    </Grid>
+                </Grid>
+            </Paper>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center"
+                }}
+                open={isErrorOpen}
+                onClose={() => {
+                    setErrorOpen(false);
+                }}
+                autoHideDuration={6000}
+                action={
+                    <React.Fragment>
+                        <IconButton
+                            size="small"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={() => setErrorOpen(false)}
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </React.Fragment>
+                }
             >
-                <Grid item xs={1} sm={1}>
-                    <Checkbox
-                        checked={isCompleted}
-                        checkedIcon={
-                            <CheckedIcon
-                                color="primary"
-                                style={{ fontSize: 28 }}
-                            />
-                        }
-                        icon={
-                            <UncheckedIcon
-                                color="disabled"
-                                style={{ fontSize: 28 }}
-                            />
-                        }
-                        onChange={event => {
-                            setIsCompleted(event.target.checked);
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={2} sm={2}>
-                    <Typography>Name</Typography>
-                </Grid>
-                <Grid item xs={3} sm={3}>
-                    <Typography>Description</Typography>
-                </Grid>
-                <Grid item xs={3} sm={3}>
-                    <Select
-                        value={assignedUser}
-                        displayEmpty
-                        onChange={handleAssignedUserChange}
-                    >
-                        <MenuItem value={null} disabled>
-                            Not Assigned
-                        </MenuItem>
-                        {groupMembers.map(item => {
-                            const { user = {} } = item ?? {};
-                            const { name = "", pictureURL = "" } = user ?? {};
-                            return (
-                                <MenuItem key={user.id} value={user}>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justify="flex-start"
-                                        alignItems="center"
-                                    >
-                                        <Grid item xs={4} sm={4}>
-                                            {pictureURL == null ||
-                                            pictureURL === "" ? (
-                                                <Avatar alt={name}>
-                                                    {name.charAt(0)}
-                                                </Avatar>
-                                            ) : (
-                                                <Avatar
-                                                    alt={name}
-                                                    src={pictureURL}
-                                                ></Avatar>
-                                            )}
-                                        </Grid>
-                                        <Grid item xs={8} sm={8}>
-                                            <Typography
-                                                variant="subtitle1"
-                                                color="inherit"
-                                            >
-                                                {user?.name ?? ""}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </MenuItem>
-                            );
-                        })}
-                    </Select>
-                </Grid>
-                <Grid item xs={2} sm={2}>
-                    <Typography>{new Date().toLocaleString()}</Typography>
-                </Grid>
-                <Grid item xs={1} sm={1}>
-                    <Checkbox
-                        checked={isImportant}
-                        checkedIcon={
-                            <CheckedImportantIcon
-                                style={{ fontSize: 28, color: yellow[500] }}
-                            />
-                        }
-                        icon={
-                            <UncheckedImportantIcon
-                                color="disabled"
-                                style={{ fontSize: 28 }}
-                            />
-                        }
-                        onChange={event => {
-                            setIsImportant(event.target.checked);
-                        }}
-                    />
-                </Grid>
-            </Grid>
-        </Paper>
+                <Alert
+                    onClose={() => {
+                        setErrorOpen(false);
+                    }}
+                    severity="error"
+                >
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
+        </>
     );
 }
 

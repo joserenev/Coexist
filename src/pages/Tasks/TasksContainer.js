@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import LoadingPage from "../../pages/Loading/LoadingPage";
-import { getGroupCalendarEvents } from "../../customGraphql/queries";
+import { getGroupTasks } from "../../customGraphql/queries";
 import TasksList from "./TasksList";
+import CreateTask from "./CreateTask";
+
+import AddIcon from "@material-ui/icons/Add";
+import { TaskStatusEnum } from "../../components/util/TasksConstants";
+const { COMPLETE } = TaskStatusEnum;
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
         backgroundColor: "#ecf0f1",
         padding: 40,
         margin: 20
+    },
+    addButton: {
+        float: "right"
     }
 }));
 
@@ -20,10 +28,16 @@ function TasksContainer(props): React.MixedElement {
     const classes = useStyles();
     const groupID = props.match?.params?.groupID ?? "";
     const { currentUserID = "" } = props;
+    const [isDialogOpen, setDialogOpen] = useState(false);
+
+    // Action handlers
+    const handleCreateTask = () => {
+        setDialogOpen(true);
+    };
 
     return (
         <Connect
-            query={graphqlOperation(getGroupCalendarEvents, {
+            query={graphqlOperation(getGroupTasks, {
                 id: groupID
             })}
         >
@@ -35,22 +49,48 @@ function TasksContainer(props): React.MixedElement {
                 if (loading) {
                     return <LoadingPage />;
                 }
-                const groupMembers = data?.getGroup?.users?.items ?? [];
+                const rawGroupMembers = data?.getGroup?.users?.items ?? [];
+                const groupMembers = rawGroupMembers.map(item => {
+                    return item.user;
+                });
+
+                const tasks = data?.getGroup?.tasks?.items ?? [];
+                const incompleteTasks = tasks.filter(task => {
+                    return task.status !== COMPLETE;
+                });
+                const completeTasks = tasks.filter(task => {
+                    return task.status === COMPLETE;
+                });
+
                 return (
                     <>
                         <div className={classes.headContainer}>
+                            <AddIcon
+                                fontSize="large"
+                                className={classes.addButton}
+                                onClick={handleCreateTask}
+                            />
                             <Typography variant="h2" gutterBottom>
                                 Group Tasks
                             </Typography>
                             <TasksList
                                 groupMembers={groupMembers}
-                                header="Completed Tasks:"
+                                header="Incomplete Tasks:"
+                                tasks={incompleteTasks}
                             />
                             <TasksList
                                 groupMembers={groupMembers}
-                                header="Incomplete Tasks:"
+                                header="Completed Tasks:"
+                                tasks={completeTasks}
                             />
                         </div>
+                        <CreateTask
+                            currentUserID={currentUserID}
+                            groupID={groupID}
+                            isDialogOpen={isDialogOpen}
+                            setDialogOpen={setDialogOpen}
+                            groupMembers={groupMembers}
+                        />
                     </>
                 );
             }}

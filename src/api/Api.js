@@ -20,6 +20,9 @@ import {
 import { getCurrentTimeStampString } from "../components/util/DateUtil";
 
 import { ApprovalStatus } from "../components/util/ExpenseApprovalUtil";
+
+import { TaskStatusEnum } from "../components/util/TasksConstants";
+
 const { EMAIL } = ReferralMedium;
 //Retrieves current logged-in User Object data from DynamoDB.
 export async function getUser() {
@@ -654,6 +657,104 @@ export async function registerCalendarEventResponse(
         })
         .catch(err => {
             console.error("Error fetching Event", err);
+            throw err;
+        });
+}
+
+export async function createNewTask(inputInfo) {
+    const eventInfo = {
+        ...inputInfo,
+        status: TaskStatusEnum.INCOMPLETE
+    };
+    const promises = [
+        await API.graphql(
+            graphqlOperation(mutations.createTask, {
+                input: eventInfo
+            })
+        )
+            .then(async response => {
+                // console.log("task creation response: ", response);
+                return response;
+            })
+            .catch(err => {
+                console.error("Error creating Task", err);
+                throw err;
+            })
+    ];
+
+    //add calls for notification to be sent
+    return await Promise.all(promises)
+        .then(data => {
+            // console.log("task creation success", { data });
+            return data;
+        })
+        .catch(error => {
+            console.error("Task creation failed", error);
+            throw error;
+        });
+}
+
+export async function updateTaskCompletion(taskID, isCompleted) {
+    const eventInfo = {
+        id: taskID,
+        status: isCompleted
+            ? TaskStatusEnum.COMPLETE
+            : TaskStatusEnum.INCOMPLETE
+    };
+
+    return await API.graphql(
+        graphqlOperation(mutations.updateTask, {
+            input: eventInfo
+        })
+    )
+        .then(async response => {
+            // console.log("task update status response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error updating task status", err);
+            throw err;
+        });
+}
+
+export async function updateTaskImportance(taskID, isImportant) {
+    const eventInfo = {
+        id: taskID,
+        isImportant
+    };
+
+    return await API.graphql(
+        graphqlOperation(mutations.updateTask, {
+            input: eventInfo
+        })
+    )
+        .then(async response => {
+            // console.log("task update importance response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error updating task importance", err);
+            throw err;
+        });
+}
+
+export async function updateTaskAssignedUser(taskID, assignedUserID) {
+    const eventInfo = {
+        id: taskID,
+        taskAssignedToId: assignedUserID
+    };
+
+    return await API.graphql(
+        graphqlOperation(mutations.updateTask, {
+            input: eventInfo
+        })
+    )
+        .then(async response => {
+            // console.log("task update assigned to response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error updating task assigned to", err);
             throw err;
         });
 }

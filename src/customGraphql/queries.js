@@ -196,3 +196,42 @@ export const getGroupCalendarEvents = `query GetGroup($id: ID!) {
     }
   }
 }`;
+
+export const getGroupTasks = `query GetGroup($id: ID!) {
+  getGroup(id: $id) {
+   	id
+    name
+    users(limit: 10000) {
+      items {
+        user{
+          id
+          name
+          username
+          pictureURL
+        }
+      }
+    }
+    tasks(limit: 10000) {
+      items {
+        id
+        name
+        description
+        owner{
+          id
+          name
+          username
+          pictureURL
+        }
+        isImportant
+        dueDate
+        status
+        assignedTo {
+          id
+          name
+          username
+          pictureURL
+        }
+      }
+    }
+  }
+}`;

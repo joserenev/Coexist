@@ -25,7 +25,26 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function TasksList({ header, groupMembers }) {
+function taskSortFunction(task1, task2) {
+    if (task1.isImportant && !task2.isImportant) {
+        return -1;
+    }
+    if (!task1.isImportant && task2.isImportant) {
+        return 1;
+    }
+    if (task1.dueDate !== null && task2.dueDate === null) {
+        return -1;
+    }
+    if (task1.dueDate === null && task2.dueDate !== null) {
+        return 1;
+    }
+    if (task1.dueDate !== null && task2.dueDate !== null) {
+        return task1.dueDate.localeCompare(task2.dueDate);
+    }
+    return task1.name.localeCompare(task2.name);
+}
+
+function TasksList({ header, groupMembers, tasks }) {
     const classes = useStyles();
 
     return (
@@ -34,14 +53,12 @@ function TasksList({ header, groupMembers }) {
                 <Typography variant="subtitle1">{header}</Typography>
             </div>
             <div className={classes.taskList}>
-                <TaskRow groupMembers={groupMembers} />
-                <TaskRow groupMembers={groupMembers} />
-                <TaskRow groupMembers={groupMembers} />
-                <TaskRow groupMembers={groupMembers} />
-                <TaskRow groupMembers={groupMembers} />
-                <TaskRow groupMembers={groupMembers} />
-                <TaskRow groupMembers={groupMembers} />
-                <TaskRow groupMembers={groupMembers} />
+                {tasks.length === 0 && (
+                    <Typography variant="subtitle1">No tasks found.</Typography>
+                )}
+                {tasks.sort(taskSortFunction).map(task => {
+                    return <TaskRow task={task} groupMembers={groupMembers} />;
+                })}
             </div>
         </div>
     );
