@@ -758,3 +758,19 @@ export async function updateTaskAssignedUser(taskID, assignedUserID) {
             throw err;
         });
 }
+
+export async function updateTask(input) {
+    return await API.graphql(
+        graphqlOperation(mutations.updateTask, {
+            input
+        })
+    )
+        .then(async response => {
+            // console.log("task update response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error updating task", err);
+            throw err;
+        });
+}

@@ -16,6 +16,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Alert from "@material-ui/lab/Alert";
+import EditIcon from "@material-ui/icons/Edit";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { TaskStatusEnum } from "../../components/util/TasksConstants";
@@ -25,13 +26,15 @@ import {
     updateTaskAssignedUser
 } from "../../api/Api";
 
+import UpdateTask from "./UpdateTask";
+
 const { INCOMPLETE, COMPLETE } = TaskStatusEnum;
 
 const useStyles = makeStyles(theme => ({
     rowContainer: {
         padding: 4,
         margin: 2,
-        minWidth: "80vw"
+        width: "100%"
     },
     userSelectItem: {
         flexDirection: "row",
@@ -63,15 +66,18 @@ function TaskRow({ groupMembers, task }) {
     const [isTaskImportant, setIsTaskImportant] = useState(
         isImportant ?? false
     );
-    const getAssignedGroupMember = () => {
+    const getAssignedGroupMember = useCallback(() => {
         if (assignedTo === null) {
             return null;
         }
         return groupMembers.find(groupMember => {
             return groupMember.id === assignedTo.id;
         });
-    };
+    }, [assignedTo, groupMembers]);
     const [assignedUser, setSelectedUser] = useState(getAssignedGroupMember());
+
+    // Update Task Dialog
+    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
 
     // Event handlers
     const handleAssignedUserChange = useCallback(
@@ -130,7 +136,7 @@ function TaskRow({ groupMembers, task }) {
                 .catch(err => {
                     setErrorOpen(true);
                     setErrorMessage(
-                        "Error occured while setting task importance. Please try again."
+                        "Error occured while updating task completion. Please try again."
                     );
                 });
         },
@@ -165,12 +171,12 @@ function TaskRow({ groupMembers, task }) {
                         />
                     </Grid>
                     <Grid item xs={2} sm={2}>
-                        <Typography>{name}</Typography>
+                        <Typography noWrap>{name}</Typography>
                     </Grid>
                     <Grid item xs={3} sm={3}>
-                        <Typography>{description}</Typography>
+                        <Typography noWrap>{description}</Typography>
                     </Grid>
-                    <Grid item xs={3} sm={3}>
+                    <Grid item xs={2} sm={2}>
                         <Select
                             value={assignedUser}
                             displayEmpty
@@ -222,7 +228,7 @@ function TaskRow({ groupMembers, task }) {
                             {dueDate !== null &&
                                 new Date(dueDate).toLocaleString()}
                             {(dueDate === null || dueDate === "") &&
-                                "No due date specified"}
+                                "No due date"}
                         </Typography>
                     </Grid>
                     <Grid item xs={1} sm={1}>
@@ -240,6 +246,16 @@ function TaskRow({ groupMembers, task }) {
                                 />
                             }
                             onChange={handleSetIsTaskImportant}
+                        />
+                    </Grid>
+                    <Grid item xs={1} sm={1}>
+                        <EditIcon
+                            color="primary"
+                            style={{ fontSize: 24 }}
+                            onClick={() => {
+                                setIsUpdateDialogOpen(true);
+                            }}
+                            task={task}
                         />
                     </Grid>
                 </Grid>
@@ -276,6 +292,14 @@ function TaskRow({ groupMembers, task }) {
                     {errorMessage}
                 </Alert>
             </Snackbar>
+            {isUpdateDialogOpen && (
+                <UpdateTask
+                    isDialogOpen={isUpdateDialogOpen}
+                    setDialogOpen={setIsUpdateDialogOpen}
+                    groupMembers={groupMembers}
+                    task={task}
+                />
+            )}
         </>
     );
 }
