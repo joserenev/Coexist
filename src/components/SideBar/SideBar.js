@@ -26,6 +26,7 @@ import Grid from "@material-ui/core/Grid";
 import ProfileIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import EditAttributes from "@material-ui/icons/EditAttributes";
+import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -209,6 +210,18 @@ function SideBar({
                         >
                             Coexist
                         </Typography>
+                        <IconButton
+                            component={Link}
+                            to="/homepage"
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="end"
+                            onClick={handleDrawerClose}
+                            //className={clsx(isSideBarOpen && classes.hide)}
+                        >
+                            <HomeTwoToneIcon />
+                        </IconButton>
+
                     </Toolbar>
                 </AppBar>
             </ClickAwayListener>
