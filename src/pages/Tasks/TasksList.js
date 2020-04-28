@@ -44,7 +44,7 @@ function taskSortFunction(task1, task2) {
     return task1.name.localeCompare(task2.name);
 }
 
-function TasksList({ header, groupMembers, tasks }) {
+function TasksList({ header, groupMembers, tasks, currentUserID }) {
     const classes = useStyles();
 
     return (
@@ -57,7 +57,13 @@ function TasksList({ header, groupMembers, tasks }) {
                     <Typography variant="subtitle1">No tasks found.</Typography>
                 )}
                 {tasks.sort(taskSortFunction).map(task => {
-                    return <TaskRow task={task} groupMembers={groupMembers} />;
+                    return (
+                        <TaskRow
+                            task={task}
+                            groupMembers={groupMembers}
+                            currentUserID={currentUserID}
+                        />
+                    );
                 })}
             </div>
         </div>

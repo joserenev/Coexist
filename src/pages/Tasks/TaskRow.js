@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function TaskRow({ groupMembers, task }) {
+function TaskRow({ groupMembers, task, currentUserID }) {
     const classes = useStyles();
 
     // Page Handling
@@ -66,6 +66,7 @@ function TaskRow({ groupMembers, task }) {
     const [isTaskImportant, setIsTaskImportant] = useState(
         isImportant ?? false
     );
+
     const getAssignedGroupMember = useCallback(() => {
         if (assignedTo === null) {
             return null;
@@ -75,6 +76,13 @@ function TaskRow({ groupMembers, task }) {
         });
     }, [assignedTo, groupMembers]);
     const [assignedUser, setSelectedUser] = useState(getAssignedGroupMember());
+
+    const isCurrentUserAssigned = useCallback(() => {
+        if (assignedUser === null) {
+            return false;
+        }
+        return assignedUser.id === currentUserID;
+    }, [assignedUser, currentUserID]);
 
     // Update Task Dialog
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
@@ -168,6 +176,7 @@ function TaskRow({ groupMembers, task }) {
                                 />
                             }
                             onChange={handleSetIsTaskCompleted}
+                            disabled={isCurrentUserAssigned()}
                         />
                     </Grid>
                     <Grid item xs={2} sm={2}>

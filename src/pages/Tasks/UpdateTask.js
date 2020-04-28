@@ -5,7 +5,7 @@ import React, { useState, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import { updateTask } from "../../api/Api";
+import { updateTask, deleteTask } from "../../api/Api";
 import Avatar from "@material-ui/core/Avatar";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -52,6 +52,10 @@ const useStyles = makeStyles(theme => ({
     },
     assignRandomlyButton: {
         float: "right"
+    },
+    deleteButton: {
+        margin: "0  40%",
+        width: 120
     }
 }));
 
@@ -235,6 +239,20 @@ function UpdateTask({
         prevName
     ]);
 
+    const handleDeleteTask = useCallback(async () => {
+        await deleteTask(id)
+            .then(res => {
+                setErrorOpen(false);
+                setErrorMessage("");
+                handleClose();
+                window.location.reload(true);
+            })
+            .catch(err => {
+                setErrorOpen(true);
+                setErrorMessage("Failed to delete task");
+            });
+    }, [handleClose, id]);
+
     return (
         <div>
             <Dialog
@@ -374,13 +392,18 @@ function UpdateTask({
                             </Link>
                         </div>
                     </DialogContentText>
+                    <DialogContentText>
+                        <Button
+                            className={classes.deleteButton}
+                            onClick={handleDeleteTask}
+                            color="secondary"
+                        >
+                            DELETE TASK
+                        </Button>
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={handleClose}
-                        color="secondary"
-                        variant="outlined"
-                    >
+                    <Button onClick={handleClose} variant="outlined">
                         CANCEL
                     </Button>
                     <Button
@@ -391,7 +414,6 @@ function UpdateTask({
                     >
                         UPDATE TASK
                     </Button>
-
                     <Snackbar
                         anchorOrigin={{
                             vertical: "bottom",
