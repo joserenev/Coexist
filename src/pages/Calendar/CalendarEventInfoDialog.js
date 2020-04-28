@@ -88,7 +88,7 @@ function CalendarEventInfoDialog({
     );
     const [updatedEventLocation, setUpdatedEventLocation] = useState(location);
     const [updatedEventNotifEnabled, setUpdatedEventNotifEnabled] = useState(
-        status === NOTIF_REQUIRED
+        status !== NOTIF_NOT_REQUIRED
     );
     const memberResponses = new Map(JSON.parse(rawMemberResponses ?? "[]"));
 
