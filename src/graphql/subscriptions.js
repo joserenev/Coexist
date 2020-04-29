@@ -25,6 +25,7 @@ export const onCreateUser = `subscription OnCreateUser {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -60,6 +61,7 @@ export const onUpdateUser = `subscription OnUpdateUser {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -95,6 +97,7 @@ export const onDeleteUser = `subscription OnDeleteUser {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -368,6 +371,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -462,6 +466,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -556,6 +561,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -1029,6 +1035,7 @@ export const onCreateTask = `subscription OnCreateTask {
     status
     isImportant
     notifStatus
+    expenditureMap
   }
 }
 `;
@@ -1118,6 +1125,7 @@ export const onUpdateTask = `subscription OnUpdateTask {
     status
     isImportant
     notifStatus
+    expenditureMap
   }
 }
 `;
@@ -1207,6 +1215,7 @@ export const onDeleteTask = `subscription OnDeleteTask {
     status
     isImportant
     notifStatus
+    expenditureMap
   }
 }
 `;

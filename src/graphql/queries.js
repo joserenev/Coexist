@@ -25,6 +25,7 @@ export const getUser = `query GetUser($id: ID!) {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -137,6 +138,7 @@ export const getGroup = `query GetGroup($id: ID!) {
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -495,6 +497,7 @@ export const getTask = `query GetTask($id: ID!) {
     status
     isImportant
     notifStatus
+    expenditureMap
   }
 }
 `;
@@ -550,6 +553,7 @@ export const listTasks = `query ListTasks(
       status
       isImportant
       notifStatus
+      expenditureMap
     }
     nextToken
   }

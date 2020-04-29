@@ -28,6 +28,7 @@ export const createUser = `mutation CreateUser(
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -66,6 +67,7 @@ export const updateUser = `mutation UpdateUser(
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -104,6 +106,7 @@ export const deleteUser = `mutation DeleteUser(
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -389,6 +392,7 @@ export const createGroup = `mutation CreateGroup(
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -486,6 +490,7 @@ export const updateGroup = `mutation UpdateGroup(
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -583,6 +588,7 @@ export const deleteGroup = `mutation DeleteGroup(
         status
         isImportant
         notifStatus
+        expenditureMap
       }
       nextToken
     }
@@ -1077,6 +1083,7 @@ export const createTask = `mutation CreateTask(
     status
     isImportant
     notifStatus
+    expenditureMap
   }
 }
 `;
@@ -1169,6 +1176,7 @@ export const updateTask = `mutation UpdateTask(
     status
     isImportant
     notifStatus
+    expenditureMap
   }
 }
 `;
@@ -1261,6 +1269,7 @@ export const deleteTask = `mutation DeleteTask(
     status
     isImportant
     notifStatus
+    expenditureMap
   }
 }
 `;
