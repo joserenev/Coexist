@@ -10,7 +10,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Paper from "@material-ui/core/Paper";
 import UncheckedImportantIcon from "@material-ui/icons/StarBorder";
 import CheckedImportantIcon from "@material-ui/icons/Star";
-import { yellow } from "@material-ui/core/colors";
+import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import { red } from "@material-ui/core/colors";
 import Select from "@material-ui/core/Select";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -235,16 +236,21 @@ function TaskRow({ groupMembers, task }) {
                         <Checkbox
                             checked={isTaskImportant}
                             checkedIcon={
-                                <CheckedImportantIcon
-                                    style={{ fontSize: 28, color: yellow[500] }}
+                               // <CheckedImportantIcon
+                               //     style={{ fontSize: 28, color: yellow[500] }}
+                               // />
+                               <PriorityHighIcon
+                                    style={{ fontSize: 28, color: red[500] }}
                                 />
                             }
                             icon={
-                                <UncheckedImportantIcon
+                                <PriorityHighIcon
                                     color="disabled"
                                     style={{ fontSize: 28 }}
                                 />
+                                
                             }
+                            
                             onChange={handleSetIsTaskImportant}
                         />
                     </Grid>
