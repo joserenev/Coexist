@@ -17,6 +17,15 @@ import { createNewCalendarEvent } from "../../api/Api";
 import { convertToDateTimeLocalString } from "../../components/util/DateUtil";
 import { CalendarEventStatusEnum } from "../../components/util/CalendarEventConstants";
 
+import PubNub from "pubnub";
+import { PubNubProvider, PubNubConsumer } from "pubnub-react";
+const pubnub = new PubNub({
+    publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+    subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+    uuid: "12445"
+});
+var channels = []; ////change to group id
+
 const { NOTIF_REQUIRED, NOTIF_NOT_REQUIRED } = CalendarEventStatusEnum;
 
 function CreateCalendarEventDialog({
@@ -42,6 +51,33 @@ function CreateCalendarEventDialog({
     const handleSnackBarClose = () => {
         setErrorOpen(false);
         setErrorMessage("");
+    };
+	
+	//notification stuff
+    var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
+    var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+    var groups = JSON.parse(groupJSON);
+    var userData = JSON.parse(userDataJSON);
+    channels[0] = groupID;
+    const [messages, addMessage] = useState([]);
+    const [message, setMessage] = useState("");
+    const sendMessage = message => {
+        var json = {};
+        json.message = userData.username + " " + message;
+        json.timeSent = new Date().getTime();
+        json.uniqueId = Math.random();
+        json.notificationClass = "Calendar";
+        json.sender = userData.username;
+        json.groupId = groupID;
+        json.currentUserId = currentUserID;
+
+        pubnub.publish(
+            {
+                channel: channels[0],
+                message: json
+            },
+            () => setMessage("")
+        );
     };
 
     useEffect(() => {
@@ -91,7 +127,7 @@ function CreateCalendarEventDialog({
         if (!isEntryValid()) {
             return;
         }
-
+		sendMessage("created a new event: '" + newEventName + "' at time " + new Date(newEventStart));
         await createNewCalendarEvent({
             name: newEventName,
             description: newEventDescription,

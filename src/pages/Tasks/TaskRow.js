@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function TaskRow({ groupMembers, task, currentUserID }) {
+function TaskRow({ groupID, groupMembers, task, currentUserID }) {
     const classes = useStyles();
 
     // Page Handling
@@ -306,6 +306,7 @@ function TaskRow({ groupMembers, task, currentUserID }) {
                     isDialogOpen={isUpdateDialogOpen}
                     setDialogOpen={setIsUpdateDialogOpen}
                     groupMembers={groupMembers}
+					groupID={groupID}
                     task={task}
                 />
             )}

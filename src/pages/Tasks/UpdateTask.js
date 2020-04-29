@@ -27,6 +27,15 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import { convertToDateTimeLocalString } from "../../components/util/DateUtil";
 
+import PubNub from "pubnub";
+import { PubNubProvider, PubNubConsumer } from "pubnub-react";
+const pubnub = new PubNub({
+    publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+    subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+    uuid: "12445"
+});
+var channels = []; ////change to group id
+
 const useStyles = makeStyles(theme => ({
     fields: {
         display: "flex",
@@ -67,7 +76,8 @@ function UpdateTask({
     isDialogOpen,
     setDialogOpen,
     groupMembers,
-    task
+    task,
+	groupID
 }): React.MixedElement {
     const classes = useStyles();
 
@@ -104,6 +114,51 @@ function UpdateTask({
     const [isTaskImportant, setIsTaskImportant] = useState(
         isImportant ?? false
     );
+	
+	//notification stuff
+    var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
+    var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+    var groups = JSON.parse(groupJSON);
+    var userData = JSON.parse(userDataJSON);
+    channels[0] = groupID;
+    const [messages, addMessage] = useState([]);
+    const [message, setMessage] = useState("");
+    const sendMessage = message => {
+        var json = {};
+        json.message = userData.username + " " + message;
+        json.timeSent = new Date().getTime();
+        json.uniqueId = Math.random();
+        json.notificationClass = "Task Update";
+        json.sender = userData.username;
+        json.groupId = groupID;
+        json.currentUserId = userData.UserId;
+
+        pubnub.publish(
+            {
+                channel: channels[0],
+                message: json
+            },
+            () => setMessage("")
+        );
+    };
+	const sendMessageToChannel = messageData => {
+        var json = {};
+        json.message = userData.username + " " + messageData.message;
+        json.timeSent = new Date().getTime();
+        json.uniqueId = Math.random();
+        json.notificationClass = "Task Update";
+        json.sender = userData.username;
+        json.groupId = groupID;
+        json.currentUserId = userData.UserId;
+
+        pubnub.publish(
+            {
+                channel: messageData.channel,
+                message: json
+            },
+            () => setMessage("")
+        );
+    };
 
     //Event handlers
     const handleAssignedUserChange = useCallback(event => {
@@ -177,19 +232,22 @@ function UpdateTask({
             id
         };
         if (name !== prevName) {
+			sendMessage("changed the task name from '" + prevName + "' to '" + name + "'");
             inputInfo = {
                 ...inputInfo,
                 name
             };
         }
         if (description !== prevDescription) {
+			sendMessage("changed the task description of '" + name + "'");
             inputInfo = {
                 ...inputInfo,
                 description
             };
         }
 
-        if (prevDueDate !== dueDate) {
+        if (prevDueDate !== dueDate && (prevDueDate != undefined || dueDate != undefined) && !(prevDueDate == null && dueDate == "")) {
+			sendMessage("changed the task due date of '" + name + "' from '" + prevDueDate + "' to '" + dueDate + "'");
             inputInfo = {
                 ...inputInfo,
                 dueDate: dueDate === "" ? null : new Date(dueDate).toISOString()
@@ -201,12 +259,18 @@ function UpdateTask({
                 assignedTo !== null &&
                 assignedUser.id !== assignedTo.id)
         ) {
+			sendMessage("changed who the '" + name + "' task was assigned to");
+			var messageData = {}
+			messageData.message = "changed who the '" + name + "' task is assigned to to you";
+			messageData.channel = assignedUser.id;
+			sendMessageToChannel(messageData);
             inputInfo = {
                 ...inputInfo,
                 taskAssignedToId: assignedUser.id
             };
         }
         if (isImportant !== isTaskImportant) {
+			sendMessage("changed the task importance of '" + name + "'");
             inputInfo = {
                 ...inputInfo,
                 isImportant: isTaskImportant

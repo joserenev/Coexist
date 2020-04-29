@@ -92,12 +92,14 @@ function TasksContainer(props): React.MixedElement {
                                 Group Tasks
                             </Typography>
                             <TasksList
+								groupID={groupID}
                                 groupMembers={groupMembers}
                                 header="Incomplete Tasks:"
                                 tasks={incompleteTasks}
                                 currentUserID={currentUserID}
                             />
                             <TasksList
+								groupID={groupID}
                                 groupMembers={groupMembers}
                                 header="Completed Tasks:"
                                 tasks={completeTasks}

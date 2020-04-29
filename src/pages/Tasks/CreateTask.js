@@ -26,6 +26,15 @@ import Grid from "@material-ui/core/Grid";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 
+import PubNub from "pubnub";
+import { PubNubProvider, PubNubConsumer } from "pubnub-react";
+const pubnub = new PubNub({
+    publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+    subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+    uuid: "12445"
+});
+var channels = []; ////change to group id
+
 const useStyles = makeStyles(theme => ({
     fields: {
         display: "flex",
@@ -78,6 +87,33 @@ function CreateExpense({
     const [assignedUser, setAssignedUser] = useState(null);
     const [isTaskImportant, setIsTaskImportant] = useState(false);
 
+	//notification stuff
+    var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
+    var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+    var groups = JSON.parse(groupJSON);
+    var userData = JSON.parse(userDataJSON);
+    channels[0] = groupID;
+    const [messages, addMessage] = useState([]);
+    const [message, setMessage] = useState("");
+    const sendMessage = message => {
+        var json = {};
+        json.message = userData.username + " " + message;
+        json.timeSent = new Date().getTime();
+        json.uniqueId = Math.random();
+        json.notificationClass = "Task";
+        json.sender = userData.username;
+        json.groupId = groupID;
+        json.currentUserId = currentUserID;
+
+        pubnub.publish(
+            {
+                channel: channels[0],
+                message: json
+            },
+            () => setMessage("")
+        );
+    };
+	
     //Event handlers
     const handleAssignedUserChange = useCallback(event => {
         setAssignedUser(event.target.value);
@@ -117,6 +153,7 @@ function CreateExpense({
         if (!isEntryValid()) {
             return;
         }
+		sendMessage("has created a new task: '" + name + "'");
         let inputInfo = {
             name,
             description,

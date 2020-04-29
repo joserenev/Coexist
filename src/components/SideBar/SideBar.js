@@ -280,6 +280,7 @@ function SideBar({
                             "CoexistGroups",
                             JSON.stringify(groupItems)
                         );
+						userData.UserId = userID;
                         window.localStorage.setItem(
                             "CoexistUserData",
                             JSON.stringify(userData)

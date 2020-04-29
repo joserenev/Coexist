@@ -56,12 +56,12 @@ function Notifications(): React.MixedElement {
                                             lastId = messageEvent.message.uniqueId;
 											if (messageEvent.message.sender != userData.username) {
 												var notifLevels = {
-													"Receipt Update":"warning",
 													"Message":"info",
 													"Receipt":"info",
+													"Receipt Update":"warning",
 													"Calendar":"info",
-													"Task":"info",
 													"Calendar Update":"warning",
+													"Task":"info",
 													"Task Update":"warning",
 													"GroupAdd":"success",
 													"GroupRemove":"error"

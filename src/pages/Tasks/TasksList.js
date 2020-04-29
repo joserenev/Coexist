@@ -44,7 +44,7 @@ function taskSortFunction(task1, task2) {
     return task1.name.localeCompare(task2.name);
 }
 
-function TasksList({ header, groupMembers, tasks, currentUserID }) {
+function TasksList({ groupID, header, groupMembers, tasks, currentUserID }) {
     const classes = useStyles();
 
     return (
@@ -62,6 +62,7 @@ function TasksList({ header, groupMembers, tasks, currentUserID }) {
                             task={task}
                             groupMembers={groupMembers}
                             currentUserID={currentUserID}
+							groupID={groupID}
                         />
                     );
                 })}
