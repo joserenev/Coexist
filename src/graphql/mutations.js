@@ -27,6 +27,7 @@ export const createUser = `mutation CreateUser(
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -64,6 +65,7 @@ export const updateUser = `mutation UpdateUser(
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -101,6 +103,7 @@ export const deleteUser = `mutation DeleteUser(
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -371,6 +374,7 @@ export const createGroup = `mutation CreateGroup(
         cycleEndDate
         totalExpenditure
         expenseDivision
+        totalOwed
       }
       nextToken
     }
@@ -384,6 +388,7 @@ export const createGroup = `mutation CreateGroup(
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -466,6 +471,7 @@ export const updateGroup = `mutation UpdateGroup(
         cycleEndDate
         totalExpenditure
         expenseDivision
+        totalOwed
       }
       nextToken
     }
@@ -479,6 +485,7 @@ export const updateGroup = `mutation UpdateGroup(
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -561,6 +568,7 @@ export const deleteGroup = `mutation DeleteGroup(
         cycleEndDate
         totalExpenditure
         expenseDivision
+        totalOwed
       }
       nextToken
     }
@@ -574,6 +582,7 @@ export const deleteGroup = `mutation DeleteGroup(
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -871,6 +880,7 @@ export const createExpensesCalculation = `mutation CreateExpensesCalculation(
         nextToken
       }
     }
+    totalOwed
   }
 }
 `;
@@ -922,6 +932,7 @@ export const updateExpensesCalculation = `mutation UpdateExpensesCalculation(
         nextToken
       }
     }
+    totalOwed
   }
 }
 `;
@@ -973,6 +984,7 @@ export const deleteExpensesCalculation = `mutation DeleteExpensesCalculation(
         nextToken
       }
     }
+    totalOwed
   }
 }
 `;
@@ -1064,6 +1076,7 @@ export const createTask = `mutation CreateTask(
     }
     status
     isImportant
+    notifStatus
   }
 }
 `;
@@ -1155,6 +1168,7 @@ export const updateTask = `mutation UpdateTask(
     }
     status
     isImportant
+    notifStatus
   }
 }
 `;
@@ -1246,6 +1260,7 @@ export const deleteTask = `mutation DeleteTask(
     }
     status
     isImportant
+    notifStatus
   }
 }
 `;

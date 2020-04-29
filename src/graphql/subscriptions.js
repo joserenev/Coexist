@@ -24,6 +24,7 @@ export const onCreateUser = `subscription OnCreateUser {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -58,6 +59,7 @@ export const onUpdateUser = `subscription OnUpdateUser {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -92,6 +94,7 @@ export const onDeleteUser = `subscription OnDeleteUser {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -350,6 +353,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
         cycleEndDate
         totalExpenditure
         expenseDivision
+        totalOwed
       }
       nextToken
     }
@@ -363,6 +367,7 @@ export const onCreateGroup = `subscription OnCreateGroup {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -442,6 +447,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
         cycleEndDate
         totalExpenditure
         expenseDivision
+        totalOwed
       }
       nextToken
     }
@@ -455,6 +461,7 @@ export const onUpdateGroup = `subscription OnUpdateGroup {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -534,6 +541,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
         cycleEndDate
         totalExpenditure
         expenseDivision
+        totalOwed
       }
       nextToken
     }
@@ -547,6 +555,7 @@ export const onDeleteGroup = `subscription OnDeleteGroup {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -832,6 +841,7 @@ export const onCreateExpensesCalculation = `subscription OnCreateExpensesCalcula
         nextToken
       }
     }
+    totalOwed
   }
 }
 `;
@@ -880,6 +890,7 @@ export const onUpdateExpensesCalculation = `subscription OnUpdateExpensesCalcula
         nextToken
       }
     }
+    totalOwed
   }
 }
 `;
@@ -928,6 +939,7 @@ export const onDeleteExpensesCalculation = `subscription OnDeleteExpensesCalcula
         nextToken
       }
     }
+    totalOwed
   }
 }
 `;
@@ -1016,6 +1028,7 @@ export const onCreateTask = `subscription OnCreateTask {
     }
     status
     isImportant
+    notifStatus
   }
 }
 `;
@@ -1104,6 +1117,7 @@ export const onUpdateTask = `subscription OnUpdateTask {
     }
     status
     isImportant
+    notifStatus
   }
 }
 `;
@@ -1192,6 +1206,7 @@ export const onDeleteTask = `subscription OnDeleteTask {
     }
     status
     isImportant
+    notifStatus
   }
 }
 `;

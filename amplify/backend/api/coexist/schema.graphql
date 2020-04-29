@@ -60,6 +60,7 @@ type ExpensesCalculation @model {
   totalExpenditure: String
   expenseDivision: String
   group: Group @connection(name: "GroupCalculations")
+  totalOwed: String
 }
 
 type Task @model {
@@ -74,6 +75,7 @@ type Task @model {
   group: Group @connection(name: "GroupTasks")
   status: String
   isImportant: Boolean
+  notifStatus: String
 }
 
 type CalendarEvent @model {

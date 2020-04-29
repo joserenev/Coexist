@@ -24,6 +24,7 @@ export const getUser = `query GetUser($id: ID!) {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -121,6 +122,7 @@ export const getGroup = `query GetGroup($id: ID!) {
         cycleEndDate
         totalExpenditure
         expenseDivision
+        totalOwed
       }
       nextToken
     }
@@ -134,6 +136,7 @@ export const getGroup = `query GetGroup($id: ID!) {
         dueDate
         status
         isImportant
+        notifStatus
       }
       nextToken
     }
@@ -369,6 +372,7 @@ export const getExpensesCalculation = `query GetExpensesCalculation($id: ID!) {
         nextToken
       }
     }
+    totalOwed
   }
 }
 `;
@@ -399,6 +403,7 @@ export const listExpensesCalculations = `query ListExpensesCalculations(
         totalBudget
         remainingBalance
       }
+      totalOwed
     }
     nextToken
   }
@@ -489,6 +494,7 @@ export const getTask = `query GetTask($id: ID!) {
     }
     status
     isImportant
+    notifStatus
   }
 }
 `;
@@ -543,6 +549,7 @@ export const listTasks = `query ListTasks(
       }
       status
       isImportant
+      notifStatus
     }
     nextToken
   }
