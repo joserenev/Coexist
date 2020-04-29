@@ -24,6 +24,9 @@ import "./popup.css";
 import User from "../User/User";
 import { getUserByUserName } from "../../api/Api";
 
+import PubNub from 'pubnub';
+import { PubNubProvider, PubNubConsumer } from 'pubnub-react';
+
 const useStyles = makeStyles(theme => ({
     groupStats: {
         flex: 0.25
@@ -42,9 +45,20 @@ const useStyles = makeStyles(theme => ({
 type Props = {|
     groupData: Object
 |};
+
+const pubnub = new PubNub({
+  publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+  subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+  uuid: "12445"
+});
+var channels = []; ////change to group id
+
 export default function EditGroupSettings({ groupData }: Props) {
     console.log(groupData);
     const [open, setOpen] = useState(false);
+	
+	var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+	var userData = JSON.parse(userDataJSON);  
 
     const [groupName, setGroupName] = useState(groupData?.name ?? "");
     const [groupDescription, setGroupDescription] = useState(
@@ -107,6 +121,21 @@ export default function EditGroupSettings({ groupData }: Props) {
         if (memberAlreadyExists) {
             return;
         }
+		var json = {};
+		json.message = userData.username + " added you to: '" + groupName + "'.";
+		  json.timeSent = new Date().getTime();
+		  json.uniqueId = Math.random();
+		  json.notificationClass = "NewGroup";
+		  json.sender = userData.username;
+		  json.groupId = groupName;
+		  
+		pubnub.publish(
+		  {
+			channel: newMember.id,
+			message: json,
+		  },
+		  () => setMessage('')
+		);
         setGroupMembers(oldMembers => {
             const newMembers = oldMembers;
             newMembers.push(newMember);
@@ -324,7 +353,7 @@ export default function EditGroupSettings({ groupData }: Props) {
                                         <li class="list-group-item">
                                             Money spent:{" "}
                                             <span class="money-text" editable>
-                                                $1,000.01
+                                                $1,000.00
                                             </span>
                                         </li>
                                         <li class="list-group-item">

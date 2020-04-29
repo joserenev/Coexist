@@ -14,7 +14,7 @@ import NotAttendingIcon from "@material-ui/icons/Cancel";
 import AwaitingResponseIcon from "@material-ui/icons/WatchLater";
 
 import ButtonBase from "@material-ui/core/ButtonBase";
-import { green, yellow, red, orange } from "@material-ui/core/colors";
+import { green, yellow, red, orange, purple } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -22,9 +22,13 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Alert from "@material-ui/lab/Alert";
 
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
+
 import {
     updateCalendarEvent,
-    registerCalendarEventResponse
+    registerCalendarEventResponse,
+    deleteCalendarEvent
 } from "../../api/Api";
 import { convertToDateTimeLocalString } from "../../components/util/DateUtil";
 import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
@@ -32,6 +36,15 @@ import {
     CalendarEventStatusEnum,
     CalendarEventResponseEnum
 } from "../../components/util/CalendarEventConstants";
+
+import PubNub from "pubnub";
+import { PubNubProvider, PubNubConsumer } from "pubnub-react";
+const pubnub = new PubNub({
+    publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
+    subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
+    uuid: "12445"
+});
+var channels = []; ////change to group id
 
 const { NOTIF_REQUIRED, NOTIF_NOT_REQUIRED } = CalendarEventStatusEnum;
 
@@ -50,6 +63,14 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center"
     }
 }));
+
+const theme = createMuiTheme({
+    palette: {
+      primary: red,
+      secondary: green,
+      error: red,
+    },
+  });
 
 function CalendarEventInfoDialog({
     isDialogOpen,
@@ -88,9 +109,36 @@ function CalendarEventInfoDialog({
     );
     const [updatedEventLocation, setUpdatedEventLocation] = useState(location);
     const [updatedEventNotifEnabled, setUpdatedEventNotifEnabled] = useState(
-        status === NOTIF_REQUIRED
+        status !== NOTIF_NOT_REQUIRED
     );
     const memberResponses = new Map(JSON.parse(rawMemberResponses ?? "[]"));
+	
+	//notification stuff
+    var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
+    var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
+    var groups = JSON.parse(groupJSON);
+    var userData = JSON.parse(userDataJSON);
+    channels[0] = groupID;
+    const [messages, addMessage] = useState([]);
+    const [message, setMessage] = useState("");
+    const sendMessage = message => {
+        var json = {};
+        json.message = userData.username + " " + message;
+        json.timeSent = new Date().getTime();
+        json.uniqueId = Math.random();
+        json.notificationClass = "Calendar Update";
+        json.sender = userData.username;
+        json.groupId = groupID;
+        json.currentUserId = currentUserID;
+
+        pubnub.publish(
+            {
+                channel: channels[0],
+                message: json
+            },
+            () => setMessage("")
+        );
+    };
 
     // Dialog functions
     const closeEventDetailDialog = useCallback(() => {
@@ -136,6 +184,7 @@ function CalendarEventInfoDialog({
         let hasAnythingUpdated = false;
 
         if (updatedEventName !== title) {
+			sendMessage("updated the event name from '" + title + "' to '" + updatedEventName + "'");
             hasAnythingUpdated = true;
             updateEventInfo = {
                 ...updateEventInfo,
@@ -143,6 +192,7 @@ function CalendarEventInfoDialog({
             };
         }
         if (updatedEventDescription !== description) {
+			sendMessage("updated the event description of '" + title + "'");
             hasAnythingUpdated = true;
             updateEventInfo = {
                 ...updateEventInfo,
@@ -153,6 +203,7 @@ function CalendarEventInfoDialog({
             updatedEventStart !==
             convertToDateTimeLocalString(new Date(start ?? ""))
         ) {
+			sendMessage("updated the event start time of '" + title + "'");
             hasAnythingUpdated = true;
             updateEventInfo = {
                 ...updateEventInfo,
@@ -164,6 +215,7 @@ function CalendarEventInfoDialog({
             updatedEventEnd !==
             convertToDateTimeLocalString(new Date(end ?? ""))
         ) {
+			sendMessage("updated the event end time of '" + title + "'");
             hasAnythingUpdated = true;
             updateEventInfo = {
                 ...updateEventInfo,
@@ -172,6 +224,7 @@ function CalendarEventInfoDialog({
         }
 
         if (updatedEventLocation !== location) {
+			sendMessage("updated the event location of '" + title + "'");
             hasAnythingUpdated = true;
             updateEventInfo = {
                 ...updateEventInfo,
@@ -183,6 +236,7 @@ function CalendarEventInfoDialog({
             (status === NOTIF_REQUIRED && !updatedEventNotifEnabled) ||
             (status === NOTIF_NOT_REQUIRED && updatedEventNotifEnabled)
         ) {
+			sendMessage("updated the event's notification option of '" + title + "'");
             hasAnythingUpdated = true;
             updateEventInfo = {
                 ...updateEventInfo,
@@ -313,6 +367,20 @@ function CalendarEventInfoDialog({
     const handleMarkAsNotAttending = () => {
         handleCalendarEventResponse(NOT_ATTENDING);
     };
+
+    const handleDeleteEvent = useCallback(async () => {
+        await deleteCalendarEvent(eventID)
+            .then(res => {
+                setErrorOpen(false);
+                setErrorMessage("");
+                closeEventDetailDialog();
+                window.location.reload(true);
+            })
+            .catch(err => {
+                setErrorOpen(true);
+                setErrorMessage("Failed to delete event in cal");
+            });
+    }, [closeEventDetailDialog, eventID]);
 
     return (
         <Dialog
@@ -465,6 +533,13 @@ function CalendarEventInfoDialog({
                         Update Event
                     </Button>
                 )}
+                <MuiThemeProvider theme={theme}>
+                {!isNotOwner && (
+                    <Button onClick={handleDeleteEvent} color="primary">
+                        Delete Event
+                    </Button>
+                )}
+                 </MuiThemeProvider>
                 <Button onClick={closeEventDetailDialog} color="primary">
                     OK
                 </Button>

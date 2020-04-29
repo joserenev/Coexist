@@ -774,3 +774,40 @@ export async function updateTask(input) {
             throw err;
         });
 }
+
+export async function deleteTask(taskID) {
+    return await API.graphql(
+        graphqlOperation(mutations.deleteTask, {
+            input: {
+                id: taskID
+            }
+        })
+    )
+        .then(async response => {
+            // console.log("task Delete response: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error Deleting task", err);
+            throw err;
+        });
+}
+
+export async function deleteCalendarEvent(calendarEventID) {
+    return await API.graphql(
+        graphqlOperation(mutations.deleteCalendarEvent, {
+            input: {
+                id: calendarEventID
+            }
+        })
+    )
+        .then(async response => {
+            console.log("task Delete calendar event: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error Deleting calendar event =", err);
+            throw err;
+        });
+
+}

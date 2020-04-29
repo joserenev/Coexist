@@ -13,14 +13,17 @@ import GroupHomePage from "../components/Groups/GroupHomePage";
 //component
 import Layout from "../components/Layout/Layout";
 
-import Authentication from "../authentication/Authentication"
+import Authentication from "../authentication/Authentication";
 import { Athena } from "aws-sdk/clients/all";
+
+import Notifications from "../components/SideBar/Notifications";
 //context TODO
 
 const App = props => (
   <Router>
       <div >
           <Main/>
+		  <Notifications />
       </div>
   </Router>
 );

@@ -26,6 +26,7 @@ import Grid from "@material-ui/core/Grid";
 import ProfileIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import EditAttributes from "@material-ui/icons/EditAttributes";
+import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -43,8 +44,6 @@ import { Connect } from "aws-amplify-react";
 import { graphqlOperation } from "aws-amplify";
 import { getUser as getUserDetailsQuery } from "../../customGraphql/queries";
 import SideBarLoading from "../../pages/Loading/SideBarLoading";
-
-import Notifications from "./Notifications";
 
 const drawerWidth = 280;
 
@@ -156,6 +155,7 @@ function SideBar({
 
       });
       */
+	
     const handleDrawerOpen = () => {
         setSideBarOpen(true);
     };
@@ -182,7 +182,7 @@ function SideBar({
 
     return (
         <div className={classes.root}>
-            <Notifications />
+            
             <CssBaseline />
             <ClickAwayListener onClickAway={handleDrawerClose}>
                 <AppBar
@@ -209,6 +209,7 @@ function SideBar({
                         >
                             Coexist
                         </Typography>
+
                     </Toolbar>
                 </AppBar>
             </ClickAwayListener>
@@ -279,6 +280,7 @@ function SideBar({
                             "CoexistGroups",
                             JSON.stringify(groupItems)
                         );
+						userData.UserId = userID;
                         window.localStorage.setItem(
                             "CoexistUserData",
                             JSON.stringify(userData)

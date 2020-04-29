@@ -282,12 +282,14 @@ function UpdateExpense({
         };
 
         if (name !== originalName) {
+			sendMessage("changed receipt name from '" + originalName + "' to '" + name + "'");
             receiptInfo = {
                 ...receiptInfo,
                 name
             };
         }
         if (description !== originalDescription) {
+			sendMessage("updated the description of receipt '" + name + "'");
             receiptInfo = {
                 ...receiptInfo,
                 description
@@ -295,12 +297,14 @@ function UpdateExpense({
         }
         const newMemberSplit = JSON.stringify(Array.from(splitMap.entries()));
         if (newMemberSplit !== editReceipt.memberSplit) {
+			sendMessage("updated the split of receipt '" + name + "'");
             receiptInfo = {
                 ...receiptInfo,
                 memberSplit: newMemberSplit
             };
         }
         if (amount !== originalAmount) {
+			sendMessage("updated the amount of receipt '" + name + "'");
             receiptInfo = {
                 ...receiptInfo,
                 totalAmount: amount
@@ -308,13 +312,12 @@ function UpdateExpense({
         }
 
         if (originalImageURL !== imageURL) {
+			sendMessage("updated the image of receipt '" + name + "'");
             receiptInfo = {
                 ...receiptInfo,
                 receiptImageUrl: imageURL
             };
         }
-
-        sendMessage("updated receipt: " + name + ".");
 
         await updateReceipt(receiptInfo)
             .then(res => {
