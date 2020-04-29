@@ -14,7 +14,7 @@ import NotAttendingIcon from "@material-ui/icons/Cancel";
 import AwaitingResponseIcon from "@material-ui/icons/WatchLater";
 
 import ButtonBase from "@material-ui/core/ButtonBase";
-import { green, yellow, red, orange } from "@material-ui/core/colors";
+import { green, yellow, red, orange, purple } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -22,9 +22,13 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Alert from "@material-ui/lab/Alert";
 
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
+
 import {
     updateCalendarEvent,
-    registerCalendarEventResponse
+    registerCalendarEventResponse,
+    deleteCalendarEvent
 } from "../../api/Api";
 import { convertToDateTimeLocalString } from "../../components/util/DateUtil";
 import SimpleUserProfileView from "../../components/User/SimpleUserProfileView";
@@ -50,6 +54,14 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center"
     }
 }));
+
+const theme = createMuiTheme({
+    palette: {
+      primary: red,
+      secondary: green,
+      error: red,
+    },
+  });
 
 function CalendarEventInfoDialog({
     isDialogOpen,
@@ -314,6 +326,20 @@ function CalendarEventInfoDialog({
         handleCalendarEventResponse(NOT_ATTENDING);
     };
 
+    const handleDeleteEvent = useCallback(async () => {
+        await deleteCalendarEvent(eventID)
+            .then(res => {
+                setErrorOpen(false);
+                setErrorMessage("");
+                closeEventDetailDialog();
+                window.location.reload(true);
+            })
+            .catch(err => {
+                setErrorOpen(true);
+                setErrorMessage("Failed to delete event in cal");
+            });
+    }, [closeEventDetailDialog, eventID]);
+
     return (
         <Dialog
             open={isDialogOpen}
@@ -465,6 +491,13 @@ function CalendarEventInfoDialog({
                         Update Event
                     </Button>
                 )}
+                <MuiThemeProvider theme={theme}>
+                {!isNotOwner && (
+                    <Button onClick={handleDeleteEvent} color="primary">
+                        Delete Event
+                    </Button>
+                )}
+                 </MuiThemeProvider>
                 <Button onClick={closeEventDetailDialog} color="primary">
                     OK
                 </Button>

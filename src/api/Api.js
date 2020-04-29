@@ -792,3 +792,22 @@ export async function deleteTask(taskID) {
             throw err;
         });
 }
+
+export async function deleteCalendarEvent(calendarEventID) {
+    return await API.graphql(
+        graphqlOperation(mutations.deleteCalendarEvent, {
+            input: {
+                id: calendarEventID
+            }
+        })
+    )
+        .then(async response => {
+            console.log("task Delete calendar event: ", response);
+            return response;
+        })
+        .catch(err => {
+            console.error("Error Deleting calendar event =", err);
+            throw err;
+        });
+
+}

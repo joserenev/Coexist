@@ -9,6 +9,11 @@ import { getGroupTasks } from "../../customGraphql/queries";
 import TasksList from "./TasksList";
 import CreateTask from "./CreateTask";
 
+import { Button,Grid } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import SubdirectoryArrowLeftTwoToneIcon from '@material-ui/icons/SubdirectoryArrowLeftTwoTone';
+import { Link, useHistory } from "react-router-dom";
+
 import AddIcon from "@material-ui/icons/Add";
 import { TaskStatusEnum } from "../../components/util/TasksConstants";
 const { COMPLETE } = TaskStatusEnum;
@@ -64,6 +69,19 @@ function TasksContainer(props): React.MixedElement {
 
                 return (
                     <>
+                        <Grid container alignItems="flex-start" justify="flex-end" direction="row" >
+                            <IconButton
+                                component={Link}
+                                to={`/groupHomePage/${groupID}`}
+                                color="inherit"
+                                aria-label="open drawer"
+                                variant="contained"
+                                style={{  padding: 10,
+                                margin: 10, }}        
+                            >
+                                <SubdirectoryArrowLeftTwoToneIcon />
+                            </IconButton>
+                        </Grid>
                         <div className={classes.headContainer}>
                             <AddIcon
                                 fontSize="large"

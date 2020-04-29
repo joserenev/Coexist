@@ -13,6 +13,10 @@ import { listExpensesCalculations } from "../../graphql/queries";
 import ExpenseGroupSummary from "./ExpenseGroupSummary";
 import ExpensesReceiptRow from "./ExpensesReceiptRow";
 import CreateExpense from "./CreateExpense";
+import { Button,Grid } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import SubdirectoryArrowLeftTwoToneIcon from '@material-ui/icons/SubdirectoryArrowLeftTwoTone';
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
@@ -71,6 +75,20 @@ function ExpensesPage(props): React.MixedElement {
                     });
                 return (
                     <>
+                        <Grid container alignItems="flex-start" justify="flex-end" direction="row" >
+                            <IconButton
+                                component={Link}
+                                to={`/groupHomePage/${groupID}`}
+                                color="inherit"
+                                aria-label="open drawer"
+                                variant="contained"
+                                style={{  padding: 10,
+                                    margin: 10, }}
+                                
+                            >
+                                <SubdirectoryArrowLeftTwoToneIcon />
+                            </IconButton>
+                        </Grid>
                         <div className={classes.headContainer}>
                             <AddIcon
                                 fontSize="large"

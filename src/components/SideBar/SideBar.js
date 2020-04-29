@@ -209,17 +209,6 @@ function SideBar({
                         >
                             Coexist
                         </Typography>
-                        <IconButton
-                            component={Link}
-                            to="/homepage"
-                            color="inherit"
-                            aria-label="open drawer"
-                            edge="end"
-                            onClick={handleDrawerClose}
-                            //className={clsx(isSideBarOpen && classes.hide)}
-                        >
-                            <HomeTwoToneIcon />
-                        </IconButton>
 
                     </Toolbar>
                 </AppBar>
