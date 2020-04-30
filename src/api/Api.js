@@ -1,6 +1,8 @@
 import { Auth } from "aws-amplify";
 import { API, graphqlOperation } from "aws-amplify";
 import * as queries from "../graphql/queries";
+import * as customQueries from "../customGraphql/queries";
+
 import * as mutations from "../graphql/mutations";
 import { ReferralMedium } from "../components/util/ReferralTypeConstants";
 import {
@@ -8,7 +10,10 @@ import {
     textInviteURL,
     emailNewGroupURL,
     textNewGroupURL,
-    emailNotifURL
+    emailNotifURL,
+    getTaskURL,
+    getCalendarEventURL,
+    getReceiptURL
 } from "../components/util/NotifConstants";
 import superagent from "superagent";
 
@@ -395,7 +400,12 @@ export async function createNewReceipt(
             })
     ];
     promises.push(
-        newReceiptCreatedUserIDListNotif(userIDList, groupName, name)
+        newReceiptCreatedUserIDListNotif(
+            userIDList,
+            groupName,
+            name,
+            receiptGroupId
+        )
     );
 
     return await Promise.all(promises)
@@ -494,7 +504,8 @@ export async function sendEmailNotifViaUserID(
     userID,
     emailBody,
     emailHeader,
-    subject
+    subject,
+    url = null
 ) {
     return await getUserByUserID(userID)
         .then(async data => {
@@ -505,6 +516,12 @@ export async function sendEmailNotifViaUserID(
                 email_body: emailBody,
                 subject: subject
             };
+            if (url !== null) {
+                requestBody = {
+                    click_url: url,
+                    ...requestBody
+                };
+            }
             return await fetch(emailNotifURL, {
                 method: "POST",
                 headers: {
@@ -528,12 +545,13 @@ export async function sendEmailNotifViaUserID(
         });
 }
 
-export async function newReceiptCreatedEmailNotif(userID, emailBody) {
+export async function newReceiptCreatedEmailNotif(userID, emailBody, groupID) {
     return await sendEmailNotifViaUserID(
         userID,
         emailBody,
         "A new receipt has been posted",
-        "New Receipt posted"
+        "New Receipt posted",
+        getReceiptURL(groupID)
     )
         .then(response => {
             // console.log({ response });
@@ -548,12 +566,14 @@ export async function newReceiptCreatedEmailNotif(userID, emailBody) {
 export async function newReceiptCreatedUserIDListNotif(
     userIDList,
     groupName,
-    receiptName
+    receiptName,
+    groupID
 ) {
     const promises = userIDList.map(userID => {
         return newReceiptCreatedEmailNotif(
             userID,
-            `A new receipt: ${receiptName} has been posted to group: ${groupName}`
+            `A new receipt: ${receiptName} has been posted to group: ${groupName}`,
+            groupID
         );
     });
 
@@ -566,6 +586,64 @@ export async function newReceiptCreatedUserIDListNotif(
             console.error("All create receipt emails failed", error);
             throw error;
         });
+}
+
+function getEasternTime(dateString) {
+    return new Date(dateString).toLocaleString("en-US", {
+        timeZone: "America/New_York"
+    });
+}
+
+async function getGroupMembers(groupId) {
+    return await API.graphql(
+        graphqlOperation(customQueries.getGroup, { id: groupId })
+    )
+        .then(response => {
+            return response.data.getGroup.users.items.map(userItem => {
+                return userItem.user;
+            });
+        })
+        .catch(error => {
+            console.error("Get group Members unsuccessful", error);
+            return error;
+        });
+}
+
+async function sendNewCalendarNotifToGroup(eventInfo) {
+    const {
+        calendarEventGroupId: groupID,
+        calendarEventOwnerId: ownerID,
+        name,
+        location,
+        startTimestamp
+    } = eventInfo;
+
+    const emailBody = `A new event: ${name} has been posted to your group.\nStart Time: ${getEasternTime(
+        startTimestamp
+    )} ET.\nLocation: ${location}.\nLet your group know if you'll be able to make it by responding to the event!`;
+
+    return await getGroupMembers(groupID).then(async groupMembers => {
+        const sendNotifPromises = groupMembers
+            .filter(groupMember => groupMember.id !== ownerID)
+            .map(groupMember => {
+                return sendEmailNotifViaUserID(
+                    groupMember.id,
+                    emailBody,
+                    `A new event has been posted`,
+                    `A new event ${name} has been posted`,
+                    getCalendarEventURL(groupID)
+                );
+            });
+        return await Promise.all(sendNotifPromises)
+            .then(data => {
+                // console.log("All create event emails sent out", { data });
+                return data;
+            })
+            .catch(error => {
+                console.error("All create event emails failed", error);
+                throw error;
+            });
+    });
 }
 
 export async function createNewCalendarEvent(inputInfo) {
@@ -588,6 +666,7 @@ export async function createNewCalendarEvent(inputInfo) {
                 throw err;
             })
     ];
+    promises.push(sendNewCalendarNotifToGroup(inputInfo));
 
     //add calls for notification to be sent
     return await Promise.all(promises)
@@ -661,6 +740,41 @@ export async function registerCalendarEventResponse(
         });
 }
 
+// name,
+// description,
+// taskGroupId: groupID,
+// taskOwnerId: currentUserID,
+// isImportant: isTaskImportant,
+
+async function sendNewTaskNotifToGroup(eventInfo) {
+    const { taskGroupId: groupID, taskOwnerId: ownerID, name } = eventInfo;
+
+    const emailBody = `A new task: ${name} has been posted to your group. Check it out in the Coexist App!`;
+
+    return await getGroupMembers(groupID).then(async groupMembers => {
+        const sendNotifPromises = groupMembers
+            .filter(groupMember => groupMember.id !== ownerID)
+            .map(groupMember => {
+                return sendEmailNotifViaUserID(
+                    groupMember.id,
+                    emailBody,
+                    `A new task has been posted`,
+                    `A new task ${name} has been posted`,
+                    getTaskURL(groupID)
+                );
+            });
+        return await Promise.all(sendNotifPromises)
+            .then(data => {
+                // console.log("All create task emails sent out", { data });
+                return data;
+            })
+            .catch(error => {
+                console.error("All create task emails failed", error);
+                throw error;
+            });
+    });
+}
+
 export async function createNewTask(inputInfo) {
     const eventInfo = {
         ...inputInfo,
@@ -681,6 +795,8 @@ export async function createNewTask(inputInfo) {
                 throw err;
             })
     ];
+
+    promises.push(sendNewTaskNotifToGroup(inputInfo));
 
     //add calls for notification to be sent
     return await Promise.all(promises)
@@ -738,24 +854,56 @@ export async function updateTaskImportance(taskID, isImportant) {
         });
 }
 
-export async function updateTaskAssignedUser(taskID, assignedUserID) {
+async function sendTaskAssignedNotif(assignedUserID, taskName, groupID) {
+    return sendEmailNotifViaUserID(
+        assignedUserID,
+        `The Task: ${taskName} has been assigned to you. Check it out in the Coexist app!`,
+        `You have been assigned a new task`,
+        `A new task ${taskName} has been assigned to you`,
+        getTaskURL(groupID)
+    );
+}
+
+export async function updateTaskAssignedUser(
+    taskID,
+    assignedUserID,
+    taskName,
+    currentUserID,
+    groupID
+) {
     const eventInfo = {
         id: taskID,
         taskAssignedToId: assignedUserID
     };
 
-    return await API.graphql(
-        graphqlOperation(mutations.updateTask, {
-            input: eventInfo
+    const promises = [
+        await API.graphql(
+            graphqlOperation(mutations.updateTask, {
+                input: eventInfo
+            })
+        )
+            .then(async response => {
+                // console.log("task update assigned to response: ", response);
+
+                return response;
+            })
+            .catch(err => {
+                console.error("Error updating task assigned to", err);
+                throw err;
+            })
+    ];
+
+    if (currentUserID !== assignedUserID) {
+        promises.push(sendTaskAssignedNotif(assignedUserID, taskName, groupID));
+    }
+    return await Promise.all(promises)
+        .then(data => {
+            // console.log("task assignment success", { data });
+            return data;
         })
-    )
-        .then(async response => {
-            // console.log("task update assigned to response: ", response);
-            return response;
-        })
-        .catch(err => {
-            console.error("Error updating task assigned to", err);
-            throw err;
+        .catch(error => {
+            console.error("Task assignment failed", error);
+            throw error;
         });
 }
 
@@ -809,5 +957,4 @@ export async function deleteCalendarEvent(calendarEventID) {
             console.error("Error Deleting calendar event =", err);
             throw err;
         });
-
 }

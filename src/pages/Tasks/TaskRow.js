@@ -98,7 +98,13 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
             ) {
                 return;
             }
-            await updateTaskAssignedUser(id, event.target.value.id)
+            await updateTaskAssignedUser(
+                id,
+                event.target.value.id,
+                name,
+                currentUserID,
+                groupID
+            )
                 .then(res => {
                     setErrorOpen(false);
                     setErrorMessage("");
@@ -111,7 +117,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                     );
                 });
         },
-        [assignedTo, id]
+        [assignedTo, currentUserID, groupID, id, name]
     );
 
     const handleSetIsTaskImportant = useCallback(
