@@ -80,7 +80,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
 
     const isCurrentUserAssigned = useCallback(() => {
         if (assignedUser === null) {
-            return false;
+            return true;
         }
         return assignedUser.id === currentUserID;
     }, [assignedUser, currentUserID]);
@@ -177,7 +177,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                                 />
                             }
                             onChange={handleSetIsTaskCompleted}
-                            disabled={isCurrentUserAssigned()}
+                            disabled={!isCurrentUserAssigned()}
                         />
                     </Grid>
                     <Grid item xs={2} sm={2}>
@@ -245,10 +245,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                         <Checkbox
                             checked={isTaskImportant}
                             checkedIcon={
-                               // <CheckedImportantIcon
-                               //     style={{ fontSize: 28, color: yellow[500] }}
-                               // />
-                               <PriorityHighIcon
+                                <PriorityHighIcon
                                     style={{ fontSize: 28, color: red[500] }}
                                 />
                             }
@@ -257,9 +254,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                                     color="disabled"
                                     style={{ fontSize: 28 }}
                                 />
-                                
                             }
-                            
                             onChange={handleSetIsTaskImportant}
                         />
                     </Grid>
@@ -312,7 +307,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                     isDialogOpen={isUpdateDialogOpen}
                     setDialogOpen={setIsUpdateDialogOpen}
                     groupMembers={groupMembers}
-					groupID={groupID}
+                    groupID={groupID}
                     task={task}
                 />
             )}
