@@ -12,6 +12,25 @@ import { PubNubProvider, PubNubConsumer } from "pubnub-react";
 
 import firebase from "firebase";
 
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import AttachFile from '@material-ui/icons/AttachFile';
+import Link from '@material-ui/core/Link';
+
+import attachIcon from './AttachIcon.png';
+
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const useStyles = makeStyles(theme => ({
     root: {
         "& .MuiTextField-root": {
@@ -83,6 +102,32 @@ const pubnub = new PubNub({
 });
 var channels = ["testNotifChannel"]; ////change to group id
 
+/*
+
+if (message.message.substring(0, 5) == "link/" && message.message.substr(5).split("<>/").length == 2) //hyperlink
+																{
+																	var mess = message.message.substr(5).split("<>/");
+																	var hyperLink = mess[0];
+																	var outerMessage = mess[1];
+																	<Link target="_blank" href={hyperLink}>
+																	<Typography >
+																		{
+																			outerMessage
+																			LINK BABY
+																		}
+																	</Typography>
+																</Link>
+																}
+																else
+																{	
+																	<Typography>
+																		{
+																			message.message
+																		}
+																	</Typography>
+																}
+*/
+
 function MessagePanel(props): React.MixedElement {
     const realGroupId = window.location.href.substr(
         window.location.href.indexOf("/messages/") + 10
@@ -96,6 +141,27 @@ function MessagePanel(props): React.MixedElement {
 
     var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
     var userData = JSON.parse(userDataJSON);
+	
+	const [open, setOpen] = React.useState(false);
+
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+	};
+	
+	const submitLink = () => {
+		var linkField = document.getElementById("linkField").value;
+		var displayField = document.getElementById("displayField").value;
+		
+		if (linkField.length < 1 || displayField.length < 1) { return; }
+		displayField = displayField.substring(0, 120);
+		linkField = linkField.substring(0, 128);
+		sendMessagePub("link/" + linkField + "<>/" + displayField);
+		setOpen(false);
+	}
 
     /////This is where messages are initially loaded from the database, and where new ones are sent?/////
     firebase
@@ -306,75 +372,169 @@ function MessagePanel(props): React.MixedElement {
                                     console.log("OKAY");
                                     console.log(currentUserID);*/
                                     if (message.senderId === currentUserID) {
-                                        return (
-                                            <Grid
-                                                container
-                                                direction="column"
-                                                justify="flex-start"
-                                                alignItems="flex-end"
-                                            >
-                                                <Grid item>
-                                                    <div
-                                                        className={
-                                                            classes.messageDiv
-                                                        }
-                                                    >
-                                                        <div
-                                                            key={`message-${messageIndex}`}
-                                                            className={
-                                                                classes.messageSelf
-                                                            }
-                                                        >
-                                                            <Typography>
-                                                                <b>
-                                                                    {
-                                                                        message.sender
-                                                                    }
-                                                                </b>
-                                                            </Typography>
-                                                            <Typography>
-                                                                {
-                                                                    message.message
-                                                                }
-                                                            </Typography>
-                                                        </div>
-                                                    </div>
-                                                </Grid>
-                                            </Grid>
-                                        );
+										if (message.message.substring(0, 5) != "link/" || message.message.substr(5).split("<>/").length != 2)
+										{
+											return (
+												<Grid
+													container
+													direction="column"
+													justify="flex-start"
+													alignItems="flex-end"
+												>
+													<Grid item>
+														<div
+															className={
+																classes.messageDiv
+															}
+														>
+															<div
+																key={`message-${messageIndex}`}
+																className={
+																	classes.messageSelf
+																}
+															>
+																<Typography>
+																	<b>
+																		{
+																			message.sender
+																		}
+																	</b>
+																</Typography>
+																<Typography>
+																		{
+																			message.message
+																		}
+																</Typography>
+															</div>
+														</div>
+													</Grid>
+												</Grid>
+											);
+										}
+										else
+										{
+											var mess = message.message.substr(5).split("<>/");
+											var hyperLink = mess[0];
+											var outerMessage = mess[1];
+											return (
+												<Grid
+													container
+													direction="column"
+													justify="flex-start"
+													alignItems="flex-end"
+												>
+													<Grid item>
+														<div
+															className={
+																classes.messageDiv
+															}
+														>
+															<div
+																key={`message-${messageIndex}`}
+																className={
+																	classes.messageSelf
+																}
+															>
+																<Typography>
+																	<b>
+																		{
+																			message.sender
+																		}
+																	</b>
+																</Typography>
+																<Link target="_blank" href={hyperLink}>
+																	<Typography >
+																		{
+																			outerMessage
+																		}
+																	</Typography>
+																</Link>
+																
+															</div>
+														</div>
+													</Grid>
+												</Grid>
+											);
+										}
+                                        
                                     }
-                                    return (
-                                        <Grid
-                                            container
-                                            direction="column"
-                                            justify="flex-start"
-                                            alignItems="flex-start"
-                                        >
-                                            <Grid item>
-                                                <div
-                                                    className={
-                                                        classes.messageDiv
-                                                    }
-                                                >
-                                                    <div
-                                                        key={`message-${messageIndex}`}
-                                                        className={
-                                                            classes.messages
-                                                        }
-                                                    >
-                                                        <Typography>
-                                                            <b>
-                                                                {message.sender}
-                                                            </b>
-                                                        </Typography>
-                                                        <Typography>
-                                                            {message.message}
-                                                        </Typography>
-                                                    </div>
-                                                </div>
-                                            </Grid>
-                                        </Grid>
-                                    );
+									if (message.message.substring(0, 5) != "link/" || message.message.substr(5).split("<>/").length != 2)
+									{
+										return (
+											<Grid
+												container
+												direction="column"
+												justify="flex-start"
+												alignItems="flex-start"
+											>
+												<Grid item>
+													<div
+														className={
+															classes.messageDiv
+														}
+													>
+														<div
+															key={`message-${messageIndex}`}
+															className={
+																classes.messages
+															}
+														>
+															<Typography>
+																<b>
+																	{message.sender}
+																</b>
+															</Typography>
+															<Typography>
+																{message.message}
+															</Typography>
+														</div>
+													</div>
+												</Grid>
+											</Grid>
+										);
+									}
+									else
+									{
+										var mess = message.message.substr(5).split("<>/");
+										var hyperLink = mess[0];
+										var outerMessage = mess[1];
+										return (
+											<Grid
+												container
+												direction="column"
+												justify="flex-start"
+												alignItems="flex-start"
+											>
+												<Grid item>
+													<div
+														className={
+															classes.messageDiv
+														}
+													>
+														<div
+															key={`message-${messageIndex}`}
+															className={
+																classes.messages
+															}
+														>
+															<Typography>
+																<b>
+																	{message.sender}
+																</b>
+															</Typography>
+															<Link target="_blank" href={hyperLink}>
+																<Typography >
+																	{
+																		outerMessage
+																	}
+																</Typography>
+															</Link>
+														</div>
+													</div>
+												</Grid>
+											</Grid>
+										);
+									}
                                 })}
                             </div>
                             <div
@@ -400,6 +560,17 @@ function MessagePanel(props): React.MixedElement {
                                     }}
                                     variant="filled"
                                 />
+								<input accept="image/*" style={{ display:"none" }} id="icon-button-file" type="file" />
+								<label htmlFor="icon-button-file">
+									<IconButton color="primary" aria-label="upload picture" component="span">
+										<PhotoCamera />
+									</IconButton>
+								</label>
+								<label htmlFor="icon-button-attach">
+									<IconButton src={attachIcon} color="primary" aria-label="upload picture" component="span" onClick={handleClickOpen}>
+										<AttachFile />
+									</IconButton>
+								</label>
                                 <Button
                                     className={classes.buttonClass}
                                     id="sendMessageButton"
@@ -410,6 +581,31 @@ function MessagePanel(props): React.MixedElement {
                                 >
                                     Send
                                 </Button>
+								
+								<Dialog
+									open={open}
+									TransitionComponent={Transition}
+									keepMounted
+									onClose={handleClose}
+									aria-labelledby="alert-dialog-slide-title"
+									aria-describedby="alert-dialog-slide-description"
+								>
+									<DialogTitle id="alert-dialog-slide-title">{"Attach a link"}</DialogTitle>
+									<DialogContent>
+										<TextField id="linkField" label="Link" />
+										<br/>
+										<TextField id="displayField" label="Text to Display" />
+									</DialogContent>
+									<DialogActions>
+										<Button onClick={handleClose} color="primary">
+											Cancel
+										</Button>
+										<Button onClick={submitLink} color="primary">
+											Submit
+										</Button>
+									</DialogActions>
+								</Dialog>
+								
                             </div>
                         </Paper>
                     </div>
