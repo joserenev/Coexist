@@ -90,6 +90,19 @@ function Notifications(): React.MixedElement {
                                                         notif["title"] = "Group: " + groups[i].group.name;
                                                     }
                                                 }
+												if (messageEvent.message.notificationClass == "Message")
+												{
+													var tempMes = messageEvent.message.message;
+													var loc = tempMes.indexOf(": ") + 2;
+													if (tempMes.substring(loc, loc + 5) == "link/" && tempMes.split("<>/").length == 2)
+													{
+														messageEvent.message.message = "Attached a link!";
+													}
+													else if (tempMes.substring(loc, loc + 8) == "picture/" && tempMes.split("<>/").length == 2)
+													{
+														messageEvent.message.message = "Attached a picture!";
+													}
+												}
                                                 notif["message"] = messageEvent.message.message;
 												notif["level"] = notifLevels[messageEvent.message.notificationClass] || "info";
                                                 notif["autoDismiss"] = notifDismiss[messageEvent.message.notificationClass] || 0;

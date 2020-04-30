@@ -173,7 +173,6 @@ function MessagePanel(props): React.MixedElement {
 	}
 	
 	const submitPicture = () => {
-		window.alert("Sending picture...");
 		var linkField = document.getElementById("pictureLinkField").value;
 		var displayField = document.getElementById("pictureTextField").value;
 		
