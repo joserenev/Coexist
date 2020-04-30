@@ -13,10 +13,9 @@ import { listExpensesCalculations } from "../../graphql/queries";
 import ExpenseGroupSummary from "./ExpenseGroupSummary";
 import ExpensesReceiptRow from "./ExpensesReceiptRow";
 import CreateExpense from "./CreateExpense";
-import { Button,Grid } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import SubdirectoryArrowLeftTwoToneIcon from '@material-ui/icons/SubdirectoryArrowLeftTwoTone';
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const useStyles = makeStyles(theme => ({
     headContainer: {
@@ -75,31 +74,29 @@ function ExpensesPage(props): React.MixedElement {
                     });
                 return (
                     <>
-                        <Grid container alignItems="flex-start" justify="flex-end" direction="row" >
+                        <div className={classes.headContainer}>
                             <IconButton
                                 component={Link}
                                 to={`/groupHomePage/${groupID}`}
                                 color="inherit"
                                 aria-label="open drawer"
                                 variant="contained"
-                                style={{  padding: 10,
-                                    margin: 10, }}
-                                
+                                style={{ marginLeft: -40, marginTop: -40 }}
                             >
-                                <SubdirectoryArrowLeftTwoToneIcon />
+                                <ArrowBackIcon />
                             </IconButton>
-                        </Grid>
-                        <div className={classes.headContainer}>
-                            <AddIcon
-                                fontSize="large"
-                                className={classes.addButton}
-                                onClick={() => {
-                                    setDialogOpen(true);
-                                }}
-                            />
-                            <Typography variant="h2" gutterBottom>
-                                Recent Expenses
-                            </Typography>
+                            <div>
+                                <AddIcon
+                                    fontSize="large"
+                                    className={classes.addButton}
+                                    onClick={() => {
+                                        setDialogOpen(true);
+                                    }}
+                                />
+                                <Typography variant="h2" gutterBottom>
+                                    Recent Expenses
+                                </Typography>
+                            </div>
                             <div className={classes.expenseList}>
                                 {filteredReceipts.map((receipt, index) => {
                                     return (

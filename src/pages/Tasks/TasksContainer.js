@@ -9,10 +9,9 @@ import { getGroupTasks } from "../../customGraphql/queries";
 import TasksList from "./TasksList";
 import CreateTask from "./CreateTask";
 
-import { Button,Grid } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import SubdirectoryArrowLeftTwoToneIcon from '@material-ui/icons/SubdirectoryArrowLeftTwoTone';
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 import AddIcon from "@material-ui/icons/Add";
 import { TaskStatusEnum } from "../../components/util/TasksConstants";
@@ -69,37 +68,36 @@ function TasksContainer(props): React.MixedElement {
 
                 return (
                     <>
-                        <Grid container alignItems="flex-start" justify="flex-end" direction="row" >
+                        <div className={classes.headContainer}>
                             <IconButton
                                 component={Link}
                                 to={`/groupHomePage/${groupID}`}
                                 color="inherit"
                                 aria-label="open drawer"
                                 variant="contained"
-                                style={{  padding: 10,
-                                margin: 10, }}        
+                                style={{ marginLeft: -40, marginTop: -40 }}
                             >
-                                <SubdirectoryArrowLeftTwoToneIcon />
+                                <ArrowBackIcon />
                             </IconButton>
-                        </Grid>
-                        <div className={classes.headContainer}>
-                            <AddIcon
-                                fontSize="large"
-                                className={classes.addButton}
-                                onClick={handleCreateTask}
-                            />
-                            <Typography variant="h2" gutterBottom>
-                                Group Tasks
-                            </Typography>
+                            <div>
+                                <AddIcon
+                                    fontSize="large"
+                                    className={classes.addButton}
+                                    onClick={handleCreateTask}
+                                />
+                                <Typography variant="h2" gutterBottom>
+                                    Group Tasks
+                                </Typography>
+                            </div>
                             <TasksList
-								groupID={groupID}
+                                groupID={groupID}
                                 groupMembers={groupMembers}
                                 header="Incomplete Tasks:"
                                 tasks={incompleteTasks}
                                 currentUserID={currentUserID}
                             />
                             <TasksList
-								groupID={groupID}
+                                groupID={groupID}
                                 groupMembers={groupMembers}
                                 header="Completed Tasks:"
                                 tasks={completeTasks}

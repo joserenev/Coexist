@@ -26,6 +26,7 @@ import Grid from "@material-ui/core/Grid";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import { convertToDateTimeLocalString } from "../../components/util/DateUtil";
+import { TaskNotifEnum } from "../../components/util/TasksConstants";
 
 import PubNub from "pubnub";
 import { PubNubProvider, PubNubConsumer } from "pubnub-react";
@@ -35,6 +36,7 @@ const pubnub = new PubNub({
     uuid: "12445"
 });
 var channels = []; ////change to group id
+const { NOTIF_NOT_REQUIRED, NOTIF_REQUIRED } = TaskNotifEnum;
 
 const useStyles = makeStyles(theme => ({
     fields: {
@@ -42,7 +44,8 @@ const useStyles = makeStyles(theme => ({
         flexDirection: "row",
         flex: 1,
         justifyContent: "space-between",
-        margin: 8
+        margin: 8,
+        alignItems: "center"
     },
     imagePreviewContainer: {
         display: "flex",
@@ -65,6 +68,9 @@ const useStyles = makeStyles(theme => ({
     deleteButton: {
         margin: "0  40%",
         width: 120
+    },
+    notifyButton: {
+        marginTop: 24
     }
 }));
 
@@ -77,7 +83,7 @@ function UpdateTask({
     setDialogOpen,
     groupMembers,
     task,
-	groupID
+    groupID
 }): React.MixedElement {
     const classes = useStyles();
 
@@ -92,7 +98,8 @@ function UpdateTask({
         description: prevDescription = "",
         isImportant = false,
         dueDate: prevDueDate = "",
-        assignedTo = {}
+        assignedTo = {},
+        notifStatus: prevNotifStatus = NOTIF_NOT_REQUIRED
     } = task ?? {};
     const [name, setName] = useState(prevName ?? "");
     const [description, setDescription] = useState(prevDescription ?? "");
@@ -101,7 +108,13 @@ function UpdateTask({
             ? ""
             : convertToDateTimeLocalString(new Date(prevDueDate))
     );
-
+    const prevTaskNotifEnabled =
+        prevNotifStatus === null || prevNotifStatus === NOTIF_NOT_REQUIRED
+            ? false
+            : true;
+    const [taskNotifEnabled, setTaskNotifEnabled] = useState(
+        prevTaskNotifEnabled
+    );
     const getAssignedGroupMember = useCallback(() => {
         if (assignedTo === null) {
             return null;
@@ -114,8 +127,8 @@ function UpdateTask({
     const [isTaskImportant, setIsTaskImportant] = useState(
         isImportant ?? false
     );
-	
-	//notification stuff
+
+    //notification stuff
     var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
     var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
     var groups = JSON.parse(groupJSON);
@@ -141,7 +154,7 @@ function UpdateTask({
             () => setMessage("")
         );
     };
-	const sendMessageToChannel = messageData => {
+    const sendMessageToChannel = messageData => {
         var json = {};
         json.message = userData.username + " " + messageData.message;
         json.timeSent = new Date().getTime();
@@ -187,13 +200,18 @@ function UpdateTask({
         } else if (description === "") {
             setErrorMessage("Task description is required");
             setErrorOpen(true);
+        } else if (dueDate === "" && taskNotifEnabled) {
+            setErrorMessage(
+                "Task due date is required if you would like to be notified."
+            );
+            setErrorOpen(true);
         } else {
             setErrorOpen(false);
             setErrorMessage("");
             return true;
         }
         return false;
-    }, [description, name]);
+    }, [description, dueDate, name, taskNotifEnabled]);
 
     const hasAnythingChanged = useCallback(() => {
         if (
@@ -206,7 +224,8 @@ function UpdateTask({
             isImportant !== isTaskImportant ||
             (dueDate !== "" &&
                 prevDueDate !== new Date(dueDate).toISOString()) ||
-            (dueDate === "" && prevDueDate !== null)
+            (dueDate === "" && prevDueDate !== null) ||
+            prevTaskNotifEnabled !== taskNotifEnabled
         ) {
             return true;
         }
@@ -221,7 +240,9 @@ function UpdateTask({
         name,
         prevDescription,
         prevDueDate,
-        prevName
+        prevName,
+        prevTaskNotifEnabled,
+        taskNotifEnabled
     ]);
 
     const handleSubmit = useCallback(async () => {
@@ -232,45 +253,74 @@ function UpdateTask({
             id
         };
         if (name !== prevName) {
-			sendMessage("changed the task name from '" + prevName + "' to '" + name + "'");
+            sendMessage(
+                "changed the task name from '" +
+                    prevName +
+                    "' to '" +
+                    name +
+                    "'"
+            );
             inputInfo = {
                 ...inputInfo,
                 name
             };
         }
         if (description !== prevDescription) {
-			sendMessage("changed the task description of '" + name + "'");
+            sendMessage("changed the task description of '" + name + "'");
             inputInfo = {
                 ...inputInfo,
                 description
             };
         }
 
-        if (prevDueDate !== dueDate && (prevDueDate != undefined || dueDate != undefined) && !(prevDueDate == null && dueDate == "")) {
-			sendMessage("changed the task due date of '" + name + "' from '" + prevDueDate + "' to '" + dueDate + "'");
+        if (
+            prevDueDate !== dueDate &&
+            (prevDueDate != undefined || dueDate != undefined) &&
+            !(prevDueDate == null && dueDate == "")
+        ) {
+            sendMessage(
+                "changed the task due date of '" +
+                    name +
+                    "' from '" +
+                    prevDueDate +
+                    "' to '" +
+                    dueDate +
+                    "'"
+            );
             inputInfo = {
                 ...inputInfo,
                 dueDate: dueDate === "" ? null : new Date(dueDate).toISOString()
             };
         }
+
+        if (prevTaskNotifEnabled !== taskNotifEnabled) {
+            inputInfo = {
+                ...inputInfo,
+                notifStatus: taskNotifEnabled
+                    ? NOTIF_REQUIRED
+                    : NOTIF_NOT_REQUIRED
+            };
+        }
+
         if (
             (assignedUser !== null && assignedTo === null) ||
             (assignedUser !== null &&
                 assignedTo !== null &&
                 assignedUser.id !== assignedTo.id)
         ) {
-			sendMessage("changed who the '" + name + "' task was assigned to");
-			var messageData = {}
-			messageData.message = "changed who the '" + name + "' task is assigned to to you";
-			messageData.channel = assignedUser.id;
-			sendMessageToChannel(messageData);
+            sendMessage("changed who the '" + name + "' task was assigned to");
+            var messageData = {};
+            messageData.message =
+                "changed who the '" + name + "' task is assigned to to you";
+            messageData.channel = assignedUser.id;
+            sendMessageToChannel(messageData);
             inputInfo = {
                 ...inputInfo,
                 taskAssignedToId: assignedUser.id
             };
         }
         if (isImportant !== isTaskImportant) {
-			sendMessage("changed the task importance of '" + name + "'");
+            sendMessage("changed the task importance of '" + name + "'");
             inputInfo = {
                 ...inputInfo,
                 isImportant: isTaskImportant
@@ -300,7 +350,11 @@ function UpdateTask({
         name,
         prevDescription,
         prevDueDate,
-        prevName
+        prevName,
+        prevTaskNotifEnabled,
+        sendMessage,
+        sendMessageToChannel,
+        taskNotifEnabled
     ]);
 
     const handleDeleteTask = useCallback(async () => {
@@ -454,6 +508,21 @@ function UpdateTask({
                             >
                                 Assign Randomly
                             </Link>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText>
+                        <div className={classes.notifyButton}>
+                            <Typography variant="body3" gutterBottom>
+                                Notify the assigned member an hour before the
+                                task is due?
+                            </Typography>
+                            <Checkbox
+                                color="primary"
+                                checked={taskNotifEnabled}
+                                onChange={event => {
+                                    setTaskNotifEnabled(event.target.checked);
+                                }}
+                            />
                         </div>
                     </DialogContentText>
                     <DialogContentText>

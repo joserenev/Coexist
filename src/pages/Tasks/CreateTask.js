@@ -25,9 +25,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
+import { TaskNotifEnum } from "../../components/util/TasksConstants";
 
 import PubNub from "pubnub";
 import { PubNubProvider, PubNubConsumer } from "pubnub-react";
+
+const { NOTIF_NOT_REQUIRED, NOTIF_REQUIRED } = TaskNotifEnum;
 const pubnub = new PubNub({
     publishKey: "pub-c-fcfbbd7d-d4d4-4dc2-9979-2339f3202a81",
     subscribeKey: "sub-c-7df07fca-72de-11ea-88bf-72bc4223cbd9",
@@ -60,6 +63,9 @@ const useStyles = makeStyles(theme => ({
     },
     assignRandomlyButton: {
         float: "right"
+    },
+    notifyButton: {
+        marginTop: 24
     }
 }));
 
@@ -86,8 +92,9 @@ function CreateExpense({
     const [dueDate, setDueDate] = useState("");
     const [assignedUser, setAssignedUser] = useState(null);
     const [isTaskImportant, setIsTaskImportant] = useState(false);
+    const [taskNotifEnabled, setTaskNotifEnabled] = useState(false);
 
-	//notification stuff
+    //notification stuff
     var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
     var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
     var groups = JSON.parse(groupJSON);
@@ -113,7 +120,7 @@ function CreateExpense({
             () => setMessage("")
         );
     };
-	
+
     //Event handlers
     const handleAssignedUserChange = useCallback(event => {
         setAssignedUser(event.target.value);
@@ -131,6 +138,7 @@ function CreateExpense({
         setDescription("");
         setDueDate("");
         setAssignedUser(null);
+        setTaskNotifEnabled(false);
         setDialogOpen(false);
     }, [setDialogOpen]);
 
@@ -141,25 +149,31 @@ function CreateExpense({
         } else if (description === "") {
             setErrorMessage("Task description is required");
             setErrorOpen(true);
+        } else if (dueDate === "" && taskNotifEnabled) {
+            setErrorMessage(
+                "Task due date is required if you would like to be notified."
+            );
+            setErrorOpen(true);
         } else {
             setErrorOpen(false);
             setErrorMessage("");
             return true;
         }
         return false;
-    }, [description, name]);
+    }, [description, dueDate, name, taskNotifEnabled]);
 
     const handleSubmit = useCallback(async () => {
         if (!isEntryValid()) {
             return;
         }
-		sendMessage("has created a new task: '" + name + "'");
+        sendMessage("has created a new task: '" + name + "'");
         let inputInfo = {
             name,
             description,
             taskGroupId: groupID,
             taskOwnerId: currentUserID,
-            isImportant: isTaskImportant
+            isImportant: isTaskImportant,
+            notifStatus: taskNotifEnabled ? NOTIF_REQUIRED : NOTIF_NOT_REQUIRED
         };
         if (dueDate !== "") {
             inputInfo = {
@@ -193,7 +207,9 @@ function CreateExpense({
         handleClose,
         isEntryValid,
         isTaskImportant,
-        name
+        name,
+        sendMessage,
+        taskNotifEnabled
     ]);
 
     return (
@@ -333,6 +349,21 @@ function CreateExpense({
                             >
                                 Assign Randomly
                             </Link>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText>
+                        <div className={classes.notifyButton}>
+                            <Typography variant="body3" gutterBottom>
+                                Notify the assigned member an hour before the
+                                task is due?
+                            </Typography>
+                            <Checkbox
+                                color="primary"
+                                checked={taskNotifEnabled}
+                                onChange={event => {
+                                    setTaskNotifEnabled(event.target.checked);
+                                }}
+                            />
                         </div>
                     </DialogContentText>
                 </DialogContent>

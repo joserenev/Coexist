@@ -52,8 +52,8 @@ function CreateCalendarEventDialog({
         setErrorOpen(false);
         setErrorMessage("");
     };
-	
-	//notification stuff
+
+    //notification stuff
     var groupJSON = window.localStorage.getItem("CoexistGroups") || "{}";
     var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
     var groups = JSON.parse(groupJSON);
@@ -127,7 +127,12 @@ function CreateCalendarEventDialog({
         if (!isEntryValid()) {
             return;
         }
-		sendMessage("created a new event: '" + newEventName + "' at time " + new Date(newEventStart));
+        sendMessage(
+            "created a new event: '" +
+                newEventName +
+                "' at time " +
+                new Date(newEventStart)
+        );
         await createNewCalendarEvent({
             name: newEventName,
             description: newEventDescription,
@@ -160,7 +165,8 @@ function CreateCalendarEventDialog({
         newEventLocation,
         newEventName,
         newEventNotifEnabled,
-        newEventStart
+        newEventStart,
+        sendMessage
     ]);
 
     return (

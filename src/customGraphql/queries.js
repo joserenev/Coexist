@@ -225,6 +225,7 @@ export const getGroupTasks = `query GetGroup($id: ID!) {
         isImportant
         dueDate
         status
+        notifStatus
         assignedTo {
           id
           name

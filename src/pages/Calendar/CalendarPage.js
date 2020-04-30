@@ -1,7 +1,7 @@
 // @flow
 
 import React, { useState, useCallback } from "react";
-import { Button,Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 
 import CreateCalendarEventDialog from "./CreateCalendarEventDialog";
 import CalendarEventInfoDialog from "./CalendarEventInfoDialog";
@@ -11,10 +11,8 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import style from "react-big-calendar/lib/css/react-big-calendar.css";
 import ExampleControlSlot from "./ExampleControlSlot";
 import IconButton from "@material-ui/core/IconButton";
-import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
-import SubdirectoryArrowLeftTwoToneIcon from '@material-ui/icons/SubdirectoryArrowLeftTwoTone';
-import { Link, useHistory } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import moment from "moment";
 
 const useStyles = makeStyles(() => ({
@@ -94,22 +92,17 @@ function CalendarPage({
 
     return (
         <div>
-            
-            <Grid container alignItems="flex-start" justify="flex-end" direction="row" >
+            <div className={classes.container}>
                 <IconButton
                     component={Link}
                     to={`/groupHomePage/${groupID}`}
                     color="inherit"
                     aria-label="open drawer"
                     variant="contained"
-                    style={{  padding: 10,
-                        margin: 10, }}
-                    >
-                        <SubdirectoryArrowLeftTwoToneIcon />
+                    style={{ marginLeft: -40, marginTop: -40, float: "left" }}
+                >
+                    <ArrowBackIcon />
                 </IconButton>
-            </Grid>
-
-            <div className={classes.container}>
                 <ExampleControlSlot.Entry waitForOutlet>
                     Click an event to see more info, or drag the mouse over the
                     calendar to select a date/time range.
