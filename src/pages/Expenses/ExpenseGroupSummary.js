@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -29,7 +29,11 @@ const useStyles = makeStyles(theme => ({
         flexDirection: "column",
         flex: 1,
         justifyContent: "space-between",
-        margin: 4
+        margin: 4,
+        alignItems: "center"
+    },
+    marginBottom: {
+        marginBottom: 12
     }
 }));
 
@@ -38,16 +42,38 @@ function ExpenseGroupSummary({ groupID, expenseItem }): React.MixedElement {
     const {
         cycleEndDate,
         totalExpenditure,
-        expenseDivision: rawExpenseDivision
+        expenseDivision: rawExpenseDivision,
+        totalOwed: rawSummary
     } = expenseItem;
 
     const expenseDivision = JSON.parse(rawExpenseDivision);
     const formattedEndDate = new Date(cycleEndDate).toDateString();
+    const summary = JSON.parse(rawSummary);
 
-    const getFormattedAmount = userID => {
-        const amount = expenseDivision[userID];
-        return Math.abs(amount).toFixed(2);
-    };
+    const { userDebt = {}, userExpense = {} } = summary ?? {};
+
+    const getDebtAmount = useCallback(
+        userID => {
+            const amount = userDebt[userID] ?? 0;
+            return Math.abs(amount).toFixed(2);
+        },
+        [userDebt]
+    );
+    const getExpenseAmount = useCallback(
+        userID => {
+            const amount = userExpense[userID] ?? 0;
+            return Math.abs(amount).toFixed(2);
+        },
+        [userExpense]
+    );
+
+    const getBalanceAmount = useCallback(
+        userID => {
+            const amount = expenseDivision[userID];
+            return Math.abs(amount).toFixed(2);
+        },
+        [expenseDivision]
+    );
 
     return (
         <>
@@ -64,13 +90,26 @@ function ExpenseGroupSummary({ groupID, expenseItem }): React.MixedElement {
                                         userID={userID}
                                         isDeleteDisabled={true}
                                     />
+                                    <Typography
+                                        variant="h6"
+                                        color="textPrimary"
+                                        className={classes.marginBottom}
+                                    >
+                                        Spent: ${getExpenseAmount(userID)}
+                                    </Typography>
+                                    <Typography
+                                        variant="h6"
+                                        color="textPrimary"
+                                        className={classes.marginBottom}
+                                    >
+                                        Owed: ${getDebtAmount(userID)}
+                                    </Typography>
                                     {expenseDivision[userID] < 0 ? (
                                         <Typography
                                             variant="h5"
                                             color="secondary"
                                         >
-                                            Charged: $
-                                            {getFormattedAmount(userID)}
+                                            Charged: ${getBalanceAmount(userID)}
                                         </Typography>
                                     ) : (
                                         <Typography
@@ -78,7 +117,7 @@ function ExpenseGroupSummary({ groupID, expenseItem }): React.MixedElement {
                                             color="primary"
                                         >
                                             Received: $
-                                            {getFormattedAmount(userID)}
+                                            {getBalanceAmount(userID)}
                                         </Typography>
                                     )}
                                 </div>
