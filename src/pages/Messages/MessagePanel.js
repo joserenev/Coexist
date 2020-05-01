@@ -178,6 +178,7 @@ function MessagePanel(props): React.MixedElement {
         }
         displayField = displayField.substring(0, 120);
         linkField = linkField.substring(0, 128);
+		if (linkField.indexOf("http") == -1) { linkField = "https://" + linkField; }
         sendMessagePub("link/" + linkField + "<>/" + displayField);
         setOpen(false);
     };
@@ -191,6 +192,7 @@ function MessagePanel(props): React.MixedElement {
         }
         displayField = displayField.substring(0, 120);
         linkField = linkField.substring(0, 128);
+		if (linkField.indexOf("http") == -1) { linkField = "https://" + linkField; }
         sendMessagePub("picture/" + linkField + "<>/" + displayField);
         openPicture(false);
     };
