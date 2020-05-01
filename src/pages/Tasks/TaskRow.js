@@ -43,6 +43,9 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "flex-start",
         display: "flex",
         alignItems: "center"
+    },
+    selectDropDown: {
+        width: "80%"
     }
 }));
 
@@ -166,6 +169,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                     direction="row"
                     justify="flex-start"
                     alignItems="center"
+                    spacing={1}
                 >
                     <Grid item xs={1} sm={1}>
                         <Checkbox
@@ -197,6 +201,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                             value={assignedUser}
                             displayEmpty
                             onChange={handleAssignedUserChange}
+                            className={classes.selectDropDown}
                         >
                             <MenuItem value={null} disabled>
                                 Not Assigned
@@ -211,6 +216,7 @@ function TaskRow({ groupID, groupMembers, task, currentUserID }) {
                                             direction="row"
                                             justify="flex-start"
                                             alignItems="center"
+                                            spacing={2}
                                         >
                                             <Grid item xs={4} sm={4}>
                                                 {pictureURL == null ||

@@ -126,7 +126,7 @@ function CalendarPage({
                 <Button
                     className={classes.createEventButton}
                     variant="contained"
-                    style={{ backgroundColor: green[500], color: green[50] }}
+                    style={{ backgroundColor: green[300], color: green[50] }}
                     onClick={handleCreateNewEventFromButton}
                 >
                     Create New Event

@@ -160,12 +160,13 @@ function GroupHomePage(props): React.MixedElement {
                                 />
                                 <div></div>
                             </div>
-
-                            <div className={classes.buttonContainer}>
+                            <div
+                                className={classes.buttonContainer}
+                                onClick={navigateToTasks}
+                            >
                                 <TasksIcon
                                     fontSize="large"
                                     className={classes.largeIcons}
-                                    onClick={navigateToTasks}
                                 />
                             </div>
                         </div>

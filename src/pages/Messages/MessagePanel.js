@@ -33,10 +33,15 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import { uploadCloudinaryImage } from "../../api/Api";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
+function isNullOrEmpty(str) {
+    return str == null || str.trim() === "";
+}
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -55,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     buttonClass: {
         width: "15%",
         float: "right",
-        backgroundColor: "#3D8831",
+        backgroundColor: "#2196f3",
         color: "white"
     },
     input: {
@@ -100,6 +105,18 @@ const useStyles = makeStyles(theme => ({
         margin: "auto",
         width: "100vh",
         minWidth: 500
+    },
+    imagePreviewContainer: {
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        justifyContent: "center",
+        align: "center"
+    },
+    imagePreview: {
+        height: 400,
+        width: 540,
+        padding: 20
     }
 }));
 
@@ -152,12 +169,16 @@ function MessagePanel(props): React.MixedElement {
 
     const [open, setOpen] = React.useState(false);
     const [openPict, openPicture] = React.useState(false);
+    const [pictureURL, setPictureURL] = React.useState("");
+    const [captionText, setCaptionText] = React.useState("");
 
     const handlePictureOpen = () => {
         openPicture(true);
     };
 
     const handlePictureClose = () => {
+        setPictureURL("");
+        setCaptionText("");
         openPicture(false);
     };
 
@@ -178,23 +199,33 @@ function MessagePanel(props): React.MixedElement {
         }
         displayField = displayField.substring(0, 120);
         linkField = linkField.substring(0, 128);
-		if (linkField.indexOf("http") == -1) { linkField = "https://" + linkField; }
+        if (linkField.indexOf("http") == -1) {
+            linkField = "https://" + linkField;
+        }
         sendMessagePub("link/" + linkField + "<>/" + displayField);
         setOpen(false);
     };
 
-    const submitPicture = () => {
-        var linkField = document.getElementById("pictureLinkField").value;
-        var displayField = document.getElementById("pictureTextField").value;
+    const handleImageChange = async event => {
+        await uploadCloudinaryImage(event.target.files[0])
+            .then(newImageURL => {
+                setPictureURL(newImageURL);
+            })
+            .catch(err => {
+                console.error("an error occured while uploading receipt image");
+            });
+    };
 
-        if (linkField.length < 1 || displayField.length < 1) {
-            return;
-        }
-        displayField = displayField.substring(0, 120);
-        linkField = linkField.substring(0, 128);
-		if (linkField.indexOf("http") == -1) { linkField = "https://" + linkField; }
+    const submitPicture = () => {
+        var linkField = pictureURL;
+        var displayField = captionText;
+        // displayField = displayField.substring(0, 120);
+        // linkField = linkField.substring(0, 128);
+        // if (linkField.indexOf("http") == -1) {
+        //     linkField = "https://" + linkField;
+        // }
         sendMessagePub("picture/" + linkField + "<>/" + displayField);
-        openPicture(false);
+        handlePictureClose();
     };
 
     /////This is where messages are initially loaded from the database, and where new ones are sent?/////
@@ -307,6 +338,10 @@ function MessagePanel(props): React.MixedElement {
 
     const sendMessagePub = message => {
         message = message.substr(0, 256);
+        if (isNullOrEmpty(message)) {
+            return;
+        }
+
         var json = {};
         json.message = userData.username + ": " + message;
         json.timeSent = new Date().getTime();
@@ -834,19 +869,58 @@ function MessagePanel(props): React.MixedElement {
                                 >
                                     <DialogTitle id="alert-dialog-slide-title">
                                         {
-                                            "Attach a picture by entering the image link"
+                                            "Upload an image you would like to send"
                                         }
                                     </DialogTitle>
                                     <DialogContent>
-                                        <TextField
-                                            id="pictureLinkField"
-                                            label="Picture URL"
-                                        />
-                                        <br />
-                                        <TextField
-                                            id="pictureTextField"
-                                            label="Caption"
-                                        />
+                                        <DialogContentText>
+                                            <TextField
+                                                id="image"
+                                                margin="dense"
+                                                label="Image"
+                                                onChange={handleImageChange}
+                                                style={{ width: 200 }}
+                                                type="file"
+                                                inputProps={{
+                                                    accept:
+                                                        "image/x-png,image/gif,image/jpeg,image/jpg"
+                                                }}
+                                            ></TextField>
+                                        </DialogContentText>
+                                        {!isNullOrEmpty(pictureURL) && (
+                                            <DialogContentText>
+                                                <div
+                                                    className={
+                                                        classes.imagePreviewContainer
+                                                    }
+                                                >
+                                                    <Typography variant="body1">
+                                                        Image Preview
+                                                    </Typography>
+                                                    <img
+                                                        className={
+                                                            classes.imagePreview
+                                                        }
+                                                        src={pictureURL}
+                                                        title="Picture"
+                                                        alt="Uploaded img preview"
+                                                    />
+                                                </div>
+                                            </DialogContentText>
+                                        )}
+                                        <DialogContentText>
+                                            <TextField
+                                                id="pictureTextField"
+                                                label="Caption"
+                                                value={captionText}
+                                                onChange={event => {
+                                                    setCaptionText(
+                                                        event.target.value
+                                                    );
+                                                }}
+                                                style={{ width: "100%" }}
+                                            />
+                                        </DialogContentText>
                                     </DialogContent>
                                     <DialogActions>
                                         <Button
@@ -858,6 +932,10 @@ function MessagePanel(props): React.MixedElement {
                                         <Button
                                             onClick={submitPicture}
                                             color="primary"
+                                            disabled={
+                                                isNullOrEmpty(pictureURL) ||
+                                                isNullOrEmpty(captionText)
+                                            }
                                         >
                                             Submit
                                         </Button>
