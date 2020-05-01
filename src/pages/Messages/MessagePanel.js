@@ -6,29 +6,36 @@ import { makeStyles } from "@material-ui/core/styles";
 //import {Wrapper} from "./MessagePanelUI";
 
 import Paper from "@material-ui/core/Paper";
+import {
+    green,
+    yellow,
+    red,
+    orange,
+    purple,
+    blue
+} from "@material-ui/core/colors";
 
 import PubNub from "pubnub";
 import { PubNubProvider, PubNubConsumer } from "pubnub-react";
 
 import firebase from "firebase";
 
-import IconButton from '@material-ui/core/IconButton';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import AttachFile from '@material-ui/icons/AttachFile';
-import Link from '@material-ui/core/Link';
+import IconButton from "@material-ui/core/IconButton";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import AttachFile from "@material-ui/icons/AttachFile";
+import Link from "@material-ui/core/Link";
 
-import attachIcon from './AttachIcon.png';
+import attachIcon from "./AttachIcon.png";
 
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const useStyles = makeStyles(theme => ({
@@ -48,7 +55,8 @@ const useStyles = makeStyles(theme => ({
     buttonClass: {
         width: "15%",
         float: "right",
-        backgroundColor: "#B6E3B3"
+        backgroundColor: "#3D8831",
+        color: "white"
     },
     input: {
         width: "85%",
@@ -57,8 +65,8 @@ const useStyles = makeStyles(theme => ({
     },
     messageSelf: {
         // maxWidth: "80%",
-        color: "white",
-        backgroundColor: "green",
+        color: "black",
+        backgroundColor: "#92C68A",
         borderRadius: "10px",
         margin: "5px",
         padding: "8px 15px",
@@ -119,7 +127,7 @@ if (message.message.substring(0, 5) == "link/" && message.message.substr(5).spli
 																</Link>
 																}
 																else
-																{	
+																{
 																	<Typography>
 																		{
 																			message.message
@@ -141,47 +149,51 @@ function MessagePanel(props): React.MixedElement {
 
     var userDataJSON = window.localStorage.getItem("CoexistUserData") || "{}";
     var userData = JSON.parse(userDataJSON);
-	
-	const [open, setOpen] = React.useState(false);
-	const [openPict, openPicture] = React.useState(false);
-	
-	const handlePictureOpen = () => {
-		openPicture(true);
-	};
-	
-	const handlePictureClose = () => {
-		openPicture(false);
-	};
 
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
+    const [open, setOpen] = React.useState(false);
+    const [openPict, openPicture] = React.useState(false);
 
-	const handleClose = () => {
-		setOpen(false);
-	};
-	
-	const submitLink = () => {
-		var linkField = document.getElementById("linkField").value;
-		var displayField = document.getElementById("displayField").value;
-		
-		if (linkField.length < 1 || displayField.length < 1) { return; }
-		displayField = displayField.substring(0, 120);
-		linkField = linkField.substring(0, 128);
-		sendMessagePub("link/" + linkField + "<>/" + displayField);
-		setOpen(false);
-	}
-	
-	const submitPicture = () => {
-		var linkField = document.getElementById("pictureLinkField").value;
-		var displayField = document.getElementById("pictureTextField").value;
-		
-		if (linkField.length < 1 || displayField.length < 1) { return; }
-		displayField = displayField.substring(0, 120);
-		linkField = linkField.substring(0, 128);
-		sendMessagePub("picture/" + linkField + "<>/" + displayField);
-		openPicture(false);
-	}
+    const handlePictureOpen = () => {
+        openPicture(true);
+    };
+
+    const handlePictureClose = () => {
+        openPicture(false);
+    };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const submitLink = () => {
+        var linkField = document.getElementById("linkField").value;
+        var displayField = document.getElementById("displayField").value;
+
+        if (linkField.length < 1 || displayField.length < 1) {
+            return;
+        }
+        displayField = displayField.substring(0, 120);
+        linkField = linkField.substring(0, 128);
+        sendMessagePub("link/" + linkField + "<>/" + displayField);
+        setOpen(false);
+    };
+
+    const submitPicture = () => {
+        var linkField = document.getElementById("pictureLinkField").value;
+        var displayField = document.getElementById("pictureTextField").value;
+
+        if (linkField.length < 1 || displayField.length < 1) {
+            return;
+        }
+        displayField = displayField.substring(0, 120);
+        linkField = linkField.substring(0, 128);
+        sendMessagePub("picture/" + linkField + "<>/" + displayField);
+        openPicture(false);
+    };
 
     /////This is where messages are initially loaded from the database, and where new ones are sent?/////
     firebase
@@ -392,248 +404,320 @@ function MessagePanel(props): React.MixedElement {
                                     console.log("OKAY");
                                     console.log(currentUserID);*/
                                     if (message.senderId === currentUserID) {
-										if (message.message.substring(0, 5) == "link/" && message.message.substr(5).split("<>/").length == 2)
-										{
-											var mess = message.message.substr(5).split("<>/");
-											var hyperLink = mess[0];
-											var outerMessage = mess[1];
-											return (
-												<Grid
-													container
-													direction="column"
-													justify="flex-start"
-													alignItems="flex-end"
-												>
-													<Grid item>
-														<div
-															className={
-																classes.messageDiv
-															}
-														>
-															<div
-																key={`message-${messageIndex}`}
-																className={
-																	classes.messageSelf
-																}
-															>
-																<Typography>
-																	<b>
-																		{
-																			message.sender
-																		}
-																	</b>
-																</Typography>
-																<Link target="_blank" href={hyperLink}>
-																	<Typography >
-																		{
-																			outerMessage
-																		}
-																	</Typography>
-																</Link>
-																
-															</div>
-														</div>
-													</Grid>
-												</Grid>
-											);
-										}
-										else if (message.message.substring(0, 8) == "picture/" && message.message.substr(7).split("<>/").length == 2)
-										{
-											var mess = message.message.substr(8).split("<>/");
-											var pictureLink = mess[0];
-											var caption = mess[1];
-											return (
-												<Grid
-													container
-													direction="column"
-													justify="flex-start"
-													alignItems="flex-end"
-												>
-													<Grid item>
-														<div
-															className={
-																classes.messageDiv
-															}
-														>
-															<div
-																key={`message-${messageIndex}`}
-																className={
-																	classes.messageSelf
-																}
-															>
-																<Typography>
-																	<b>
-																		{
-																			message.sender
-																		}
-																	</b>
-																</Typography>
-																<img src={pictureLink} style={{ maxWidth:"250px", maxHeight:"250px", height:"auto" }} title={caption} />
-																<Typography> { caption } </Typography>
-															</div>
-														</div>
-													</Grid>
-												</Grid>
-											);
-										}
-										else
-										{
-											return (
-												<Grid
-													container
-													direction="column"
-													justify="flex-start"
-													alignItems="flex-end"
-												>
-													<Grid item>
-														<div
-															className={
-																classes.messageDiv
-															}
-														>
-															<div
-																key={`message-${messageIndex}`}
-																className={
-																	classes.messageSelf
-																}
-															>
-																<Typography>
-																	<b>
-																		{
-																			message.sender
-																		}
-																	</b>
-																</Typography>
-																<Typography>
-																		{
-																			message.message
-																		}
-																</Typography>
-															</div>
-														</div>
-													</Grid>
-												</Grid>
-											);
-										}
-                                        
+                                        if (
+                                            message.message.substring(0, 5) ==
+                                                "link/" &&
+                                            message.message
+                                                .substr(5)
+                                                .split("<>/").length == 2
+                                        ) {
+                                            var mess = message.message
+                                                .substr(5)
+                                                .split("<>/");
+                                            var hyperLink = mess[0];
+                                            var outerMessage = mess[1];
+                                            return (
+                                                <Grid
+                                                    container
+                                                    direction="column"
+                                                    justify="flex-start"
+                                                    alignItems="flex-end"
+                                                >
+                                                    <Grid item>
+                                                        <div
+                                                            className={
+                                                                classes.messageDiv
+                                                            }
+                                                        >
+                                                            <div
+                                                                key={`message-${messageIndex}`}
+                                                                className={
+                                                                    classes.messageSelf
+                                                                }
+                                                            >
+                                                                <Typography>
+                                                                    <b>
+                                                                        {
+                                                                            message.sender
+                                                                        }
+                                                                    </b>
+                                                                </Typography>
+                                                                <Link
+                                                                    target="_blank"
+                                                                    href={
+                                                                        hyperLink
+                                                                    }
+                                                                >
+                                                                    <Typography>
+                                                                        {
+                                                                            outerMessage
+                                                                        }
+                                                                    </Typography>
+                                                                </Link>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        } else if (
+                                            message.message.substring(0, 8) ==
+                                                "picture/" &&
+                                            message.message
+                                                .substr(7)
+                                                .split("<>/").length == 2
+                                        ) {
+                                            var mess = message.message
+                                                .substr(8)
+                                                .split("<>/");
+                                            var pictureLink = mess[0];
+                                            var caption = mess[1];
+                                            return (
+                                                <Grid
+                                                    container
+                                                    direction="column"
+                                                    justify="flex-start"
+                                                    alignItems="flex-end"
+                                                >
+                                                    <Grid item>
+                                                        <div
+                                                            className={
+                                                                classes.messageDiv
+                                                            }
+                                                        >
+                                                            <div
+                                                                key={`message-${messageIndex}`}
+                                                                className={
+                                                                    classes.messageSelf
+                                                                }
+                                                            >
+                                                                <Typography>
+                                                                    <b>
+                                                                        {
+                                                                            message.sender
+                                                                        }
+                                                                    </b>
+                                                                </Typography>
+                                                                <img
+                                                                    src={
+                                                                        pictureLink
+                                                                    }
+                                                                    style={{
+                                                                        maxWidth:
+                                                                            "250px",
+                                                                        maxHeight:
+                                                                            "250px",
+                                                                        height:
+                                                                            "auto"
+                                                                    }}
+                                                                    title={
+                                                                        caption
+                                                                    }
+                                                                />
+                                                                <Typography>
+                                                                    {" "}
+                                                                    {
+                                                                        caption
+                                                                    }{" "}
+                                                                </Typography>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        } else {
+                                            return (
+                                                <Grid
+                                                    container
+                                                    direction="column"
+                                                    justify="flex-start"
+                                                    alignItems="flex-end"
+                                                >
+                                                    <Grid item>
+                                                        <div
+                                                            className={
+                                                                classes.messageDiv
+                                                            }
+                                                        >
+                                                            <div
+                                                                key={`message-${messageIndex}`}
+                                                                className={
+                                                                    classes.messageSelf
+                                                                }
+                                                            >
+                                                                <Typography>
+                                                                    <b>
+                                                                        {
+                                                                            message.sender
+                                                                        }
+                                                                    </b>
+                                                                </Typography>
+                                                                <Typography>
+                                                                    {
+                                                                        message.message
+                                                                    }
+                                                                </Typography>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        }
                                     }
-									if (message.message.substring(0, 5) == "link/" && message.message.substr(5).split("<>/").length == 2)
-									{
-										var mess = message.message.substr(5).split("<>/");
-										var hyperLink = mess[0];
-										var outerMessage = mess[1];
-										return (
-											<Grid
-												container
-												direction="column"
-												justify="flex-start"
-												alignItems="flex-start"
-											>
-												<Grid item>
-													<div
-														className={
-															classes.messageDiv
-														}
-													>
-														<div
-															key={`message-${messageIndex}`}
-															className={
-																classes.messages
-															}
-														>
-															<Typography>
-																<b>
-																	{message.sender}
-																</b>
-															</Typography>
-															<Link target="_blank" href={hyperLink}>
-																<Typography >
-																	{
-																		outerMessage
-																	}
-																</Typography>
-															</Link>
-														</div>
-													</div>
-												</Grid>
-											</Grid>
-										);
-									}
-									else if (message.message.substring(0, 8) == "picture/" && message.message.substr(7).split("<>/").length == 2)
-									{
-										var mess = message.message.substr(8).split("<>/");
-										var pictureLink = mess[0];
-										var caption = mess[1];
-										var mess = message.message.substr(5).split("<>/");
-										var hyperLink = mess[0];
-										var outerMessage = mess[1];
-										return (
-											<Grid
-												container
-												direction="column"
-												justify="flex-start"
-												alignItems="flex-start"
-											>
-												<Grid item>
-													<div
-														className={
-															classes.messageDiv
-														}
-													>
-														<div
-															key={`message-${messageIndex}`}
-															className={
-																classes.messages
-															}
-														>
-															<Typography>
-																<b>
-																	{message.sender}
-																</b>
-															</Typography>
-															<img src={pictureLink} style={{ maxWidth:"250px", maxHeight:"250px", height:"auto" }} title={caption} />
-															<Typography> { caption } </Typography>
-														</div>
-													</div>
-												</Grid>
-											</Grid>
-										);
-									}
-									else
-									{
-										return (
-											<Grid
-												container
-												direction="column"
-												justify="flex-start"
-												alignItems="flex-start"
-											>
-												<Grid item>
-													<div
-														className={
-															classes.messageDiv
-														}
-													>
-														<div
-															key={`message-${messageIndex}`}
-															className={
-																classes.messages
-															}
-														>
-															<Typography>
-																<b>
-																	{message.sender}
-																</b>
-															</Typography>
-															<Typography>
-																{message.message}
-															</Typography>
-														</div>
-													</div>
-												</Grid>
-											</Grid>
-										);
-									}
+                                    if (
+                                        message.message.substring(0, 5) ==
+                                            "link/" &&
+                                        message.message.substr(5).split("<>/")
+                                            .length == 2
+                                    ) {
+                                        var mess = message.message
+                                            .substr(5)
+                                            .split("<>/");
+                                        var hyperLink = mess[0];
+                                        var outerMessage = mess[1];
+                                        return (
+                                            <Grid
+                                                container
+                                                direction="column"
+                                                justify="flex-start"
+                                                alignItems="flex-start"
+                                            >
+                                                <Grid item>
+                                                    <div
+                                                        className={
+                                                            classes.messageDiv
+                                                        }
+                                                    >
+                                                        <div
+                                                            key={`message-${messageIndex}`}
+                                                            className={
+                                                                classes.messages
+                                                            }
+                                                        >
+                                                            <Typography>
+                                                                <b>
+                                                                    {
+                                                                        message.sender
+                                                                    }
+                                                                </b>
+                                                            </Typography>
+                                                            <Link
+                                                                target="_blank"
+                                                                href={hyperLink}
+                                                            >
+                                                                <Typography>
+                                                                    {
+                                                                        outerMessage
+                                                                    }
+                                                                </Typography>
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    } else if (
+                                        message.message.substring(0, 8) ==
+                                            "picture/" &&
+                                        message.message.substr(7).split("<>/")
+                                            .length == 2
+                                    ) {
+                                        var mess = message.message
+                                            .substr(8)
+                                            .split("<>/");
+                                        var pictureLink = mess[0];
+                                        var caption = mess[1];
+                                        var mess = message.message
+                                            .substr(5)
+                                            .split("<>/");
+                                        var hyperLink = mess[0];
+                                        var outerMessage = mess[1];
+                                        return (
+                                            <Grid
+                                                container
+                                                direction="column"
+                                                justify="flex-start"
+                                                alignItems="flex-start"
+                                            >
+                                                <Grid item>
+                                                    <div
+                                                        className={
+                                                            classes.messageDiv
+                                                        }
+                                                    >
+                                                        <div
+                                                            key={`message-${messageIndex}`}
+                                                            className={
+                                                                classes.messages
+                                                            }
+                                                        >
+                                                            <Typography>
+                                                                <b>
+                                                                    {
+                                                                        message.sender
+                                                                    }
+                                                                </b>
+                                                            </Typography>
+                                                            <img
+                                                                src={
+                                                                    pictureLink
+                                                                }
+                                                                style={{
+                                                                    maxWidth:
+                                                                        "250px",
+                                                                    maxHeight:
+                                                                        "250px",
+                                                                    height:
+                                                                        "auto"
+                                                                }}
+                                                                title={caption}
+                                                            />
+                                                            <Typography>
+                                                                {" "}
+                                                                {caption}{" "}
+                                                            </Typography>
+                                                        </div>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    } else {
+                                        return (
+                                            <Grid
+                                                container
+                                                direction="column"
+                                                justify="flex-start"
+                                                alignItems="flex-start"
+                                            >
+                                                <Grid item>
+                                                    <div
+                                                        className={
+                                                            classes.messageDiv
+                                                        }
+                                                    >
+                                                        <div
+                                                            key={`message-${messageIndex}`}
+                                                            className={
+                                                                classes.messages
+                                                            }
+                                                        >
+                                                            <Typography>
+                                                                <b>
+                                                                    {
+                                                                        message.sender
+                                                                    }
+                                                                </b>
+                                                            </Typography>
+                                                            <Typography>
+                                                                {
+                                                                    message.message
+                                                                }
+                                                            </Typography>
+                                                        </div>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    }
                                 })}
                             </div>
                             <div
@@ -659,17 +743,36 @@ function MessagePanel(props): React.MixedElement {
                                     }}
                                     variant="filled"
                                 />
-								<input disabled="true" accept="image/*" style={{ display:"none" }} id="icon-button-file" type="file" />
-								<label htmlFor="icon-button-file">
-									<IconButton color="primary" aria-label="upload picture" component="span" onClick={openPicture}>
-										<PhotoCamera />
-									</IconButton>
-								</label>
-								<label htmlFor="icon-button-attach">
-									<IconButton src={attachIcon} color="primary" aria-label="upload picture" component="span" onClick={handleClickOpen}>
-										<AttachFile />
-									</IconButton>
-								</label>
+                                <input
+                                    disabled="true"
+                                    accept="image/*"
+                                    style={{ display: "none" }}
+                                    id="icon-button-file"
+                                    type="file"
+                                />
+                                <div>
+                                    <label htmlFor="icon-button-file">
+                                        <IconButton
+                                            color="primary"
+                                            aria-label="upload picture"
+                                            component="span"
+                                            onClick={openPicture}
+                                        >
+                                            <PhotoCamera />
+                                        </IconButton>
+                                    </label>
+                                    <label htmlFor="icon-button-attach">
+                                        <IconButton
+                                            src={attachIcon}
+                                            color="primary"
+                                            aria-label="upload picture"
+                                            component="span"
+                                            onClick={handleClickOpen}
+                                        >
+                                            <AttachFile />
+                                        </IconButton>
+                                    </label>
+                                </div>
                                 <Button
                                     className={classes.buttonClass}
                                     id="sendMessageButton"
@@ -680,55 +783,84 @@ function MessagePanel(props): React.MixedElement {
                                 >
                                     Send
                                 </Button>
-								
-								<Dialog
-									open={open}
-									TransitionComponent={Transition}
-									keepMounted
-									onClose={handleClose}
-									aria-labelledby="alert-dialog-slide-title"
-									aria-describedby="alert-dialog-slide-description"
-								>
-									<DialogTitle id="alert-dialog-slide-title">{"Attach a link"}</DialogTitle>
-									<DialogContent>
-										<TextField id="linkField" label="Link" />
-										<br/>
-										<TextField id="displayField" label="Text to Display" />
-									</DialogContent>
-									<DialogActions>
-										<Button onClick={handleClose} color="primary">
-											Cancel
-										</Button>
-										<Button onClick={submitLink} color="primary">
-											Submit
-										</Button>
-									</DialogActions>
-								</Dialog>
-								
-								<Dialog
-									open={openPict}
-									TransitionComponent={Transition}
-									keepMounted
-									onClose={handleClose}
-									aria-labelledby="alert-dialog-slide-title"
-									aria-describedby="alert-dialog-slide-description"
-								>
-									<DialogTitle id="alert-dialog-slide-title">{"Attach a picture"}</DialogTitle>
-									<DialogContent>
-										<TextField id="pictureLinkField" label="Picture URL" />
-										<br/>
-										<TextField id="pictureTextField" label="Caption" />
-									</DialogContent>
-									<DialogActions>
-										<Button onClick={handlePictureClose} color="primary">
-											Cancel
-										</Button>
-										<Button onClick={submitPicture} color="primary">
-											Submit
-										</Button>
-									</DialogActions>
-								</Dialog>
-								
+
+                                <Dialog
+                                    open={open}
+                                    TransitionComponent={Transition}
+                                    keepMounted
+                                    onClose={handleClose}
+                                    aria-labelledby="alert-dialog-slide-title"
+                                    aria-describedby="alert-dialog-slide-description"
+                                >
+                                    <DialogTitle id="alert-dialog-slide-title">
+                                        {"Enter the details to attach a link"}
+                                    </DialogTitle>
+                                    <DialogContent>
+                                        <TextField
+                                            id="linkField"
+                                            label="Link"
+                                        />
+                                        <br />
+                                        <TextField
+                                            id="displayField"
+                                            label="Text to Display"
+                                        />
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button
+                                            onClick={handleClose}
+                                            color="primary"
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            onClick={submitLink}
+                                            color="primary"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
+
+                                <Dialog
+                                    open={openPict}
+                                    TransitionComponent={Transition}
+                                    keepMounted
+                                    onClose={handleClose}
+                                    aria-labelledby="alert-dialog-slide-title"
+                                    aria-describedby="alert-dialog-slide-description"
+                                >
+                                    <DialogTitle id="alert-dialog-slide-title">
+                                        {
+                                            "Attach a picture by entering the image link"
+                                        }
+                                    </DialogTitle>
+                                    <DialogContent>
+                                        <TextField
+                                            id="pictureLinkField"
+                                            label="Picture URL"
+                                        />
+                                        <br />
+                                        <TextField
+                                            id="pictureTextField"
+                                            label="Caption"
+                                        />
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button
+                                            onClick={handlePictureClose}
+                                            color="primary"
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            onClick={submitPicture}
+                                            color="primary"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
                             </div>
                         </Paper>
                     </div>
@@ -739,40 +871,3 @@ function MessagePanel(props): React.MixedElement {
 }
 
 export default MessagePanel;
-
-/*const useStyles = makeStyles(theme => ({
-    headContainer: {
-        margin: 10
-    },
-
-    largeIcons: {
-        height: 180,
-        width: 180
-    },
-    paper: {
-        padding: theme.spacing(2),
-        margin: "auto",
-        width: "100vh",
-        minWidth: 500
-    },
-	pane: {
-		flexDirection: "column-reverse",
-		width: "50vw",
-		height: "80vh",
-		background: "#A5D699",
-		zindex: 10,
-		left: "5%"
-	}
-}));
-
-function MessagePanel(): React.MixedElement {
-    const classes = useStyles();
-    const theme = useTheme();
-    return (
-        <div className={classes.pane}>
-            <Message />
-        </div>
-    );
-}
-
-export default MessagePanel;*/
