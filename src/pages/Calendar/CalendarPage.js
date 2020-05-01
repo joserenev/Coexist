@@ -6,6 +6,8 @@ import { Button, Grid } from "@material-ui/core";
 import CreateCalendarEventDialog from "./CreateCalendarEventDialog";
 import CalendarEventInfoDialog from "./CalendarEventInfoDialog";
 
+import { green } from "@material-ui/core/colors";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import style from "react-big-calendar/lib/css/react-big-calendar.css";
@@ -124,7 +126,7 @@ function CalendarPage({
                 <Button
                     className={classes.createEventButton}
                     variant="contained"
-                    color="primary"
+                    style={{ backgroundColor: green[500], color: green[50] }}
                     onClick={handleCreateNewEventFromButton}
                 >
                     Create New Event
